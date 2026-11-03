@@ -93,6 +93,13 @@ Picked so Phase 0 isn't blocked. Reverse any of them later.
 - Decoder state is a plain object; no garage dependency yet.
 - Done when: entering the worked example on a phone-width browser shows the right
   amount financed.
+- **Status 2026-11-02: done.** Checked in headless Chrome at 375px: worked example shows
+  $28,881, bi-weekly shows the monthly equivalent, state survives tab switches, no
+  horizontal scroll, all targets >= 44px. Inputs are `type=text` with `inputmode`
+  (not `type=number`: avoids spinner/comma quirks). Parsing is `src/decoder/inputs.ts`
+  (`readDecoder`); state is the `decoder` rune object in `src/decoder/state.svelte.ts`.
+  "Check the numbers" goes to `#verdict`, still an empty stub for Session 4, which
+  should read `currentReading()` for quote + benchmarks.
 
 ### Session 4 · Verdict screen
 - Headline, three gap rows with stripes, breakdown table, "Ask for" chips.
