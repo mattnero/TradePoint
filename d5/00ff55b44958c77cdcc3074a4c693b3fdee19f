@@ -1,0 +1,45 @@
+CLAUDE.md
+  s_c773a4b86741f1::t_f9caba4d4f8e1f 1-64
+PLAN.md
+  s_c773a4b86741f1::t_d49a2ee0ccff47 1-199
+README.md
+  s_c773a4b86741f1::t_3b5fb394b4de08 10-11
+docs/mockups/tradepoint-mockups.html
+  s_c773a4b86741f1::t_b9043dc0491089 1-536
+docs/spec.md
+  s_c773a4b86741f1::t_7583b949c05b71 1-119
+docs/workshop/01-concept.md
+  s_c773a4b86741f1::t_4bf1be8b98dfa7 1-70
+docs/workshop/02-features-and-mvp.md
+  s_c773a4b86741f1::t_2b6e57617b656d 1-87
+docs/workshop/03-calculator-math.md
+  s_c773a4b86741f1::t_554b829d261783 1-110
+docs/workshop/04-fair-market-value.md
+  s_c773a4b86741f1::t_c76f7cbfd9f20d 1-50
+docs/workshop/05-delivery-options.md
+  s_c773a4b86741f1::t_06a53fdba02f21 1-73
+docs/workshop/06-competitors-and-risks.md
+  s_c773a4b86741f1::t_54b03afcce776f 1-59
+docs/workshop/07-open-questions.md
+  s_c773a4b86741f1::t_30d2bada819d20 1-77
+docs/workshop/08-revenue-model.md
+  s_c773a4b86741f1::t_0da73684cc3baf 1-101
+docs/workshop/09-trade-in-timing.md
+  s_c773a4b86741f1::t_91c9a2162f6b80 1-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d500ff55b44958c77cdcc3074a4c693b3fdee19f",
+  "prompts": {},
+  "sessions": {
+    "s_c773a4b86741f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "498250e7-ee8b-4c2d-bcc4-5bcd69bd6f32",
+        "model": "claude-fable-5.1"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
