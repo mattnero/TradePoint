@@ -34,6 +34,36 @@ export function wholeMonthsBetween(from: IsoDate, to: IsoDate): number {
 export function addYears(date: IsoDate, years: number): IsoDate {
   const [y, m, d] = parts(date);
   const year = y + years;
-  const day = Math.min(d, daysInMonth(year, m));
-  return `${year}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+  return format(year, m, Math.min(d, daysInMonth(year, m)));
+}
+
+function format(y: number, m: number, d: number): IsoDate {
+  return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
+export function addMonths(date: IsoDate, months: number): IsoDate {
+  const [y, m, d] = parts(date);
+  const index = y * 12 + (m - 1) + months;
+  const year = Math.floor(index / 12);
+  const month = (index % 12) + 1;
+  return format(year, month, Math.min(d, daysInMonth(year, month)));
+}
+
+export function addDays(date: IsoDate, days: number): IsoDate {
+  const [y, m, d] = parts(date);
+  const shifted = new Date(Date.UTC(y, m - 1, d + days));
+  return format(shifted.getUTCFullYear(), shifted.getUTCMonth() + 1, shifted.getUTCDate());
+}
+
+export function firstDayOfMonth(year: number, month: number): IsoDate {
+  return format(year, month, 1);
+}
+
+export function lastDayOfMonth(year: number, month: number): IsoDate {
+  return format(year, month, daysInMonth(year, month));
+}
+
+export function monthOf(date: IsoDate): { year: number; month: number } {
+  const [year, month] = parts(date);
+  return { year, month };
 }

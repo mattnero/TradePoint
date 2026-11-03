@@ -200,6 +200,24 @@ a real quote before continuing; fix what hurt.
 - Pure functions, tests for each cliff type plus the "already past" cases (a 2019
   Santa Fe has no warranty cliff left; the engine must say so, not invent one).
 - Done when: the mockup's example vehicle yields the four cliffs in the mockup order.
+- **Status 2026-11-02: done.** `cliffsFor({ vehicle, asOf, valueAt?, horizonMonths = 36 })`
+  returns `{ upcoming, past, activeSeason, needs }`, all structured data (no copy; UI
+  writes titles). Mockup 2022 Santa Fe yields equity → warranty → 100,000 km → season in
+  mockup order. Decision: the transmission-fluid window is sorted by date like
+  everything else, so it lands second (May 2027 at 96,000 km), not last as the mockup
+  draws it; the mockup labelled it by km, not by date.
+  Rules: comprehensive and powertrain merge into one cliff when they end the same day
+  for the same reason (Hyundai, Kia); warranty end = min(date limit, projected km date);
+  unknown driving rate gives `limitedBy: "date-or-km"`; ended items go to `past`, never
+  `upcoming` (2019 Santa Fe: warranty past, 100k past, next is 150k). Equity steps
+  monthly and is past when already positive. An active season goes in `activeSeason`;
+  the cliff is always the next window start. Maintenance is an interval (next multiple
+  of the item km). `needs` lists what's missing (inServiceDate, odometerRate, segment,
+  value, warrantyTerms) for progressive onboarding. Projections use the exact km/day
+  from the last two readings, counted from the latest reading date.
+  `valueAt` is injected: Session 11's value model plugs in here. On a plain 1.1%/mo
+  curve the mockup car crosses in month 3 (Feb 2027); Session 11's anchored curve must
+  produce month 4. Added `segment?` to `Vehicle` (optional, validated; no migration).
 
 ### Session 9 · Garage screen (free tier)
 - Vehicle card, odometer, km/month, cliff list, "I'm at a dealership" button.

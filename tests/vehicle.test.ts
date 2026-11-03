@@ -134,6 +134,7 @@ describe("parseVehicle", () => {
   const full: Vehicle = {
     ...santaFe(),
     trim: "Luxury",
+    segment: "mid-suv",
     inServiceDate: "2019-03-15",
     purchase: { price: cents(3299500), date: "2019-03-15" },
     odometer: [
@@ -156,6 +157,7 @@ describe("parseVehicle", () => {
     ["string year", { ...full, year: "2019" }],
     ["blank make", { ...full, make: "" }],
     ["numeric trim", { ...full, trim: 4 }],
+    ["unknown segment", { ...full, segment: "spaceship" }],
     ["bad in-service date", { ...full, inServiceDate: "2019-02-30" }],
     ["purchase without a date", { ...full, purchase: { price: 100 } }],
     ["fractional purchase price", { ...full, purchase: { price: 1.5, date: "2019-03-15" } }],

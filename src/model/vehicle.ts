@@ -1,6 +1,7 @@
 import { daysBetween, isIsoDate, type IsoDate } from "./dates";
 import { parseLoan, type Loan } from "./loan";
 import { cents, type Cents } from "./money";
+import { SEGMENTS, type SegmentKey } from "./segments";
 
 export interface OdometerReading {
   date: IsoDate;
@@ -18,6 +19,7 @@ export interface Vehicle {
   make: string;
   model: string;
   trim?: string;
+  segment?: SegmentKey;
   inServiceDate?: IsoDate;
   purchase?: Purchase;
   odometer: OdometerReading[];
@@ -84,12 +86,17 @@ export function latestReading(vehicle: Vehicle): OdometerReading {
   return vehicle.odometer[vehicle.odometer.length - 1]!;
 }
 
-export function kmPerMonth(vehicle: Vehicle): number | null {
+export function kmPerDay(vehicle: Vehicle): number | null {
   const [previous, latest] = vehicle.odometer.slice(-2);
   if (previous === undefined || latest === undefined) return null;
   const days = daysBetween(previous.date, latest.date);
   if (days < MIN_DAYS_FOR_RATE) return null;
-  return Math.round((latest.km - previous.km) / (days / DAYS_PER_MONTH));
+  return (latest.km - previous.km) / days;
+}
+
+export function kmPerMonth(vehicle: Vehicle): number | null {
+  const perDay = kmPerDay(vehicle);
+  return perDay === null ? null : Math.round(perDay * DAYS_PER_MONTH);
 }
 
 export function parseVehicle(value: unknown): Vehicle | null {
@@ -109,6 +116,10 @@ export function parseVehicle(value: unknown): Vehicle | null {
   if (v.trim !== undefined) {
     if (typeof v.trim !== "string") return null;
     vehicle.trim = v.trim;
+  }
+  if (v.segment !== undefined) {
+    if (!SEGMENTS.includes(v.segment as SegmentKey)) return null;
+    vehicle.segment = v.segment as SegmentKey;
   }
   if (v.inServiceDate !== undefined) {
     if (!isIsoDate(v.inServiceDate)) return null;

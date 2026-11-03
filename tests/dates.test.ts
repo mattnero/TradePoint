@@ -1,4 +1,4 @@
-import { addYears, daysBetween, isIsoDate, wholeMonthsBetween } from "../src/model/dates";
+import { addDays, addMonths, addYears, daysBetween, isIsoDate, wholeMonthsBetween } from "../src/model/dates";
 
 describe("isIsoDate", () => {
   it.each(["2026-11-02", "2024-02-29", "1999-12-31"])("accepts %s", (s) => {
@@ -51,5 +51,27 @@ describe("addYears", () => {
   it("lands a leap day on Feb 28 in a common year", () => {
     expect(addYears("2024-02-29", 5)).toBe("2029-02-28");
     expect(addYears("2024-02-29", 4)).toBe("2028-02-29");
+  });
+});
+
+describe("addMonths", () => {
+  it("moves the month and keeps the day", () => {
+    expect(addMonths("2026-11-02", 3)).toBe("2027-02-02");
+  });
+
+  it("clamps to the end of a shorter month", () => {
+    expect(addMonths("2026-01-31", 1)).toBe("2026-02-28");
+  });
+
+  it("crosses year boundaries both ways", () => {
+    expect(addMonths("2026-11-15", 14)).toBe("2028-01-15");
+    expect(addMonths("2026-01-15", -1)).toBe("2025-12-15");
+  });
+});
+
+describe("addDays", () => {
+  it("adds calendar days across months and leap years", () => {
+    expect(addDays("2026-11-02", 270)).toBe("2027-07-30");
+    expect(addDays("2024-02-28", 1)).toBe("2024-02-29");
   });
 });
