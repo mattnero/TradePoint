@@ -1,0 +1,19 @@
+PLAN.md
+  s_c773a4b86741f1::t_c8fb03dc8859ce 30-36
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "f29d0c30c6df19a9d1d4a3d274c133171a25189d",
+  "prompts": {},
+  "sessions": {
+    "s_c773a4b86741f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "498250e7-ee8b-4c2d-bcc4-5bcd69bd6f32",
+        "model": "claude-fable-5.1"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
