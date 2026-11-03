@@ -1,0 +1,54 @@
+src/model/cliffCopy.ts
+  s_5924c5434f5e41::t_70966e58a8678b 2-85,97
+  s_5924c5434f5e41::t_cc4f47a1a78537 1,86-96
+src/model/warranty.ts
+  s_5924c5434f5e41::t_70966e58a8678b 71-74
+src/main.ts
+  s_5924c5434f5e41::t_bc807c1fecf0b6 2
+src/screens/Garage.svelte
+  s_5924c5434f5e41::t_bc807c1fecf0b6 2-3,13-34,37-46,48-91,93-121,124-139,141-215
+  s_5924c5434f5e41::t_cc4f47a1a78537 4-12,47,92
+src/styles/base.css
+  s_5924c5434f5e41::t_d920c40b6d15b8 1-94
+src/garage/inputs.ts
+  s_5924c5434f5e41::t_70966e58a8678b 1-71
+tests/cliffCopy.test.ts
+  s_5924c5434f5e41::t_f3efef75ee9d57 1,12-138,161-162
+  s_5924c5434f5e41::t_cc4f47a1a78537 2-11,139-160
+tests/vehicle.test.ts
+  s_5924c5434f5e41::t_70966e58a8678b 139,163
+src/model/dates.ts
+  s_5924c5434f5e41::t_70966e58a8678b 70-77
+src/garage/AddVehicleForm.svelte
+  s_5924c5434f5e41::t_d920c40b6d15b8 1-95
+src/garage/VehicleSetup.svelte
+  s_5924c5434f5e41::t_d920c40b6d15b8 1-230,234-239
+  s_5924c5434f5e41::t_cc4f47a1a78537 231-233
+tests/garageInputs.test.ts
+  s_5924c5434f5e41::t_f3efef75ee9d57 1-92
+src/model/cliffs.ts
+  s_5924c5434f5e41::t_db90bdd1e33098 69-75,84-88,104
+src/model/vehicle.ts
+  s_5924c5434f5e41::t_70966e58a8678b 24,129-131
+  s_5924c5434f5e41::t_3f8c1b256d087b 132
+tests/cliffs.test.ts
+  s_5924c5434f5e41::t_db90bdd1e33098 166-174
+PLAN.md
+  s_5924c5434f5e41::t_af570c9ecfa1e0 229-250
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "debdd0932935c54743330732c1a72bb09e2e32cf",
+  "prompts": {},
+  "sessions": {
+    "s_5924c5434f5e41": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cdb72cd-20ac-4f31-a7e2-630070744025",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
