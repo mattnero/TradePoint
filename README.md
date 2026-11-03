@@ -7,8 +7,8 @@ car's value (warranty expiry, odometer thresholds, equity crossover, big mainten
 season), and decodes a dealer's payment-framed offer into the real all-in price while
 you're still at the desk.
 
-Status: Phase 0, math module only. See `docs/` for the workshop record once it moves
-here from the hub.
+Status: Phase 0, math module only. Agent-facing docs: `CLAUDE.md`, `PLAN.md`,
+`docs/spec.md`. Background: `docs/workshop/`.
 
 ## Rules this project keeps
 

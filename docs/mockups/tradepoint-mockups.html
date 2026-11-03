@@ -1,0 +1,536 @@
+<title>TradePoint Mockups</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a studio board. Six phone frames in a wrapping row, each with a note card beneath. Phones stack to one column at phone width. */
+:root {
+  --bg: #EDF0F3;
+  --board-ink: #16212B;
+  --board-muted: #5F6D7A;
+  --surface: #FFFFFF;
+  --surface-2: #F3F5F7;
+  --ink: #16212B;
+  --muted: #62707C;
+  --line: #D8DEE4;
+  --accent: #0E7C86;
+  --accent-soft: #D9EEF0;
+  --accent-ink: #FFFFFF;
+  --good: #2F8A57;
+  --good-soft: #DDF1E4;
+  --warn: #B9771A;
+  --warn-soft: #FBEBD2;
+  --bad: #B5443B;
+  --bad-soft: #F7DEDC;
+  --bezel: #1B2229;
+  --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1115; --board-ink: #E6EBEF; --board-muted: #97A4AF;
+    --surface: #151B21; --surface-2: #1D252D; --ink: #E6EBEF; --muted: #95A2AD; --line: #2B353E;
+    --accent: #43B5BE; --accent-soft: #163B40; --accent-ink: #0B1215;
+    --good: #58C487; --good-soft: #163A27; --warn: #E2A445; --warn-soft: #3E2E12; --bad: #E26B62; --bad-soft: #42201D;
+    --bezel: #000000; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1115; --board-ink: #E6EBEF; --board-muted: #97A4AF;
+  --surface: #151B21; --surface-2: #1D252D; --ink: #E6EBEF; --muted: #95A2AD; --line: #2B353E;
+  --accent: #43B5BE; --accent-soft: #163B40; --accent-ink: #0B1215;
+  --good: #58C487; --good-soft: #163A27; --warn: #E2A445; --warn-soft: #3E2E12; --bad: #E26B62; --bad-soft: #42201D;
+  --bezel: #000000; color-scheme: dark;
+}
+
+/* The app itself is light-only (Matt, 2026-11-02): white screens in both board themes. The board around the phones follows the viewer's theme. */
+.screen {
+  --surface: #FFFFFF; --surface-2: #F3F5F7; --ink: #16212B; --muted: #62707C; --line: #D8DEE4;
+  --accent: #0E7C86; --accent-soft: #D9EEF0; --accent-ink: #FFFFFF;
+  --good: #2F8A57; --good-soft: #DDF1E4; --warn: #B9771A; --warn-soft: #FBEBD2; --bad: #B5443B; --bad-soft: #F7DEDC;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--board-ink); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-block: 32px 64px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.board { max-width: 1240px; margin: 0 auto; display: grid; gap: 28px; }
+.intro { max-width: 68ch; display: grid; gap: 8px; }
+.intro h1 { font-family: var(--display); font-weight: 700; font-size: 44px; line-height: 1; margin: 0; letter-spacing: 0.01em; text-wrap: balance; }
+.intro p { margin: 0; color: var(--board-muted); }
+.intro .eyebrow { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.legend { display: flex; flex-wrap: wrap; gap: 10px 18px; font-size: 13px; color: var(--board-muted); align-items: center; }
+.legend .tag { display: inline-flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+.frames { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px 24px; align-items: start; }
+.frame { display: grid; gap: 14px; min-width: 0; }
+.frame-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.frame-head h2 { font-family: var(--display); font-weight: 600; font-size: 22px; margin: 0; }
+.tier { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; padding: 3px 8px; border-radius: 3px; }
+.tier.free { background: var(--accent-soft); color: var(--accent); }
+.tier.pro { background: var(--board-ink); color: var(--bg); }
+
+.phone { background: var(--bezel); border-radius: 36px; padding: 12px; max-width: 360px; width: 100%; margin: 0 auto; box-shadow: 0 18px 40px rgba(0,0,0,0.18); }
+.screen { background: var(--surface); color: var(--ink); border-radius: 26px; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; min-height: 700px; font-size: 14px; }
+.status { display: flex; justify-content: space-between; padding: 10px 18px 0; font-size: 12px; font-weight: 600; color: var(--muted); font-variant-numeric: tabular-nums; }
+.content { padding: 12px 16px 16px; display: grid; gap: 12px; align-content: start; min-width: 0; }
+.nav { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); padding: 8px 6px 10px; font-size: 10.5px; text-align: center; color: var(--muted); }
+.nav div { display: grid; gap: 3px; justify-items: center; }
+.nav .ico { width: 20px; height: 20px; border-radius: 6px; background: var(--line); }
+.nav .on { color: var(--accent); font-weight: 600; }
+.nav .on .ico { background: var(--accent); }
+
+.app-title { display: flex; justify-content: space-between; align-items: baseline; }
+.app-title h3 { font-family: var(--display); font-weight: 700; font-size: 26px; margin: 0; line-height: 1; }
+.app-title small { color: var(--muted); font-size: 12px; }
+.card { background: var(--surface-2); border-radius: 12px; padding: 12px 14px; display: grid; gap: 8px; min-width: 0; }
+.card.flat { background: transparent; border: 1px solid var(--line); }
+.label { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.big { font-family: var(--display); font-weight: 700; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.mid { font-family: var(--display); font-weight: 600; font-size: 22px; line-height: 1; font-variant-numeric: tabular-nums; }
+.row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.row + .row { border-top: 1px solid var(--line); padding-top: 6px; }
+.kv { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; font-variant-numeric: tabular-nums; }
+.kv .k { color: var(--muted); }
+.kv .v { text-align: right; font-weight: 500; }
+.kv .total { border-top: 1px solid var(--line); padding-top: 6px; font-weight: 600; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 500; }
+.pill.good { background: var(--good-soft); color: var(--good); }
+.pill.warn { background: var(--warn-soft); color: var(--warn); }
+.pill.bad { background: var(--bad-soft); color: var(--bad); }
+.pill.accent { background: var(--accent-soft); color: var(--accent); }
+.banner { border-left: 4px solid var(--accent); padding: 8px 12px; background: var(--accent-soft); border-radius: 8px; font-size: 13px; }
+.banner strong { display: block; font-family: var(--display); font-size: 17px; font-weight: 600; }
+.cliff { display: grid; grid-template-columns: 44px 1fr; gap: 10px; align-items: center; }
+.cliff .when { font-family: var(--display); font-weight: 600; font-size: 18px; line-height: 1; text-align: center; }
+.cliff .when small { display: block; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-family: var(--body); font-weight: 600; }
+.cliff .what { font-size: 13px; }
+.cliff .what span { color: var(--muted); display: block; font-size: 12px; }
+.btn { font: inherit; font-weight: 600; border: 0; border-radius: 10px; padding: 11px 14px; text-align: center; cursor: pointer; }
+.btn.primary { background: var(--accent); color: var(--accent-ink); }
+.btn.ghost { background: transparent; color: var(--accent); border: 1.5px solid var(--accent); }
+.btn.quiet { background: var(--surface-2); color: var(--ink); }
+.btn:focus-visible, input:focus-visible, .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.btn-row { display: grid; gap: 8px; grid-template-columns: 1fr 1fr; }
+
+.field { display: grid; gap: 4px; }
+.field label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.field input { font: inherit; font-family: var(--display); font-weight: 600; font-size: 20px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); width: 100%; min-width: 0; font-variant-numeric: tabular-nums; }
+.field.prefilled input { border-color: var(--accent); background: var(--accent-soft); }
+.fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.fields .wide { grid-column: 1 / -1; }
+.seg { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { font: inherit; font-size: 13px; font-weight: 500; padding: 8px 4px; border: 0; background: var(--surface); color: var(--muted); cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.hint { font-size: 12px; color: var(--muted); }
+
+.verdict-head { padding: 14px 16px; border-radius: 12px; display: grid; gap: 4px; }
+.verdict-head.warn { background: var(--warn-soft); color: var(--warn); }
+.verdict-head.bad { background: var(--bad-soft); color: var(--bad); }
+.verdict-head.good { background: var(--good-soft); color: var(--good); }
+.verdict-head h4 { margin: 0; font-family: var(--display); font-weight: 700; font-size: 28px; line-height: 1; }
+.verdict-head p { margin: 0; font-size: 13px; color: var(--ink); }
+.gap { display: grid; grid-template-columns: 6px 1fr auto; gap: 10px; align-items: center; }
+.gap .stripe { width: 6px; height: 100%; min-height: 34px; border-radius: 3px; }
+.gap .stripe.warn { background: var(--warn); } .gap .stripe.bad { background: var(--bad); } .gap .stripe.good { background: var(--good); }
+.gap .t { font-weight: 600; font-size: 13px; } .gap .t span { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+.gap .amt { font-family: var(--display); font-weight: 700; font-size: 22px; font-variant-numeric: tabular-nums; }
+.gap .amt.warn { color: var(--warn); } .gap .amt.bad { color: var(--bad); } .gap .amt.good { color: var(--good); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); }
+
+.chart { width: 100%; height: auto; display: block; }
+.chart text { font-family: var(--body); font-size: 10px; fill: var(--muted); }
+.chart .grid { stroke: var(--line); stroke-width: 1; }
+.chart .value { stroke: var(--accent); stroke-width: 2.2; fill: none; }
+.chart .loan { stroke: var(--muted); stroke-width: 2; fill: none; stroke-dasharray: 4 3; }
+.chart .area { fill: var(--accent); opacity: 0.12; }
+.chart .marker { stroke: var(--warn); stroke-width: 1.2; stroke-dasharray: 2 3; }
+.chart .cross { fill: var(--good); stroke: var(--surface); stroke-width: 2; }
+.chart .cross-lbl { fill: var(--good); font-weight: 600; }
+.chart .mk-lbl { fill: var(--warn); font-weight: 600; }
+
+.share-card { background: var(--ink); color: var(--surface); border-radius: 14px; padding: 14px; display: grid; gap: 10px; }
+.share-card .brand { font-family: var(--display); font-weight: 700; letter-spacing: 0.04em; font-size: 14px; opacity: 0.8; }
+.share-card .kv .k { color: var(--surface); opacity: 0.7; }
+.share-card .kv .total { border-color: rgba(255,255,255,0.25); }
+.msg { background: var(--surface-2); border-radius: 14px 14px 14px 4px; padding: 10px 12px; font-size: 13px; }
+.msg.me { background: var(--accent-soft); border-radius: 14px 14px 4px 14px; }
+
+.sheet { background: var(--surface-2); border-radius: 18px 18px 0 0; padding: 16px; display: grid; gap: 12px; align-self: end; margin: 0 -16px -16px; }
+.price { font-family: var(--display); font-weight: 700; font-size: 44px; line-height: 1; }
+.price small { font-family: var(--body); font-size: 13px; font-weight: 500; color: var(--muted); }
+.includes { display: grid; gap: 8px; font-size: 13px; }
+.includes div { display: grid; grid-template-columns: 18px 1fr; gap: 8px; align-items: start; }
+.tick { width: 16px; height: 16px; border-radius: 50%; background: var(--accent); margin-top: 2px; position: relative; }
+.tick::after { content: ""; position: absolute; left: 5px; top: 2px; width: 4px; height: 8px; border: solid var(--accent-ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+.locked { opacity: 0.55; position: relative; }
+.locked::after { content: "PRO"; position: absolute; right: 10px; top: 10px; font-size: 10px; letter-spacing: 0.1em; font-weight: 700; background: var(--ink); color: var(--surface); padding: 2px 6px; border-radius: 3px; opacity: 1; }
+
+.note { background: var(--surface); color: var(--ink); border-radius: 10px; padding: 12px 14px; font-size: 13px; display: grid; gap: 6px; border: 1px solid var(--line); }
+.note b { font-weight: 600; }
+.note ul { margin: 0; padding-left: 18px; display: grid; gap: 3px; }
+.note .q { color: var(--warn); font-weight: 500; }
+
+@media (max-width: 560px) {
+  .intro h1 { font-size: 36px; }
+  .screen { min-height: 640px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .seg button, .btn { transition: background-color .15s ease, color .15s ease; }
+}
+</style>
+
+<div class="board">
+  <header class="intro">
+    <div class="eyebrow">TradePoint · UI mockups · 2026-11-02</div>
+    <h1>Know when to trade. Check the deal when you do.</h1>
+    <p>Six screens for the companion-led app. The app is light-only with a white background; the screens stay white even when this board is viewed in dark mode. Vehicle, loan and value figures are example data for a 2022 Santa Fe, not Matt's real numbers. The dealer screen is live: edit the inputs and the verdict recomputes with the repo's loan math.</p>
+    <div class="legend">
+      <span class="tag"><span class="dot" style="background: var(--accent)"></span>Accent, teal: the app's own voice</span>
+      <span class="tag"><span class="dot" style="background: var(--good)"></span>Match</span>
+      <span class="tag"><span class="dot" style="background: var(--warn)"></span>Gap to ask about</span>
+      <span class="tag"><span class="dot" style="background: var(--bad)"></span>Large gap</span>
+    </div>
+  </header>
+
+  <section class="frames">
+
+    <!-- 1. GARAGE -->
+    <article class="frame">
+      <div class="frame-head"><h2>1 · Garage (home)</h2><span class="tier free">Free + Pro tile</span></div>
+      <div class="phone"><div class="screen">
+        <div class="status"><span>9:41</span><span>●●● 78%</span></div>
+        <div class="content">
+          <div class="app-title"><h3>Your car</h3><small>Updated today</small></div>
+          <div class="card">
+            <div class="row"><div><div class="label">2022 Hyundai Santa Fe Preferred AWD</div><div class="mid">86,800 km</div></div><span class="pill accent">+1,500 km / mo</span></div>
+          </div>
+          <div class="card">
+            <div class="row"><div><div class="label">Estimated value</div><div class="big">$14,200</div><div class="hint">From 3 comps · Oct 28</div></div>
+            <div style="text-align:right"><div class="label">Loan balance</div><div class="big">$15,100</div><div class="hint">4.49% · 30 mo left</div></div></div>
+            <div class="row"><span class="label">Equity</span><span class="pill bad">−$900 · positive in ~4 months</span></div>
+          </div>
+          <div class="banner"><strong>Your window: Mar to Jun 2027</strong>Equity turns positive in March. Powertrain warranty ends in June. If you plan to trade in the next two years, this is the stretch to do it. Otherwise, keeping it is cheaper by about $2,100 a year.</div>
+          <div class="label">Next cliffs</div>
+          <div class="card flat" style="gap:12px">
+            <div class="cliff"><div class="when">4<small>mo</small></div><div class="what">Equity crosses positive<span>Loan balance drops below estimated value</span></div></div>
+            <div class="cliff"><div class="when">7<small>mo</small></div><div class="what">Powertrain warranty ends<span>Hyundai Canada 5 yr / 100,000 km · Jun 2027</span></div></div>
+            <div class="cliff"><div class="when">9<small>mo</small></div><div class="what">100,000 km<span>Listing filter cutoff and wholesale price step</span></div></div>
+          </div>
+          <button class="btn primary" type="button">I'm at a dealership</button>
+        </div>
+        <nav class="nav"><div class="on"><span class="ico"></span>Garage</div><div><span class="ico"></span>Timeline</div><div><span class="ico"></span>Dealer</div><div><span class="ico"></span>Settings</div></nav>
+      </div></div>
+      <div class="note">
+        <b>What it does</b>
+        <ul>
+          <li>Summary before detail: value, balance, equity, then the window sentence, then the cliff list.</li>
+          <li>The window sentence is the product. It always offers the "keep it" alternative with a dollar figure.</li>
+          <li>Equity tile and window banner are Pro. Free users see the cliff list and a locked version of the tile (see screen 6).</li>
+          <li>"I'm at a dealership" is always one tap from home and carries the trade figures into screen 3.</li>
+        </ul>
+        <span class="q">Open: should "Estimated value" show the comps inline, or stay a tap away?</span>
+      </div>
+    </article>
+
+    <!-- 2. TIMELINE -->
+    <article class="frame">
+      <div class="frame-head"><h2>2 · Timeline</h2><span class="tier pro">Pro</span></div>
+      <div class="phone"><div class="screen">
+        <div class="status"><span>9:41</span><span>●●● 78%</span></div>
+        <div class="content">
+          <div class="app-title"><h3>Next 36 months</h3><small>Estimate</small></div>
+          <div class="card">
+            <svg class="chart" id="equityChart" viewBox="0 0 300 170" role="img" aria-label="Estimated value and loan balance over 36 months, crossing at month 4"></svg>
+            <div class="row" style="font-size:12px"><span><span class="dot" style="background:var(--accent)"></span> Estimated value</span><span><span class="dot" style="background:var(--muted)"></span> Loan balance</span></div>
+            <div class="hint">Mid-SUV average curve, re-anchored to your 3 comps on Oct 28. Add an outside offer to tighten it.</div>
+          </div>
+          <div class="card flat" style="gap:12px">
+            <div class="cliff"><div class="when">Mar<small>2027</small></div><div class="what">Equity turns positive<span>About $14,000 value vs $13,600 owing</span></div></div>
+            <div class="cliff"><div class="when">Jun<small>2027</small></div><div class="what">Powertrain warranty ends<span>Buyers and dealers pay for months remaining</span></div></div>
+            <div class="cliff"><div class="when">Aug<small>2027</small></div><div class="what">100,000 km<span>At 1,500 km per month</span></div></div>
+            <div class="cliff"><div class="when">Sep<small>to Dec</small></div><div class="what">AWD demand peaks<span>Seasonal; strongest listing prices for this segment</span></div></div>
+            <div class="cliff"><div class="when">~96k<small>km</small></div><div class="what">Transmission fluid service<span>Typical $350. Sell before, not after.</span></div></div>
+          </div>
+          <button class="btn ghost" type="button">Refresh value from comps</button>
+        </div>
+        <nav class="nav"><div><span class="ico"></span>Garage</div><div class="on"><span class="ico"></span>Timeline</div><div><span class="ico"></span>Dealer</div><div><span class="ico"></span>Settings</div></nav>
+      </div></div>
+      <div class="note">
+        <b>What it does</b>
+        <ul>
+          <li>Two lines, one crossing. Vertical dashed markers are the cliffs. The green dot is the crossover.</li>
+          <li>Every estimate says where it came from. "Mid-SUV average, re-anchored to your comps" is the honest label.</li>
+          <li>The list repeats the chart's events in words, so the chart can be skimmed and the list read.</li>
+        <li>Decided: the chart is Pro. Free users get the cliff list on this screen with the chart area dimmed and a Pro tag.</li>
+        </ul>
+        <span class="q">Open: show the "keep it" cost per year as a third line, or keep it to the sentence on screen 1?</span>
+      </div>
+    </article>
+
+    <!-- 3. DEALER INPUT -->
+    <article class="frame">
+      <div class="frame-head"><h2>3 · At the dealership</h2><span class="tier free">Free</span></div>
+      <div class="phone"><div class="screen">
+        <div class="status"><span>2:17</span><span>●●○ 41%</span></div>
+        <div class="content">
+          <div class="app-title"><h3>What did they say?</h3><small>Live</small></div>
+          <div class="field"><label for="in-payment">Payment</label><input id="in-payment" type="number" inputmode="decimal" value="450"></div>
+          <div class="seg" role="group" aria-label="Payment frequency">
+            <button type="button" data-freq="monthly" aria-pressed="true">Monthly</button>
+            <button type="button" data-freq="biweekly" aria-pressed="false">Bi-weekly</button>
+            <button type="button" data-freq="weekly" aria-pressed="false">Weekly</button>
+          </div>
+          <div class="fields">
+            <div class="field"><label for="in-term">Term (months)</label><input id="in-term" type="number" inputmode="numeric" value="84"></div>
+            <div class="field"><label for="in-apr">Rate % APR</label><input id="in-apr" type="number" inputmode="decimal" step="0.01" value="7.99"></div>
+            <div class="field"><label for="in-down">Down payment</label><input id="in-down" type="number" inputmode="numeric" value="3000"></div>
+            <div class="field"><label for="in-adv">Advertised price</label><input id="in-adv" type="number" inputmode="numeric" value="29995"></div>
+            <div class="field prefilled"><label for="in-trade">Trade allowance</label><input id="in-trade" type="number" inputmode="numeric" value="8000"></div>
+            <div class="field prefilled"><label for="in-payoff">Trade payoff</label><input id="in-payoff" type="number" inputmode="numeric" value="5000"></div>
+          </div>
+          <div class="hint"><span class="pill accent">From your garage</span> payoff and trade benchmark came from the Santa Fe entry. Edit if the dealer's numbers differ.</div>
+          <div class="label">Your benchmarks</div>
+          <div class="fields">
+            <div class="field"><label for="in-bank">Pre-approval % APR</label><input id="in-bank" type="number" inputmode="decimal" step="0.01" value="5.99"></div>
+            <div class="field"><label for="in-offer">Outside trade offer</label><input id="in-offer" type="number" inputmode="numeric" value="9200"></div>
+          </div>
+          <button class="btn primary" type="button">Check the numbers</button>
+        </div>
+        <nav class="nav"><div><span class="ico"></span>Garage</div><div><span class="ico"></span>Timeline</div><div class="on"><span class="ico"></span>Dealer</div><div><span class="ico"></span>Settings</div></nav>
+      </div></div>
+      <div class="note">
+        <b>What it does</b>
+        <ul>
+          <li>Six numbers, big targets, numeric keypad. Designed for one thumb at a desk with someone watching.</li>
+          <li>Frequency is a segmented control, not a dropdown, because "bi-weekly" is the trick and should be one tap to flip.</li>
+          <li>Teal fields are pre-filled from the garage. Without a garage entry they're plain and empty; the decoder still works.</li>
+          <li>Benchmarks are the prep work. Empty benchmarks mean the verdict shows the price gap only.</li>
+        </ul>
+        <span class="q">Open: should "Advertised price" be optional and collapsed by default? Many buyers won't have it handy.</span>
+      </div>
+    </article>
+
+    <!-- 4. VERDICT -->
+    <article class="frame">
+      <div class="frame-head"><h2>4 · Verdict</h2><span class="tier free">Free</span></div>
+      <div class="phone"><div class="screen">
+        <div class="status"><span>2:18</span><span>●●○ 41%</span></div>
+        <div class="content">
+          <div class="verdict-head warn" id="verdictHead"><h4 id="verdictTitle">Numbers don't match</h4><p id="verdictSub">3 gaps over 3% of the deal ($1,046). Ask before you sign.</p></div>
+          <div class="card flat" style="gap:12px">
+            <div class="gap"><div class="stripe warn" id="s-price"></div><div class="t">Price gap<span id="price-sub">Implied all-in vs advertised + HST + licensing</span></div><div class="amt warn" id="g-price">+$1,877</div></div>
+            <div class="gap"><div class="stripe warn" id="s-rate"></div><div class="t">Rate gap<span id="rate-sub">7.99% quoted vs your 5.99% pre-approval, over 84 months</span></div><div class="amt warn" id="g-rate">+$2,371</div></div>
+            <div class="gap"><div class="stripe warn" id="s-trade"></div><div class="t">Trade gap<span id="trade-sub">$8,000 allowance vs your $9,200 outside offer</span></div><div class="amt warn" id="g-trade">−$1,200</div></div>
+          </div>
+          <div class="card">
+            <div class="label">What this deal actually is</div>
+            <div class="kv">
+              <span class="k">Amount financed</span><span class="v" id="o-financed">$28,881</span>
+              <span class="k">Down + net trade equity</span><span class="v" id="o-cash">$6,000</span>
+              <span class="k">Implied all-in price</span><span class="v" id="o-allin">$34,881</span>
+              <span class="k">Total interest</span><span class="v" id="o-interest">$8,919</span>
+              <span class="k total">Total you pay over the term</span><span class="v total" id="o-total">$43,800</span>
+            </div>
+          </div>
+          <div class="label">Ask for</div>
+          <div class="chips"><span class="chip">Itemized bill of sale</span><span class="chip">The buy rate</span><span class="chip">Trade appraisal sheet</span><span class="chip">Same price at 60 months</span></div>
+          <div class="btn-row"><button class="btn quiet" type="button">I need 10 minutes</button><button class="btn primary" type="button">Share</button></div>
+        </div>
+        <nav class="nav"><div><span class="ico"></span>Garage</div><div><span class="ico"></span>Timeline</div><div class="on"><span class="ico"></span>Dealer</div><div><span class="ico"></span>Settings</div></nav>
+      </div></div>
+      <div class="note">
+        <b>What it does</b>
+        <ul>
+          <li>Headline says "match" or "don't match", never "good deal" or "bad deal". The gaps carry the judgement.</li>
+          <li>Three stripes, three dollar figures, each with its comparison spelled out. Nothing out of 100.</li>
+          <li>The breakdown is the number the finance manager can't dispute: it's their own payment reversed.</li>
+          <li>"Ask for" chips are copy-ready scripts. "I need 10 minutes" copies a text to send to a partner.</li>
+        <li>Decided: thresholds scale with the deal. A gap over 3% of implied all-in is amber, over 8% is red. On this $34,881 example that's $1,046 and $2,790. On a $12,000 used car it's $360 and $960, which is still worth asking about.</li>
+        </ul>
+      </div>
+    </article>
+
+    <!-- 5. SHARE -->
+    <article class="frame">
+      <div class="frame-head"><h2>5 · Shared snapshot</h2><span class="tier free">Free</span></div>
+      <div class="phone"><div class="screen">
+        <div class="status"><span>2:19</span><span>Messages</span></div>
+        <div class="content">
+          <div class="msg me">They want $450/mo for 84 months. Thoughts?</div>
+          <div class="share-card">
+            <div class="row"><span class="brand">TRADEPOINT</span><span class="pill warn">Numbers don't match</span></div>
+            <div class="kv">
+              <span class="k">Quoted</span><span class="v">$450 / mo · 84 mo · 7.99%</span>
+              <span class="k">Really paying</span><span class="v" id="sh-allin">$34,881 all-in</span>
+              <span class="k">Advertised + tax</span><span class="v" id="sh-exp">$33,004</span>
+              <span class="k total">Unexplained</span><span class="v total" id="sh-gap">+$1,877</span>
+            </div>
+            <div class="kv">
+              <span class="k">Rate markup costs</span><span class="v" id="sh-rate">$2,371</span>
+              <span class="k">Trade under your offer by</span><span class="v" id="sh-trade">$1,200</span>
+            </div>
+            <div class="hint" style="color:inherit;opacity:.7">Open in TradePoint to edit · tradepoint.app/d/4k9…</div>
+          </div>
+          <div class="msg">Ask them to match the Clutch offer and show you the buy rate. Don't sign today.</div>
+          <div class="msg me">On it.</div>
+          <div class="hint" style="text-align:center">Snapshot is a link with the deal encoded in it. No account, no server.</div>
+        </div>
+        <nav class="nav" style="visibility:hidden"><div></div><div></div><div></div><div></div></nav>
+      </div></div>
+      <div class="note">
+        <b>What it does</b>
+        <ul>
+          <li>This is the growth loop. The partner at home sees the verdict and the four numbers that matter, then taps through to the free web decoder.</li>
+          <li>Card is dark on purpose so it reads as an object inside any chat app, light or dark.</li>
+          <li>Deal state lives in the URL fragment. Nothing to store, nothing to leak.</li>
+        </ul>
+        <span class="q">Open: image card vs link preview. An image survives being forwarded; a link stays editable.</span>
+      </div>
+    </article>
+
+    <!-- 6. PRO -->
+    <article class="frame">
+      <div class="frame-head"><h2>6 · Pro unlock</h2><span class="tier pro">Pro</span></div>
+      <div class="phone"><div class="screen">
+        <div class="status"><span>9:42</span><span>●●● 78%</span></div>
+        <div class="content" style="grid-template-rows: auto auto 1fr">
+          <div class="app-title"><h3>Your car</h3><small>Updated today</small></div>
+          <div class="card locked">
+            <div class="row"><div><div class="label">Estimated value</div><div class="big">$14,200</div></div>
+            <div style="text-align:right"><div class="label">Loan balance</div><div class="big">$15,100</div></div></div>
+            <div class="row"><span class="label">Equity</span><span class="pill bad">−$900</span></div>
+          </div>
+          <div class="sheet">
+            <div class="label">TradePoint Pro</div>
+            <div class="price">$4.99 <small>once. No subscription.</small></div>
+            <div class="includes">
+              <div><span class="tick"></span><span>Equity projection, the 36-month chart and your trade window, updated as you add comps or offers</span></div>
+              <div><span class="tick"></span><span>More than one vehicle</span></div>
+              <div><span class="tick"></span><span>Save deals and compare two dealers side by side</span></div>
+              <div><span class="tick"></span><span>PDF of any deal breakdown</span></div>
+            </div>
+            <div class="hint">The decoder, the cliff list and sharing stay free for everyone. Pro pays for the curve.</div>
+            <button class="btn primary" type="button">Unlock Pro · $4.99</button>
+            <button class="btn quiet" type="button">Not now</button>
+          </div>
+        </div>
+        <nav class="nav"><div class="on"><span class="ico"></span>Garage</div><div><span class="ico"></span>Timeline</div><div><span class="ico"></span>Dealer</div><div><span class="ico"></span>Settings</div></nav>
+      </div></div>
+      <div class="note">
+        <b>What it does</b>
+        <ul>
+          <li>The paywall appears where the value is: tapping the dimmed equity tile. Never on first launch.</li>
+          <li>Price, "once", and what stays free are the three things a hobby app's paywall must say to avoid one-star reviews.</li>
+          <li>Four lines of inclusions, no comparison table.</li>
+        <li>Decided: the 36-month chart is Pro, the cliff list is free.</li>
+        </ul>
+      </div>
+    </article>
+
+  </section>
+</div>
+
+<script>
+(function () {
+  var PER = { monthly: 12, biweekly: 26, weekly: 52 };
+  function pv(p, r, n) { return r === 0 ? p * n : p * (1 - Math.pow(1 + r, -n)) / r; }
+  function pmt(a, r, n) { return r === 0 ? a / n : a * r / (1 - Math.pow(1 + r, -n)); }
+  function money(x, signed) {
+    var s = Math.abs(Math.round(x)).toLocaleString("en-CA");
+    if (signed) return (x < 0 ? "−$" : "+$") + s;
+    return "$" + s;
+  }
+  function num(id) { var v = parseFloat(document.getElementById(id).value); return isNaN(v) ? 0 : v; }
+  var freq = "monthly";
+
+  function compute() {
+    var payment = num("in-payment"), term = num("in-term"), apr = num("in-apr") / 100;
+    var down = num("in-down"), adv = num("in-adv"), trade = num("in-trade"), payoff = num("in-payoff");
+    var bank = num("in-bank") / 100, offer = num("in-offer");
+    var n = Math.round(term * PER[freq] / 12), r = apr / PER[freq];
+    var financed = pv(payment, r, n);
+    var equity = trade - payoff, cash = down + equity;
+    var allIn = financed + cash, total = payment * n + cash, interest = payment * n - financed;
+    var expected = adv + 0.13 * Math.max(0, adv - trade) + 150;
+    var priceGap = adv > 0 ? allIn - expected : 0;
+    var rateGap = bank > 0 ? (payment - pmt(financed, bank / PER[freq], n)) * n : 0;
+    var tradeGap = offer > 0 ? trade - offer : 0;
+
+    set("o-financed", money(financed)); set("o-cash", money(cash)); set("o-allin", money(allIn));
+    set("o-interest", money(interest)); set("o-total", money(total));
+    set("g-price", money(priceGap, true)); set("g-rate", money(rateGap, true)); set("g-trade", money(tradeGap, true));
+    set("rate-sub", (apr * 100).toFixed(2) + "% quoted vs your " + (bank * 100).toFixed(2) + "% pre-approval, over " + term + " months");
+    set("trade-sub", money(trade) + " allowance vs your " + money(offer) + " outside offer");
+    set("sh-allin", money(allIn) + " all-in"); set("sh-exp", money(expected)); set("sh-gap", money(priceGap, true));
+    set("sh-rate", money(Math.max(0, rateGap))); set("sh-trade", money(Math.max(0, -tradeGap)));
+
+    var warnAt = 0.03 * allIn, badAt = 0.08 * allIn;
+    sev("price", priceGap, warnAt, badAt); sev("rate", rateGap, warnAt, badAt); sev("trade", -tradeGap, warnAt, badAt);
+    var worst = Math.max(level(priceGap, warnAt, badAt), level(rateGap, warnAt, badAt), level(-tradeGap, warnAt, badAt));
+    var head = document.getElementById("verdictHead");
+    head.className = "verdict-head " + ["good", "warn", "bad"][worst];
+    var count = [priceGap, rateGap, -tradeGap].filter(function (g) { return g > warnAt; }).length;
+    set("verdictTitle", worst === 0 ? "Numbers match" : worst === 1 ? "Numbers don't match" : "Large gaps");
+    set("verdictSub", worst === 0 ? "Every gap is under 3% of the deal. Still ask for the bill of sale." : count + (count === 1 ? " gap" : " gaps") + " over 3% of the deal (" + money(warnAt) + "). Ask before you sign.");
+  }
+  function level(g, warn, bad) { return g > bad ? 2 : g > warn ? 1 : 0; }
+  function sev(key, g, warn, bad) {
+    var cls = ["good", "warn", "bad"][level(g, warn, bad)];
+    document.getElementById("s-" + key).className = "stripe " + cls;
+    document.getElementById("g-" + key).className = "amt " + cls;
+  }
+  function set(id, text) { document.getElementById(id).textContent = text; }
+
+  document.querySelectorAll(".seg button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      freq = b.getAttribute("data-freq");
+      document.querySelectorAll(".seg button").forEach(function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); });
+      compute();
+    });
+  });
+  document.querySelectorAll(".content input").forEach(function (i) { i.addEventListener("input", compute); });
+  compute();
+
+  // Equity chart: value curve re-anchored at $14,200, mid-SUV 1.1%/mo; loan $15,100 at 4.49%, 30 months left.
+  var svg = document.getElementById("equityChart");
+  var W = 300, H = 170, L = 34, R = 8, T = 14, B = 26, months = 36;
+  var yMax = 18000;
+  function x(m) { return L + (W - L - R) * m / months; }
+  function y(v) { return T + (H - T - B) * (1 - v / yMax); }
+  var val = [], loan = [], cross = -1;
+  var bal = 15100, rr = 0.0449 / 12, left = 30, p = pmt(bal, rr, left);
+  for (var m = 0; m <= months; m++) {
+    var v = 14200 * Math.pow(1 - 0.011, m);
+    var l = m >= left ? 0 : bal * Math.pow(1 + rr, m) - p * (Math.pow(1 + rr, m) - 1) / rr;
+    val.push([m, v]); loan.push([m, l]);
+    if (cross < 0 && v >= l) cross = m;
+  }
+  function path(pts) { return pts.map(function (q, i) { return (i ? "L" : "M") + x(q[0]).toFixed(1) + " " + y(q[1]).toFixed(1); }).join(" "); }
+  var out = "";
+  [0, 6000, 12000, 18000].forEach(function (g) {
+    out += '<line class="grid" x1="' + L + '" x2="' + (W - R) + '" y1="' + y(g) + '" y2="' + y(g) + '"/>';
+    out += '<text x="' + (L - 4) + '" y="' + (y(g) + 3) + '" text-anchor="end">' + (g ? "$" + (g / 1000) + "k" : "$0") + '</text>';
+  });
+  out += '<path class="area" d="' + path(val) + ' L' + x(months) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + ' Z"/>';
+  var markers = [[7, "Warranty"], [9, "100k km"]];
+  markers.forEach(function (mk) {
+    out += '<line class="marker" x1="' + x(mk[0]) + '" x2="' + x(mk[0]) + '" y1="' + T + '" y2="' + y(0) + '"/>';
+    out += '<text class="mk-lbl" x="' + (x(mk[0]) + 3) + '" y="' + (T + 8) + '">' + mk[1] + '</text>';
+  });
+  out += '<path class="value" d="' + path(val) + '"/><path class="loan" d="' + path(loan) + '"/>';
+  if (cross >= 0) {
+    out += '<circle class="cross" cx="' + x(cross) + '" cy="' + y(val[cross][1]) + '" r="4.5"/>';
+    out += '<text class="cross-lbl" x="' + (x(cross) - 6) + '" y="' + (y(val[cross][1]) + 16) + '" text-anchor="end">Positive equity</text>';
+  }
+  var labels = [[0, "Nov 26"], [12, "Nov 27"], [24, "Nov 28"], [36, "Nov 29"]];
+  labels.forEach(function (lb) {
+    out += '<text x="' + x(lb[0]) + '" y="' + (H - 8) + '" text-anchor="' + (lb[0] === 0 ? "start" : lb[0] === 36 ? "end" : "middle") + '">' + lb[1] + '</text>';
+  });
+  svg.innerHTML = out;
+})();
+</script>
