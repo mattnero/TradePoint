@@ -141,6 +141,20 @@ a real quote before continuing; fix what hurt.
   wrapped in try/catch, migration stub.
 - Done when: a vehicle survives reload and a deliberately broken stored blob falls
   back to an empty garage without crashing.
+- **Status 2026-11-02: done.** Checked in Chrome: vehicle survives reload; a broken blob
+  gives an empty garage and the original is copied to `tradepoint.garage.backup` before
+  anything can overwrite it; blocked `localStorage` falls back to memory without errors.
+  Layout: `src/model/dates.ts` (ISO date helpers, whole-month counting), `loan.ts` (two
+  shapes: `terms` and `snapshot`; balance derived at any date, never projected backwards),
+  `vehicle.ts` (`createVehicle`, `addOdometerReading`, `kmPerMonth`, `parseVehicle`),
+  `src/store/garage.ts` (pure load/save/migrate, injectable storage) and
+  `garage.svelte.ts` (reactive `garageStore`; nothing imports it yet, Session 9 will).
+  Choices: `kmPerMonth` is null when the last two readings are under 14 days apart
+  (short spans extrapolate wildly); a reading on an existing date replaces it; the loan
+  assumes monthly payments; `deals` is an opaque array until Phase 1 defines it; one
+  vehicle is a UI rule, the store holds an array. Next sessions: the `Vehicle` has no
+  benchmarks or value anchors yet (Sessions 10 and 11 add them, with a migration only
+  if existing fields change).
 
 ### Session 7 · Reference data
 - `src/data/warranty.json`: make → comprehensive and powertrain terms (years, km) for
