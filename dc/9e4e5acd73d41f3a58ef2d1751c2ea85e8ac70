@@ -1,0 +1,61 @@
+src/screens/Timeline.svelte
+  s_5924c5434f5e41::t_cbbfa9b8698259 4-11
+  s_5924c5434f5e41::t_f6792bb08e8478 1-3
+src/BottomNav.svelte
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-62
+index.html
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-20
+src/screens/Dealer.svelte
+  s_5924c5434f5e41::t_f6792bb08e8478 1-3
+  s_5924c5434f5e41::t_cbbfa9b8698259 4-11
+src/router/parse.ts
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-30
+src/screens/Garage.svelte
+  s_5924c5434f5e41::t_cbbfa9b8698259 4-11
+  s_5924c5434f5e41::t_f6792bb08e8478 1-3
+vite.config.ts
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-7
+src/screens/Settings.svelte
+  s_5924c5434f5e41::t_cbbfa9b8698259 4-11
+  s_5924c5434f5e41::t_f6792bb08e8478 1-3
+src/main.ts
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-5
+tests/route.test.ts
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-32
+src/screens/Verdict.svelte
+  s_5924c5434f5e41::t_f6792bb08e8478 1-3
+  s_5924c5434f5e41::t_cbbfa9b8698259 4-11
+package.json
+  s_5924c5434f5e41::t_cbbfa9b8698259 10-13
+  s_5924c5434f5e41::t_c917f1fba6365b 17-21
+src/router/router.svelte.ts
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-13
+svelte.config.js
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-5
+src/styles/tokens.css
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-43
+tsconfig.json
+  s_5924c5434f5e41::t_cbbfa9b8698259 9-10,12-13,15
+src/App.svelte
+  s_5924c5434f5e41::t_cbbfa9b8698259 1-47
+.github/workflows/ci.yml
+  s_5924c5434f5e41::t_cdd1dfd01e0299 1-40
+package-lock.json
+  s_5924c5434f5e41::t_d7901f8d2b8ebb 12-16,20-41,340-390,392-394,459-481,492-501,512-547,558-564,572-596,650-659,921-927,938-947,986,1030-1043,1078-1090,1108-1169,1208-1210,1214-1215,1218,1299-1318,1414-1420
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "dc9e4e5acd73d41f3a58ef2d1751c2ea85e8ac70",
+  "prompts": {},
+  "sessions": {
+    "s_5924c5434f5e41": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cdb72cd-20ac-4f31-a7e2-630070744025",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
