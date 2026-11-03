@@ -1,0 +1,57 @@
+tests/decoder.test.ts
+  s_5924c5434f5e41::t_4af7787b7b4ac3 1,97-113
+  s_5924c5434f5e41::t_0d3bc98fa06ee6 114
+tests/vehicle.test.ts
+  s_5924c5434f5e41::t_4af7787b7b4ac3 146,154-158,177-180
+src/screens/Dealer.svelte
+  s_5924c5434f5e41::t_f3576888038d5d 3,7,67-72,75-82,85-96
+src/model/vehicle.ts
+  s_5924c5434f5e41::t_9a31d1212aa80d 5,29,105-119,155-159
+src/decoder/Field.svelte
+  s_5924c5434f5e41::t_f3576888038d5d 8,15,19,64-66
+  s_5924c5434f5e41::t_1492756fd25c86 67-68
+src/screens/Garage.svelte
+  s_5924c5434f5e41::t_f3576888038d5d 16,33-37,116-118
+src/decoder/fromGarage.ts
+  s_5924c5434f5e41::t_9a31d1212aa80d 1-32
+src/garage/VehicleSetup.svelte
+  s_5924c5434f5e41::t_f88c8eb31a56bc 2,30-32
+  s_5924c5434f5e41::t_f3576888038d5d 10-12,33-34,93-106,193-205
+  s_5924c5434f5e41::t_e6d6fb2e8292a1 206
+src/share/codec.ts
+  s_5924c5434f5e41::t_9a31d1212aa80d 4,53
+src/model/money.ts
+  s_5924c5434f5e41::t_9a31d1212aa80d 49-54
+src/garage/inputs.ts
+  s_5924c5434f5e41::t_9a31d1212aa80d 3,73-92
+src/decoder/state.svelte.ts
+  s_5924c5434f5e41::t_f3576888038d5d 1-3,8-9,13-26
+tests/money.test.ts
+  s_5924c5434f5e41::t_4af7787b7b4ac3 1,75-92
+  s_5924c5434f5e41::t_749cb7081c7e3c 93
+src/decoder/inputs.ts
+  s_5924c5434f5e41::t_9a31d1212aa80d 48-51
+tests/fromGarage.test.ts
+  s_5924c5434f5e41::t_4af7787b7b4ac3 1-99
+tests/garageInputs.test.ts
+  s_5924c5434f5e41::t_4af7787b7b4ac3 4,94-128
+  s_5924c5434f5e41::t_cd39d17e86e548 129
+PLAN.md
+  s_5924c5434f5e41::t_c85036cd478471 259-273
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "05aaf773bc4dc1ed44900311973a3ce2833f7314",
+  "prompts": {},
+  "sessions": {
+    "s_5924c5434f5e41": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cdb72cd-20ac-4f31-a7e2-630070744025",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
