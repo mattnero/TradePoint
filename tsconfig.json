@@ -6,8 +6,11 @@
     "strict": true,
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
+    "verbatimModuleSyntax": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
-    "types": ["vitest/globals"]
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vitest/globals", "svelte", "vite/client"]
   },
-  "include": ["src", "tests"]
+  "include": ["src/**/*.ts", "src/**/*.svelte", "tests", "vite.config.ts", "vitest.config.ts"]
 }
