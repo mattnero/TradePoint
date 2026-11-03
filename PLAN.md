@@ -27,6 +27,13 @@ comes first. Mockups: `docs/mockups/tradepoint-mockups.html`.
 No backend. No accounts. If a feature needs a server, it waits for Phase 2 and gets a
 written reason.
 
+## Model per session
+
+Sonnet by default. Use Opus for sessions 2, 7, 8 and 11 (verdict model, warranty data,
+cliff engine, depreciation/equity): edge-case heavy, and wrong answers there look
+right. If a session on Sonnet turns into a judgment call about product behaviour,
+switch rather than guess. Fable is not needed for this project.
+
 ## Working rules
 
 - Math and model code is written test-first. UI code is checked by using it.
