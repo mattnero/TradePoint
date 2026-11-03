@@ -143,11 +143,17 @@ describe("parseVehicle", () => {
       { date: "2025-07-01", km: 51000 },
     ],
     loan: { kind: "terms", principal: cents(2888100), apr: 0.0799, termMonths: 84, startDate: "2019-03-15" },
+    benchmarks: { preApprovalApr: 0.0599, outsideTradeOffer: cents(920000) },
   };
 
   it("round-trips through JSON", () => {
     expect(parseVehicle(JSON.parse(JSON.stringify(full)))).toEqual(full);
     expect(parseVehicle(JSON.parse(JSON.stringify(santaFe())))).toEqual(santaFe());
+  });
+
+  it("keeps a benchmark that holds only one of the two values", () => {
+    const only = { ...santaFe(), benchmarks: { outsideTradeOffer: cents(920000) } };
+    expect(parseVehicle(JSON.parse(JSON.stringify(only)))).toEqual(only);
   });
 
   it.each([
@@ -168,6 +174,10 @@ describe("parseVehicle", () => {
     ["odometer going down", { ...full, odometer: [{ date: "2025-01-01", km: 9 }, { date: "2025-07-01", km: 5 }] }],
     ["odometer out of order", { ...full, odometer: [{ date: "2025-07-01", km: 9 }, { date: "2025-01-01", km: 5 }] }],
     ["bad loan", { ...full, loan: { kind: "terms" } }],
+    ["benchmarks not an object", { ...full, benchmarks: 5 }],
+    ["pre-approval rate over 100%", { ...full, benchmarks: { preApprovalApr: 1.5 } }],
+    ["fractional outside offer", { ...full, benchmarks: { outsideTradeOffer: 1.5 } }],
+    ["negative outside offer", { ...full, benchmarks: { outsideTradeOffer: -1 } }],
   ])("rejects %s", (_name, value) => {
     expect(parseVehicle(value)).toBeNull();
   });

@@ -46,3 +46,9 @@ export function parseMoneyInput(input: string): Cents | null {
   const total = Number(whole || "0") * 100 + Math.round(Number(`0.${fraction || "0"}`) * 100);
   return Number.isSafeInteger(total) ? cents(total) : null;
 }
+
+export function formatInputMoney(amount: Cents): string {
+  const dollars = Math.floor(amount / 100);
+  const remainder = amount % 100;
+  return remainder === 0 ? String(dollars) : `${dollars}.${String(remainder).padStart(2, "0")}`;
+}

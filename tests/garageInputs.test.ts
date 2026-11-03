@@ -1,6 +1,7 @@
 import {
   readInServiceDate,
   readKm,
+  readBenchmarks,
   readLoanSnapshot,
   readNewVehicle,
   type NewVehicleForm,
@@ -88,5 +89,41 @@ describe("readLoanSnapshot", () => {
     ["fractional months", { balance: "15000", apr: "4.49", monthsLeft: "2.5" }, "Enter the months left, 1 or more."],
   ])("explains a bad %s", (_name, f, error) => {
     expect(readLoanSnapshot(f, TODAY)).toEqual({ ok: false, error });
+  });
+});
+
+describe("readBenchmarks", () => {
+  it("reads both", () => {
+    expect(readBenchmarks({ preApprovalApr: "5.99", outsideOffer: "9,200" })).toEqual({
+      ok: true,
+      value: { preApprovalApr: 0.0599, outsideTradeOffer: cents(920000) },
+    });
+  });
+
+  it("reads either alone, and blank means cleared", () => {
+    expect(readBenchmarks({ preApprovalApr: "5.99", outsideOffer: "" })).toEqual({ ok: true, value: { preApprovalApr: 0.0599 } });
+    expect(readBenchmarks({ preApprovalApr: "", outsideOffer: "9200" })).toEqual({
+      ok: true,
+      value: { outsideTradeOffer: cents(920000) },
+    });
+    expect(readBenchmarks({ preApprovalApr: " ", outsideOffer: "" })).toEqual({ ok: true, value: {} });
+  });
+
+  it("accepts a zero offer and a 0% rate", () => {
+    expect(readBenchmarks({ preApprovalApr: "0", outsideOffer: "0" })).toEqual({
+      ok: true,
+      value: { preApprovalApr: 0, outsideTradeOffer: cents(0) },
+    });
+  });
+
+  it("explains a bad entry instead of dropping it", () => {
+    expect(readBenchmarks({ preApprovalApr: "five", outsideOffer: "" })).toEqual({
+      ok: false,
+      error: "Enter the pre-approval rate, like 5.99.",
+    });
+    expect(readBenchmarks({ preApprovalApr: "", outsideOffer: "lots" })).toEqual({
+      ok: false,
+      error: "Enter the outside offer in dollars, like 9200.",
+    });
   });
 });

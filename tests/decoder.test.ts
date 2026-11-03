@@ -1,4 +1,4 @@
-import { emptyDecoder, parsePercentInput, readDecoder, type DecoderInputs } from "../src/decoder/inputs";
+import { emptyDecoder, formatPercentInput, parsePercentInput, readDecoder, type DecoderInputs } from "../src/decoder/inputs";
 import { dealFigures } from "../src/model/deal";
 
 const workedExample: DecoderInputs = {
@@ -92,5 +92,23 @@ describe("readDecoder", () => {
 
   it("carries the quoted frequency", () => {
     expect(readDecoder({ ...workedExample, frequency: "biweekly" }).quote?.frequency).toBe("biweekly");
+  });
+});
+
+describe("formatPercentInput", () => {
+  it.each([
+    [0.0599, "5.99"],
+    [0.0449, "4.49"],
+    [0, "0"],
+    [0.06249, "6.249"],
+    [0.07, "7"],
+  ])("writes %d as %s", (rate, text) => {
+    expect(formatPercentInput(rate)).toBe(text);
+  });
+
+  it("round-trips through parsePercentInput", () => {
+    for (const rate of [0.0599, 0.0449, 0.0799, 0.06249, 0]) {
+      expect(parsePercentInput(formatPercentInput(rate))).toBeCloseTo(rate, 10);
+    }
   });
 });

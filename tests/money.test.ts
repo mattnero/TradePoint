@@ -1,4 +1,4 @@
-import { cents, formatCAD, fromDollars, parseMoneyInput, toDollars } from "../src/model/money";
+import { cents, formatCAD, formatInputMoney, fromDollars, parseMoneyInput, toDollars } from "../src/model/money";
 
 describe("cents", () => {
   it("accepts whole numbers", () => {
@@ -71,4 +71,23 @@ describe("parseMoneyInput", () => {
       expect(parseMoneyInput(input)).toBeNull();
     },
   );
+});
+
+describe("formatInputMoney", () => {
+  it("drops the cents when there are none", () => {
+    expect(formatInputMoney(cents(920000))).toBe("9200");
+    expect(formatInputMoney(cents(0))).toBe("0");
+  });
+
+  it("keeps two digits of cents otherwise", () => {
+    expect(formatInputMoney(cents(1221381))).toBe("12213.81");
+    expect(formatInputMoney(cents(20850))).toBe("208.50");
+    expect(formatInputMoney(cents(5))).toBe("0.05");
+  });
+
+  it("parses back to the same amount", () => {
+    for (const c of [0, 5, 20850, 1221381, 920000]) {
+      expect(parseMoneyInput(formatInputMoney(cents(c)))).toBe(c);
+    }
+  });
 });

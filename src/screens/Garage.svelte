@@ -13,6 +13,7 @@
   import { cliffsFor } from "../model/cliffs";
   import { todayIso } from "../model/dates";
   import { kmPerMonth, latestReading, type Vehicle } from "../model/vehicle";
+  import { applyGarage } from "../decoder/state.svelte";
   import { garageStore } from "../store/garage.svelte";
 
   const today = todayIso();
@@ -27,6 +28,11 @@
 
   function save(next: Vehicle) {
     garageStore.update((g) => ({ ...g, vehicles: [next] }));
+  }
+
+  function startDealerVisit(v: Vehicle) {
+    applyGarage(v, today);
+    window.location.hash = "#dealer";
   }
 
   function remove() {
@@ -107,7 +113,9 @@
       </p>
     {/if}
 
-    <a class="btn primary" href="#dealer">I'm at a dealership</a>
+    <button class="btn primary" type="button" onclick={() => startDealerVisit(vehicle)}>
+      I'm at a dealership
+    </button>
 
     <VehicleSetup {vehicle} onchange={save} onremove={remove} />
   </div>

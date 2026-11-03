@@ -1,5 +1,6 @@
 import { isIsoDate, type IsoDate } from "../model/dates";
 import type { Loan } from "../model/loan";
+import type { Benchmarks } from "../model/verdict";
 import { parseMoneyInput } from "../model/money";
 import type { NewVehicle } from "../model/vehicle";
 import { parsePercentInput } from "../decoder/inputs";
@@ -68,4 +69,24 @@ export function readLoanSnapshot(form: LoanForm, today: IsoDate): Result<Loan> {
   const months = readCount(form.monthsLeft);
   if (months === null || months < 1) return { ok: false, error: "Enter the months left, 1 or more." };
   return { ok: true, value: { kind: "snapshot", balance, apr, monthsRemaining: months, asOf: today } };
+}
+
+export interface BenchmarksForm {
+  preApprovalApr: string;
+  outsideOffer: string;
+}
+
+export function readBenchmarks(form: BenchmarksForm): Result<Benchmarks> {
+  const value: Benchmarks = {};
+  if (form.preApprovalApr.trim() !== "") {
+    const apr = parsePercentInput(form.preApprovalApr);
+    if (apr === null) return { ok: false, error: "Enter the pre-approval rate, like 5.99." };
+    value.preApprovalApr = apr;
+  }
+  if (form.outsideOffer.trim() !== "") {
+    const offer = parseMoneyInput(form.outsideOffer);
+    if (offer === null) return { ok: false, error: "Enter the outside offer in dollars, like 9200." };
+    value.outsideTradeOffer = offer;
+  }
+  return { ok: true, value };
 }

@@ -1,7 +1,26 @@
+import type { IsoDate } from "../model/dates";
+import type { Vehicle } from "../model/vehicle";
+import { garageDecoderValues, GARAGE_FIELDS, mergeGarageValues, type GarageField, type GarageValues } from "./fromGarage";
 import { emptyDecoder, readDecoder } from "./inputs";
 
 export const decoder = $state(emptyDecoder());
 
+let garageValues = $state<GarageValues>({});
+
 export function currentReading() {
   return readDecoder(decoder);
+}
+
+export function applyGarage(vehicle: Vehicle, today: IsoDate): void {
+  const next = garageDecoderValues(vehicle, today);
+  Object.assign(decoder, mergeGarageValues(decoder, garageValues, next));
+  garageValues = next;
+}
+
+export function isFromGarage(field: GarageField): boolean {
+  return decoder[field] !== "" && decoder[field] === garageValues[field];
+}
+
+export function anyFromGarage(): boolean {
+  return GARAGE_FIELDS.some(isFromGarage);
 }

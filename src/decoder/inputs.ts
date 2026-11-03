@@ -45,6 +45,10 @@ export function parsePercentInput(input: string): number | null {
   return percent > 100 ? null : percent / 100;
 }
 
+export function formatPercentInput(rate: number): string {
+  return String(Math.round(rate * 100 * 10_000) / 10_000);
+}
+
 function parseTerm(input: string): number | null {
   const cleaned = input.trim();
   if (!/^\d+$/.test(cleaned)) return null;

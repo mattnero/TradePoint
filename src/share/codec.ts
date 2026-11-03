@@ -1,6 +1,7 @@
 import { readDecoder, type DecoderInputs } from "../decoder/inputs";
 import type { PaymentFrequency } from "../math/loan";
 import type { DealQuote } from "../model/deal";
+import { cents, formatInputMoney } from "../model/money";
 import type { Benchmarks } from "../model/verdict";
 
 const VERSION = 1;
@@ -49,9 +50,7 @@ function isOptionalCount(value: unknown): value is Slot {
 }
 
 function moneyText(amount: number): string {
-  const dollars = Math.floor(amount / 100);
-  const remainder = amount % 100;
-  return remainder === 0 ? String(dollars) : `${dollars}.${String(remainder).padStart(2, "0")}`;
+  return formatInputMoney(cents(amount));
 }
 
 function percentText(slot: number): string {

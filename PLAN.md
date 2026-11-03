@@ -256,6 +256,21 @@ a real quote before continuing; fix what hurt.
 - Benchmarks (pre-approval rate, outside offer) live on the vehicle and pre-fill too.
 - Done when: a garage with a loan opens the decoder with payoff filled and a verdict
   that includes the trade gap.
+- **Status 2026-11-03: done.** Checked in Chrome at 375px: a garage with a loan and
+  benchmarks opens the decoder with payoff, pre-approval rate and outside offer filled and
+  teal; typing the dealer's quote gives the worked-example verdict with all three gaps.
+  **Deviation from the plan text: trade allowance is NOT pre-filled.** The allowance is the
+  dealer's number; filling it from our own estimate would zero the trade gap silently if
+  the user forgot to change it. Revisit in Session 11 as a visible "your estimate: $X"
+  hint beside the field (not a value in it). Payoff is the modelled loan balance today and
+  the screen says to prefer the lender's figure.
+  Rules: tapping "I'm at a dealership" fills only blank fields, or fields still holding the
+  garage's earlier value; anything the user typed is kept. Teal shows only while the
+  field equals the garage value, so editing it turns the teal off. Benchmarks live on
+  `Vehicle.benchmarks` (`preApprovalApr`, `outsideTradeOffer`), edited in the garage's
+  "Your benchmarks" card; `parseVehicle` validates them, no migration needed (optional).
+  Code: `src/decoder/fromGarage.ts` (pure, tested), `applyGarage` in
+  `src/decoder/state.svelte.ts`.
 
 ### Session 11 · Depreciation and equity projection
 - `src/model/value.ts`: segment curve anchored to purchase price, then re-anchored

@@ -1,9 +1,10 @@
 <script lang="ts">
   import Field from "../decoder/Field.svelte";
-  import { currentReading, decoder } from "../decoder/state.svelte";
+  import { anyFromGarage, currentReading, decoder, isFromGarage } from "../decoder/state.svelte";
   import { monthlyEquivalent, type PaymentFrequency } from "../math/loan";
   import { dealFigures } from "../model/deal";
   import { formatCAD, fromDollars, toDollars } from "../model/money";
+  import { garageStore } from "../store/garage.svelte";
 
   const frequencies: { value: PaymentFrequency; label: string }[] = [
     { value: "monthly", label: "Monthly" },
@@ -63,13 +64,36 @@
     <Field id="in-down" label="Down payment" bind:value={decoder.down} />
     <Field id="in-adv" label="Advertised price (optional)" bind:value={decoder.advertised} />
     <Field id="in-trade" label="Trade allowance" bind:value={decoder.tradeAllowance} />
-    <Field id="in-payoff" label="Trade payoff" bind:value={decoder.tradePayoff} />
+    <Field
+      id="in-payoff"
+      label="Trade payoff"
+      prefilled={isFromGarage("tradePayoff")}
+      bind:value={decoder.tradePayoff}
+    />
   </div>
+
+  {#if anyFromGarage() && garageStore.vehicle}
+    <p class="hint">
+      <span class="pill">From your garage</span>
+      Filled in from your {garageStore.vehicle.make} {garageStore.vehicle.model}. The payoff is worked out
+      from your loan, so use your lender's figure if you have it. Edit anything the dealer's numbers change.
+    </p>
+  {/if}
 
   <span class="label">Your benchmarks</span>
   <div class="fields">
-    <Field id="in-bank" label="Pre-approval % APR" bind:value={decoder.preApprovalApr} />
-    <Field id="in-offer" label="Outside trade offer" bind:value={decoder.outsideOffer} />
+    <Field
+      id="in-bank"
+      label="Pre-approval % APR"
+      prefilled={isFromGarage("preApprovalApr")}
+      bind:value={decoder.preApprovalApr}
+    />
+    <Field
+      id="in-offer"
+      label="Outside trade offer"
+      prefilled={isFromGarage("outsideOffer")}
+      bind:value={decoder.outsideOffer}
+    />
   </div>
   <p class="hint">Leave benchmarks empty and the verdict shows the price gap only.</p>
 

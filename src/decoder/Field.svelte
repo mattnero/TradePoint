@@ -5,16 +5,18 @@
     value = $bindable(),
     mode = "decimal",
     hint,
+    prefilled = false,
   }: {
     id: string;
     label: string;
     value: string;
     mode?: "decimal" | "numeric";
     hint?: string;
+    prefilled?: boolean;
   } = $props();
 </script>
 
-<div class="field">
+<div class="field" class:prefilled>
   <label for={id}>{label}</label>
   <input
     {id}
@@ -57,6 +59,11 @@
     color: var(--ink);
     width: 100%;
     min-width: 0;
+  }
+
+  .prefilled input {
+    border-color: var(--accent);
+    background: var(--accent-soft);
   }
 
   input:focus-visible {
