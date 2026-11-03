@@ -1,0 +1,29 @@
+src/decoder/Field.svelte
+  s_5924c5434f5e41::t_bf5d77bd0e25c1 1-71
+src/screens/Dealer.svelte
+  s_5924c5434f5e41::t_bf5d77bd0e25c1 2-24,27-79,82-188,190
+tests/decoder.test.ts
+  s_5924c5434f5e41::t_3de1400ca06779 1-96
+src/decoder/state.svelte.ts
+  s_5924c5434f5e41::t_3de1400ca06779 1-7
+src/decoder/inputs.ts
+  s_5924c5434f5e41::t_3de1400ca06779 1-86
+PLAN.md
+  s_5924c5434f5e41::t_1e200e72b1f77d 96-102
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "177390f0ae849bcaff21723a0c65b978cdb71a51",
+  "prompts": {},
+  "sessions": {
+    "s_5924c5434f5e41": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cdb72cd-20ac-4f31-a7e2-630070744025",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
