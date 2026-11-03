@@ -1,0 +1,39 @@
+tests/vehicle.test.ts
+  s_5924c5434f5e41::t_6dcb18c8849847 1-170
+tests/garage.test.ts
+  s_5924c5434f5e41::t_6dcb18c8849847 1-146
+tests/loanModel.test.ts
+  s_5924c5434f5e41::t_6dcb18c8849847 1-99
+src/store/garage.ts
+  s_5924c5434f5e41::t_56c5b58072b306 1-78,87-98,100-110
+  s_5924c5434f5e41::t_7a786fac1f5d61 79-86,99
+src/model/dates.ts
+  s_5924c5434f5e41::t_56c5b58072b306 1-32
+src/model/loan.ts
+  s_5924c5434f5e41::t_56c5b58072b306 1-86
+tests/dates.test.ts
+  s_5924c5434f5e41::t_6dcb18c8849847 1-44
+src/model/vehicle.ts
+  s_5924c5434f5e41::t_56c5b58072b306 1-128
+src/store/garage.svelte.ts
+  s_5924c5434f5e41::t_4fab8e00b6a17a 40
+  s_5924c5434f5e41::t_7a786fac1f5d61 1-39,41-42
+PLAN.md
+  s_5924c5434f5e41::t_5a2fb04e0e98f0 144-157
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9b8fd02dad7fde8572d5777f5496f5d5ab8c851a",
+  "prompts": {},
+  "sessions": {
+    "s_5924c5434f5e41": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cdb72cd-20ac-4f31-a7e2-630070744025",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
