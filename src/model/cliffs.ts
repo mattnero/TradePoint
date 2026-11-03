@@ -66,7 +66,13 @@ interface CoverageEnd {
   limitedBy: WarrantyLimit;
 }
 
-function coverageEnd(coverage: Coverage, terms: CoverageTerms, inService: IsoDate, odo: Odometer): CoverageEnd {
+function coverageEnd(
+  coverage: Coverage,
+  terms: CoverageTerms,
+  inService: IsoDate,
+  odo: Odometer,
+  asOf: IsoDate,
+): CoverageEnd {
   const byDate = addYears(inService, terms.years);
   if (terms.km === null) return { coverage, terms, date: byDate, limitedBy: "date" };
   const byKm = dateAtKm(odo, terms.km);
@@ -75,7 +81,11 @@ function coverageEnd(coverage: Coverage, terms: CoverageTerms, inService: IsoDat
       ? { coverage, terms, date: byKm, limitedBy: "km" }
       : { coverage, terms, date: byDate, limitedBy: "date" };
   }
-  if (odo.reading.km >= terms.km) return { coverage, terms, date: null, limitedBy: "km" };
+  if (odo.reading.km >= terms.km) {
+    return byDate <= asOf
+      ? { coverage, terms, date: byDate, limitedBy: "date" }
+      : { coverage, terms, date: null, limitedBy: "km" };
+  }
   const parked = odo.perDay !== null && odo.perDay <= 0;
   return { coverage, terms, date: byDate, limitedBy: parked ? "date" : "date-or-km" };
 }
@@ -91,7 +101,7 @@ function warrantyCliffs(vehicle: Vehicle, odo: Odometer, asOf: IsoDate, report: 
     return [];
   }
   const inService = vehicle.inServiceDate;
-  const ends = COVERAGES.map((c) => coverageEnd(c, status[c], inService, odo));
+  const ends = COVERAGES.map((c) => coverageEnd(c, status[c], inService, odo, asOf));
   const groups = new Map<string, CoverageEnd[]>();
   for (const end of ends) {
     const key = `${end.date}|${end.limitedBy}`;

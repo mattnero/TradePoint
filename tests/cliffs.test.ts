@@ -163,6 +163,15 @@ describe("warranty edge cases", () => {
     ]);
   });
 
+  it("names the date, not the km, when a single reading is over the limit and the date has also passed", () => {
+    const old = { ...base, inServiceDate: "2019-04-01", odometer: [{ date: "2026-11-02", km: 118000 }] };
+    const report = cliffsFor({ vehicle: old, asOf: AS_OF });
+    expect(report.past.filter((p) => p.kind === "warranty")).toEqual([
+      { kind: "warranty", date: "2022-04-01", coverages: ["comprehensive"], limitedBy: "date" },
+      { kind: "warranty", date: "2024-04-01", coverages: ["powertrain"], limitedBy: "date" },
+    ]);
+  });
+
   it("reports a km-limited warranty as past when the odometer is already over the limit", () => {
     const over = { ...base, odometer: [{ date: "2026-11-02", km: 61000 }] };
     const report = cliffsFor({ vehicle: over, asOf: AS_OF });

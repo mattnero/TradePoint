@@ -21,6 +21,7 @@ export interface Vehicle {
   trim?: string;
   segment?: SegmentKey;
   inServiceDate?: IsoDate;
+  inServiceEstimated?: boolean;
   purchase?: Purchase;
   odometer: OdometerReading[];
   loan?: Loan;
@@ -124,6 +125,10 @@ export function parseVehicle(value: unknown): Vehicle | null {
   if (v.inServiceDate !== undefined) {
     if (!isIsoDate(v.inServiceDate)) return null;
     vehicle.inServiceDate = v.inServiceDate;
+  }
+  if (v.inServiceEstimated !== undefined) {
+    if (typeof v.inServiceEstimated !== "boolean") return null;
+    vehicle.inServiceEstimated = v.inServiceEstimated;
   }
   if (v.purchase !== undefined) {
     const p = v.purchase as Record<string, unknown> | null;

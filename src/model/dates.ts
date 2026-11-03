@@ -67,3 +67,11 @@ export function monthOf(date: IsoDate): { year: number; month: number } {
   const [year, month] = parts(date);
   return { year, month };
 }
+
+export function toIsoDate(date: Date): IsoDate {
+  return format(date.getFullYear(), date.getMonth() + 1, date.getDate());
+}
+
+export function todayIso(): IsoDate {
+  return toIsoDate(new Date());
+}

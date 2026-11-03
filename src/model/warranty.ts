@@ -68,3 +68,7 @@ export function warrantyFor(
     notes: row.notes,
   };
 }
+
+export function knownMakes(): string[] {
+  return Object.keys(TABLE).sort();
+}

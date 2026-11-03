@@ -226,6 +226,28 @@ a real quote before continuing; fix what hurt.
 - Equity tile present but dimmed with a Pro tag (no paywall yet; a stub).
 - Done when: Matt's real Santa Fe is in the garage with correct odometer and
   warranty state.
+- **Status 2026-11-03: built, waiting on Matt's real figures.** Everything works end to
+  end in Chrome at 375px using a stand-in 2019 Santa Fe (add, estimate and set in-service
+  date, segment, loan, odometer update, reload, remove). The last "done when" step is
+  Matt entering his own car at https://mattnero.github.io/TradePoint/#garage: year 2019,
+  Hyundai, Santa Fe, current km, and the real in-service date (the app shows "Estimated"
+  until he does). Nothing from the stand-in was saved to the repo.
+  Built: onboarding form (`AddVehicleForm`), vehicle card with km/month, dimmed Pro
+  value tile (stub), next-cliffs list, "Already behind you" list, `VehicleSetup`
+  (odometer update, in-service date with "estimate from model year" flagged Estimated via
+  new `Vehicle.inServiceEstimated`, vehicle type, optional loan snapshot, remove). Copy is
+  in `src/model/cliffCopy.ts`, form parsing in `src/garage/inputs.ts`, both tested.
+  Shared button/card/pill classes live in `src/styles/base.css`; Dealer and Verdict still
+  carry their own copies (fold in during the Session 14 polish pass).
+  Decisions: window banner (Pro) and equity row wait for Sessions 11-12 (no value model
+  yet, so `cliffsFor` runs without `valueAt`); purchase price/date not asked yet (Session 11
+  needs it for the depreciation anchor); one car only, replaced by "Remove this car";
+  a same-day odometer entry corrects the earlier one rather than erroring; a second
+  reading on a later day is what gives km/month. Transmission fluid "due around" is the
+  next multiple of 96,000 km above the odometer, so a car past 96,000 km shows 192,000;
+  it cannot know whether the 96,000 km service was done.
+  Engine bug found by real use and fixed with a test: a single reading over the km limit
+  with the date limit also passed now reports "ended <date>", not "km, date unknown".
 
 ### Session 10 · Garage → decoder handoff
 - "I'm at a dealership" pre-fills trade payoff from the loan and trade allowance
