@@ -1,0 +1,233 @@
+{
+  "Toyota": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.toyota.ca/en/owners/warranty-and-coverage/new-vehicle/",
+    "quote": "Every Toyota vehicle is supported by a 36-month/60,000 km limited warranty coverage. ... 36 MONTHS / 60,000 km* Basic | 60 Months / 100,000 km* Powertrain Warranty (*Whichever comes first)",
+    "verifiedOn": "2026-11-02",
+    "notes": "BEV components and EV battery 8 yr / 160,000 km. Lexus is a separate make, not covered here."
+  },
+  "Ford": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.ford.ca/trucks/f150-lightning/ev-charging/",
+    "quote": "Bumper-to-Bumper Coverage: 3 years/60,000 kilometres ... Powertrain Coverage: 5 years/100,000 kilometres",
+    "verifiedOn": "2026-11-02",
+    "notes": "Cross-checked against Ford of Canada 2025 MY Warranty Guide (Ford cars and trucks except F-650/750) on fordservicecontent.com. Diesel unique powertrain 5 yr / 160,000 km. Hybrid/EV unique components 8 yr / 160,000 km. Some fleet trucks get 5 yr / 160,000 km powertrain."
+  },
+  "Honda": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.honda.ca/en/honda-plus/standard-warranty",
+    "quote": "Power Train Warranty | Five years or 100,000 Km, whichever occurs first. ... Distributor's Warranty | Three Years or 60,000 Km, whichever occurs first.",
+    "verifiedOn": "2026-11-02",
+    "notes": "Honda calls basic coverage the Distributor's Warranty; both measured from the warranty registration date. Honda's '5 Year/100,000 km' marketing is the powertrain term, not comprehensive. Hybrid system 8 yr / 160,000 km. Acura is a separate make."
+  },
+  "Hyundai": {
+    "comprehensive": {
+      "years": 5,
+      "km": 100000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.hyundaicanada.com/en/shopping-tools/warranty-marketing",
+    "quote": "Hyundai Canada offers New Vehicle Limited Warranty coverage for 5 years or 100,000 km. Hyundai's Powertrain Warranty covers the engine and transaxle for 5 years or 100,000 km, whichever occurs first.",
+    "verifiedOn": "2026-11-02",
+    "notes": "Transfers to later owners at no charge. Hybrid, PHEV and EV systems 8 yr / 160,000 km."
+  },
+  "Chevrolet": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [
+      "Chevy"
+    ],
+    "source": "https://www.chevrolet.ca/content/dam/chevrolet/na/canada/english/index/warranty/02-pdfs/2026-warranty/26_MUL_Canadian_WM_en_CA_U_19680743B_CA_2025OCT02_2P-EN.pdf",
+    "quote": "The Base Warranty coverage for Chevrolet, Buick, and GMC is for 3 years or 60,000 kilometres, whichever comes first ... Gasoline and Diesel powertrain components are covered for 5 years or 100,000 kilometres, whichever comes first.",
+    "verifiedOn": "2026-11-02",
+    "notes": "2026 MY booklet. TurboMax and 3.0L/6.6L Duramax: 5 yr / 160,000 km powertrain. EVs have no powertrain row; propulsion battery 8 yr / 160,000 km."
+  },
+  "GMC": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.gmccanada.ca/content/dam/gmc/na/ca/en/index/warranty/02-pdfs/25_MUL_Canadian_WM_en_CA_U_18453867A_CA_2024FEB22_English.pdf",
+    "quote": "The Base Warranty coverage for Chevrolet, Buick, and GMC is for 3 years or 60,000 kilometres, whichever comes first ... Gasoline and Diesel powertrain components are covered for 5 years or 100,000 kilometres, whichever comes first.",
+    "verifiedOn": "2026-11-02",
+    "notes": "2025 MY booklet linked from gmccanada.ca; 2026 GM Canada booklet has identical wording. TurboMax and Duramax: 5 yr / 160,000 km powertrain. EVs: no powertrain row; battery 8 yr / 160,000 km."
+  },
+  "Kia": {
+    "comprehensive": {
+      "years": 5,
+      "km": 100000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.kia.ca/en/owners/kia-ownership/warranty",
+    "quote": "5-year/100,000 km - Worry-free comprehensive warranty covering virtually the entire vehicle. 5-year/100,000 km - Powertrain Warranty covering the engine, transmission, axles, differentials and driveshafts.",
+    "verifiedOn": "2026-11-02",
+    "notes": "Hybrid, PHEV and EV components 8 yr / 150,000 km; high-voltage battery 8 yr / 160,000 km."
+  },
+  "Nissan": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.nissan.ca/content/dam/Nissan/Canada/owners/warranties/2025-Nissan-EN-NCI-WIB-2nd.pdf",
+    "quote": "The duration of POWERTRAIN Warranty is 60 months or 100,000 kilometres (whichever comes first). ... 36 months/60,000 kilometres Basic Warranty",
+    "verifiedOn": "2026-11-02",
+    "notes": "2025 MY all-models booklet; 2024 booklet matches. A nissan.ca FAQ says 36 months/50,000 km but looks stale. GT-R and LEAF have their own booklets, not checked."
+  },
+  "Mazda": {
+    "comprehensive": {
+      "years": 3,
+      "km": null
+    },
+    "powertrain": {
+      "years": 5,
+      "km": null
+    },
+    "aliases": [],
+    "source": "https://www.mazda.ca/globalassets/mazda-canada/en/pdf/warranty/2025-warranty-details-e.pdf",
+    "quote": "The New Vehicle Limited Warranty period is 36 months (unlimited distance). ... Basic 36 Unlimited Distance ... Powertrain 60 Unlimited Distance",
+    "verifiedOn": "2026-11-02",
+    "notes": "km null means unlimited distance. Commercial-use or exported vehicles fall back to Basic 36 months / 80,000 km and Powertrain 60 months / 100,000 km. Standard on 2015 and later."
+  },
+  "Ram": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [
+      "Dodge Ram"
+    ],
+    "source": "https://www.ramtruck.ca/en/mopar/protection",
+    "quote": "Basic Warranty coverage is for 3 years or 60,000 kilometres (Whichever comes first. Some conditions may apply). ... a 5-year or 100,000-kilometre fully transferable Powertrain Limited Warranty (Whichever comes first. Some conditions may apply)",
+    "verifiedOn": "2026-11-02",
+    "notes": "2026 Ram 1500/2500/3500/Chassis Cab/ProMaster bought retail: 10 yr / 160,000 km powertrain, not transferable (except QC, NS, SK) and not for fleet; this row keeps the transferable 5/100 because resale is what matters here. Cummins diesel 5 yr / 160,000 km. SRT 3 yr / 60,000 km powertrain."
+  },
+  "Jeep": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.jeep.ca/en/mopar/protection",
+    "quote": "Basic Warranty coverage is for 3 years or 60,000 kilometres (Whichever comes first. Some conditions may apply). ... Most 2022, 2023, 2024, 2025, 2026 and 2027 Chrysler, Jeep, Dodge, Ram and FIAT vehicles are backed by a 5-year or 100,000-kilometre fully transferable Powertrain Limited Warranty",
+    "verifiedOn": "2026-11-02",
+    "notes": "Model years 2022 to 2027 ('most'). 4xe hybrid battery 8 yr / 160,000 km. SRT 3 yr / 60,000 km powertrain."
+  },
+  "Subaru": {
+    "comprehensive": {
+      "years": 3,
+      "km": 60000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [],
+    "source": "https://www.subaru.ca/warranty",
+    "quote": "Subaru New Vehicle Limited Warranty (36-month / 60,000-km) ... Subaru Major Component Warranty (60-month / 100,000-km) When the Subaru New Vehicle Limited Warranty expires, major components will continue to be covered up to a total of 60 months from the date of initial registration or 100,000 km, whichever comes first.",
+    "verifiedOn": "2026-11-02",
+    "notes": "Subaru calls powertrain the Major Component Warranty. Transfers to later owners who register with Subaru Canada. EV battery and drive unit 8 yr / 160,000 km."
+  },
+  "Volkswagen": {
+    "comprehensive": {
+      "years": 4,
+      "km": 80000
+    },
+    "powertrain": {
+      "years": 5,
+      "km": 100000
+    },
+    "aliases": [
+      "VW"
+    ],
+    "source": "https://www.vw.ca/en/owners-and-drivers/warranties-and-coverage.html",
+    "quote": "New-vehicle warranty for 2018–2026 models 4-year / 80,000 km New Vehicle Limited Warranty ... Powertrain 5-year / 100,000 km Powertrain Limited Warranty",
+    "verifiedOn": "2026-11-02",
+    "notes": "Model years 2018 to 2026; 2017 and older: owner's manual. Wear items covered first 12 months / 20,000 km only. ID. Buzz high-voltage system 8 yr / 160,000 km."
+  },
+  "BMW": {
+    "comprehensive": {
+      "years": 4,
+      "km": 80000
+    },
+    "powertrain": {
+      "years": 4,
+      "km": 80000
+    },
+    "aliases": [],
+    "source": "https://www.bmw.ca/en/topics/owners/parts_service_warranty/warranties.html",
+    "quote": "The warranty period is up to 4 years or 80,000 kilometres, whichever occurs first, and begins on the date of first retail sale, or the date the vehicle is placed in service as a demonstrator or company vehicle, whichever is earlier.",
+    "verifiedOn": "2026-11-02",
+    "notes": "No separate powertrain warranty; the powertrain is under the 4 yr / 80,000 km New Vehicle Limited Warranty, so both rows match. Latest-generation EV high-voltage battery 8 yr / 160,000 km."
+  },
+  "Mitsubishi": {
+    "comprehensive": {
+      "years": 5,
+      "km": 100000
+    },
+    "powertrain": {
+      "years": 10,
+      "km": 160000
+    },
+    "aliases": [],
+    "source": "https://www.mitsubishi-motors.ca/en/owners/warranty",
+    "quote": "5-YEAR/100,000 KM NEW VEHICLE LIMITED WARRANTY ... 10-YEAR/160,000 KM POWERTRAIN LIMITED WARRANTY ... In Canada, the warranty follows the vehicle and does not need to be transferred.",
+    "verifiedOn": "2026-11-02",
+    "notes": "Page is client-rendered; read in a real browser. Warranty follows the vehicle to later owners in Canada. Lithium-ion battery 10 yr / 160,000 km."
+  }
+}

@@ -1,4 +1,4 @@
-import { daysBetween, isIsoDate, wholeMonthsBetween } from "../src/model/dates";
+import { addYears, daysBetween, isIsoDate, wholeMonthsBetween } from "../src/model/dates";
 
 describe("isIsoDate", () => {
   it.each(["2026-11-02", "2024-02-29", "1999-12-31"])("accepts %s", (s) => {
@@ -40,5 +40,16 @@ describe("wholeMonthsBetween", () => {
     ["2024-01-15", "2023-12-01", 0],
   ])("%s to %s is %i", (from, to, expected) => {
     expect(wholeMonthsBetween(from, to)).toBe(expected);
+  });
+});
+
+describe("addYears", () => {
+  it("moves the year and keeps the day", () => {
+    expect(addYears("2022-06-15", 5)).toBe("2027-06-15");
+  });
+
+  it("lands a leap day on Feb 28 in a common year", () => {
+    expect(addYears("2024-02-29", 5)).toBe("2029-02-28");
+    expect(addYears("2024-02-29", 4)).toBe("2028-02-29");
   });
 });

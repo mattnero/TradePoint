@@ -1,3 +1,5 @@
+import provinces from "../data/provinces.json";
+
 export type Province = "ON";
 
 export interface TaxRule {
@@ -7,7 +9,11 @@ export interface TaxRule {
 }
 
 export const TAX_RULES: Record<Province, TaxRule> = {
-  ON: { rate: 0.13, tradeInReducesBase: true, licensingEstimate: 150 },
+  ON: {
+    rate: provinces.ON.taxRate,
+    tradeInReducesBase: provinces.ON.tradeInReducesBase,
+    licensingEstimate: provinces.ON.licensingEstimateCents / 100,
+  },
 };
 
 export function salesTax(price: number, tradeAllowance: number, province: Province): number {

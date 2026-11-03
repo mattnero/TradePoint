@@ -1,0 +1,62 @@
+{
+  "compact-car": {
+    "label": "Compact car",
+    "rough": true,
+    "firstYearDrop": 0.2,
+    "monthlyRate": 0.011,
+    "lateMonthlyRate": 0.006,
+    "flattensAfterMonths": 72,
+    "season": null,
+    "maintenance": [{ "item": "Transmission fluid service", "km": 96000, "typicalCostCents": 35000 }]
+  },
+  "mid-suv": {
+    "label": "Mid-size SUV",
+    "rough": true,
+    "firstYearDrop": 0.2,
+    "monthlyRate": 0.011,
+    "lateMonthlyRate": 0.006,
+    "flattensAfterMonths": 72,
+    "season": { "startMonth": 9, "endMonth": 12, "reason": "AWD demand peaks" },
+    "maintenance": [{ "item": "Transmission fluid service", "km": 96000, "typicalCostCents": 35000 }]
+  },
+  "pickup": {
+    "label": "Pickup truck",
+    "rough": true,
+    "firstYearDrop": 0.18,
+    "monthlyRate": 0.01,
+    "lateMonthlyRate": 0.005,
+    "flattensAfterMonths": 72,
+    "season": { "startMonth": 9, "endMonth": 12, "reason": "4x4 demand peaks" },
+    "maintenance": [{ "item": "Transmission fluid service", "km": 96000, "typicalCostCents": 35000 }]
+  },
+  "minivan": {
+    "label": "Minivan",
+    "rough": true,
+    "firstYearDrop": 0.22,
+    "monthlyRate": 0.012,
+    "lateMonthlyRate": 0.006,
+    "flattensAfterMonths": 72,
+    "season": null,
+    "maintenance": [{ "item": "Transmission fluid service", "km": 96000, "typicalCostCents": 35000 }]
+  },
+  "luxury": {
+    "label": "Luxury",
+    "rough": true,
+    "firstYearDrop": 0.25,
+    "monthlyRate": 0.013,
+    "lateMonthlyRate": 0.007,
+    "flattensAfterMonths": 72,
+    "season": null,
+    "maintenance": [{ "item": "Transmission fluid service", "km": 96000, "typicalCostCents": 45000 }]
+  },
+  "ev": {
+    "label": "Electric",
+    "rough": true,
+    "firstYearDrop": 0.28,
+    "monthlyRate": 0.014,
+    "lateMonthlyRate": 0.008,
+    "flattensAfterMonths": 72,
+    "season": null,
+    "maintenance": []
+  }
+}

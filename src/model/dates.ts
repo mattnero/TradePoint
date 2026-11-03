@@ -30,3 +30,10 @@ export function wholeMonthsBetween(from: IsoDate, to: IsoDate): number {
   const anniversary = Math.min(fd, daysInMonth(ty, tm));
   return (ty - fy) * 12 + (tm - fm) - (td < anniversary ? 1 : 0);
 }
+
+export function addYears(date: IsoDate, years: number): IsoDate {
+  const [y, m, d] = parts(date);
+  const year = y + years;
+  const day = Math.min(d, daysInMonth(year, m));
+  return `${year}-${String(m).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+}

@@ -167,6 +167,30 @@ a real quote before continuing; fix what hurt.
   re-anchored by user values.
 - Done when: `warrantyFor("Hyundai", inServiceDate, km)` returns the right expiry for
   the example car.
+- **Status 2026-11-02: done.** `warrantyFor(make, inServiceDate, km, asOf)` (asOf added so
+  it stays pure) returns per-coverage `endsOn`, `kmRemaining` and `expired: "date" | "km" |
+  null`; mockup 2022 Santa Fe (in service 2022-06-15, 86,800 km) gives powertrain to
+  2027-06-15 with 13,200 km left. Unknown make returns null; never guess.
+  Warranty rows: Toyota, Ford, Honda, Hyundai, Chevrolet, GMC, Kia, Nissan, Mazda, Ram,
+  Jeep, Subaru, Volkswagen, BMW, Mitsubishi. **Tesla dropped**: tesla.com/en_ca returns 403
+  to curl, WebFetch and headless Chrome, and the only document reachable is a 2017-18 PDF;
+  add it only after reading the en_ca warranty page in a real browser. Every row has a
+  verbatim quote and a Canadian manufacturer source; Toyota, Mazda, Ram, Jeep were
+  re-checked against raw page text. `km: null` means unlimited distance (Mazda).
+  Caveats for Session 8: terms are current model-year terms (VW states 2018-2026, Jeep
+  2022-2027); older cars may differ, so the UI should say "current terms". Ram's 2026
+  retail-only 10 yr / 160,000 km powertrain is in notes, not the row. Diesel, EV and
+  hybrid exceptions are in notes, not modelled.
+  `provinces.json` now drives `TAX_RULES` (licensing stored in cents, converted at the
+  math edge). The $150 licensing estimate is above ServiceOntario's $32 permit plus
+  plates; kept because it errs toward fewer false price-gap alarms.
+  `segments.json`: six segments, all `rough: true`, mid-SUV matches the mockup (1.1%/mo,
+  Sep-Dec AWD season, transmission fluid at 96,000 km for $350). Added
+  `lateMonthlyRate` and `flattensAfterMonths` (72) for the spec's year-6 flattening;
+  Session 11 decides how the curve uses them. Only one maintenance item per segment
+  (transmission fluid); more need sources.
+  Open for Session 9: `warrantyFor` needs an in-service date; onboarding only asks for
+  year/make/model + km first, so Session 9 must ask for it or estimate it and label it.
 
 ### Session 8 · Cliff engine
 - `src/model/cliffs.ts`: given vehicle + loan + value anchors, return dated events:

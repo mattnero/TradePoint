@@ -1,0 +1,20 @@
+{
+  "ON": {
+    "name": "Ontario",
+    "taxRate": 0.13,
+    "tradeInReducesBase": true,
+    "licensingEstimateCents": 15000,
+    "sources": [
+      {
+        "fact": "HST 13% on a dealer sale; trade-in credit reduces the taxable amount (worked Ontario example)",
+        "url": "https://www.canada.ca/en/revenue-agency/services/forms-publications/publications/b-084r/notice-change-b-084-treatment-used-goods.html",
+        "verifiedOn": "2026-11-02"
+      },
+      {
+        "fact": "ServiceOntario vehicle permit $32, licence plates $15 to $300; licensingEstimate is a rounded-up allowance for permit, plates and dealer registration handling",
+        "url": "https://www.ontario.ca/page/driver-and-vehicle-fees",
+        "verifiedOn": "2026-11-02"
+      }
+    ]
+  }
+}
