@@ -1,0 +1,23 @@
+{
+  "name": "Workshop worked example (docs 03), 2026-11-02",
+  "inputs": {
+    "payment": 450,
+    "frequency": "monthly",
+    "termMonths": 84,
+    "apr": 0.0799,
+    "downPayment": 3000,
+    "tradeAllowance": 8000,
+    "tradePayoff": 5000,
+    "province": "ON",
+    "advertisedPrice": 29995
+  },
+  "expected": {
+    "amountFinanced": 28881,
+    "netTradeEquity": 3000,
+    "impliedAllIn": 34881,
+    "totalPaid": 43800,
+    "totalInterest": 8919,
+    "expectedAllIn": 33004,
+    "unexplainedGap": 1877
+  }
+}
