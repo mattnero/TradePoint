@@ -68,10 +68,8 @@ Picked so Phase 0 isn't blocked. Reverse any of them later.
 - GitHub Actions: `npm ci && npm run typecheck && npm test` on push; deploy `dist/`
   to GitHub Pages on `main`.
 - Done when: the empty shell is live at `mattnero.github.io/TradePoint` and CI is green.
-- **Status 2026-11-02: code and CI done, live deploy blocked.** `check` job is green. The
-  `deploy` job fails because GitHub Pages is unavailable for a private repo on the free
-  plan. Needs Matt's call: make the repo public, or host on Cloudflare Pages. Deploy
-  config (`base: "/TradePoint/"`, `.github/workflows/ci.yml`) is already in place.
+- **Status 2026-11-02: done.** Repo made public (Pages needs it on the free plan); shell
+  live at https://mattnero.github.io/TradePoint/ and CI green.
 
 ### Session 2 · Money, rates and the verdict model
 - `src/model/money.ts`: cents type, `formatCAD`, `parseMoneyInput`.
