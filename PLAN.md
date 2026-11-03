@@ -120,6 +120,14 @@ Picked so Phase 0 isn't blocked. Reverse any of them later.
 - Opening `#d=<code>` lands on the verdict with inputs restored and an "Edit" path
   back to the decoder.
 - Done when: a link pasted into another browser shows the same verdict.
+- **Status 2026-11-02: done.** Verified on the production build with two separate browser
+  contexts: identical verdict, Edit restores every field, damaged or truncated codes show
+  "This link doesn't open". Format v1 is a JSON array base64url'd (116 chars for the worked
+  example): `[1, paymentCents, freqIndex, term, apr×100000, down, allowance, payoff,
+  advertised|null, preApprApr|null, offer|null]`. Province is implicit ON; bump the version
+  to add one. Decoding re-validates through `readDecoder`, so nothing invalid reaches the
+  screen. Share uses the native share sheet when present (cancel is silent), else copies
+  the link. Viewing a shared deal does not touch the local decoder state until Edit.
 
 **Checkpoint after session 5: the decoder is usable for the van purchase.** Use it on
 a real quote before continuing; fix what hurt.

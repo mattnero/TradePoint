@@ -1,6 +1,9 @@
 <script lang="ts">
-  import { currentReading } from "../decoder/state.svelte";
+  import { currentReading, decoder } from "../decoder/state.svelte";
+  import { readDecoder } from "../decoder/inputs";
   import { formatCAD } from "../model/money";
+  import { router } from "../router/router.svelte";
+  import { decodeShare, encodeShare } from "../share/codec";
   import { headline, verdict, type VerdictLevel } from "../model/verdict";
   import { askFor, gapRows, subtitle, tenMinutesText } from "../model/verdictCopy";
 
@@ -10,7 +13,10 @@
     large: "bad",
   };
 
-  const reading = $derived(currentReading());
+  const code = $derived(router.route.name === "verdict" ? router.route.code : null);
+  const shared = $derived(code === null ? null : decodeShare(code));
+  const brokenLink = $derived(code !== null && shared === null);
+  const reading = $derived(shared ? readDecoder(shared) : currentReading());
   const result = $derived(reading.quote ? verdict(reading.quote, reading.benchmarks) : null);
   const rows = $derived(
     reading.quote && result ? gapRows(reading.quote, reading.benchmarks, result) : [],
@@ -18,25 +24,58 @@
   const chips = $derived(reading.quote && result ? askFor(reading.quote, result) : []);
   const message = $derived(reading.quote && result ? tenMinutesText(reading.quote, result) : "");
 
-  let copyState = $state<"idle" | "copied" | "refused">("idle");
+  let notice = $state("");
+  let fallbackText = $state<string | null>(null);
   let fallback = $state<HTMLTextAreaElement>();
 
-  async function copyMessage() {
+  async function copy(text: string, success: string) {
     try {
-      await navigator.clipboard.writeText(message);
-      copyState = "copied";
+      await navigator.clipboard.writeText(text);
+      notice = success;
+      fallbackText = null;
     } catch {
-      copyState = "refused";
+      notice = "Copying was refused. The text is selected below; copy it by hand.";
+      fallbackText = text;
       queueMicrotask(() => {
         fallback?.focus();
         fallback?.select();
       });
     }
   }
+
+  function copyMessage() {
+    return copy(message, "Copied. Paste it to whoever is helping you decide.");
+  }
+
+  async function share() {
+    if (!reading.quote) return;
+    const url = `${location.origin}${location.pathname}#d=${encodeShare(reading.quote, reading.benchmarks)}`;
+    if (typeof navigator.share === "function") {
+      try {
+        await navigator.share({ title: "TradePoint deal check", url });
+        return;
+      } catch (error) {
+        if (error instanceof DOMException && error.name === "AbortError") return;
+      }
+    }
+    await copy(url, "Link copied. Opening it shows this same verdict.");
+  }
+
+  function edit() {
+    if (shared) Object.assign(decoder, shared);
+    window.location.hash = "#dealer";
+  }
 </script>
 
 <div class="stack">
-{#if result && reading.quote}
+{#if brokenLink}
+  <h1>This link doesn't open</h1>
+  <p class="empty">It looks cut off or damaged. Ask for it again, or enter the quote yourself.</p>
+  <a class="btn primary" href="#dealer">Go to the decoder</a>
+{:else if result && reading.quote}
+  {#if shared}
+    <p class="shared">Shared deal. These numbers come from the link.</p>
+  {/if}
   <div class="head {tone[result.level]}">
     <h1>{headline(result.level)}</h1>
     <p>{subtitle(result)}</p>
@@ -81,20 +120,15 @@
   </div>
 
   <div class="actions">
-    <a class="btn quiet" href="#dealer">Edit</a>
-    <button class="btn primary" type="button" onclick={copyMessage}>I need 10 minutes</button>
+    <button class="btn quiet" type="button" onclick={edit}>Edit</button>
+    <button class="btn quiet" type="button" onclick={copyMessage}>I need 10 minutes</button>
+    <button class="btn primary wide" type="button" onclick={share}>Share</button>
   </div>
 
-  <div aria-live="polite" class="copy-status">
-    {#if copyState === "copied"}
-      Copied. Paste it to whoever is helping you decide.
-    {:else if copyState === "refused"}
-      Copying was refused. The text is selected below; copy it by hand.
-    {/if}
-  </div>
+  <div aria-live="polite" class="copy-status">{notice}</div>
 
-  {#if copyState === "refused"}
-    <textarea bind:this={fallback} readonly rows="6" aria-label="Message to copy" value={message}
+  {#if fallbackText !== null}
+    <textarea bind:this={fallback} readonly rows="6" aria-label="Text to copy" value={fallbackText}
     ></textarea>
   {/if}
 {:else}
@@ -253,6 +287,16 @@
     display: grid;
     grid-template-columns: 1fr 2fr;
     gap: 8px;
+  }
+
+  .actions .wide {
+    grid-column: 1 / -1;
+  }
+
+  .shared {
+    margin: 0;
+    font-size: 12px;
+    color: var(--muted);
   }
 
   .btn {
