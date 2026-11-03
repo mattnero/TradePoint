@@ -106,6 +106,13 @@ Picked so Phase 0 isn't blocked. Reverse any of them later.
 - "I need 10 minutes" copies a short text to the clipboard (with a fallback that
   selects the text when clipboard is refused).
 - Done when: the worked example renders amber with the three gaps from the mockup.
+- **Status 2026-11-02: done.** Checked in headless Chrome at 375px: worked example renders
+  amber with +$1,877 / +$2,371 / −$1,200, clipboard copy works, and a refused clipboard
+  selects a fallback textarea. Copy lives in `src/model/verdictCopy.ts` (tested). Ask-for
+  chips: bill of sale always; buy rate / trade appraisal only when that gap is flagged;
+  "Same price at 60 months" when term > 60. No Share button yet; Session 5 adds it next to
+  "I need 10 minutes". The screen reads `currentReading()` from the decoder state, so
+  Session 5 should load a decoded `#d=` code into `decoder` before rendering.
 
 ### Session 5 · Share link
 - `src/share/codec.ts`: encode the deal inputs into a compact URL-safe string
