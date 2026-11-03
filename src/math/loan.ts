@@ -43,6 +43,12 @@ export function totalInterest(q: LoanQuote): number {
   return totalOfPayments(q) - amountFinanced(q);
 }
 
+export function rateGap(q: LoanQuote, benchmarkApr: number): number {
+  const n = periodCount(q.termMonths, q.frequency);
+  const atBenchmark = paymentFor(amountFinanced(q), periodicRate(benchmarkApr, q.frequency), n);
+  return (q.payment - atBenchmark) * n;
+}
+
 export function monthlyEquivalent(payment: number, frequency: PaymentFrequency): number {
   return (payment * PERIODS_PER_YEAR[frequency]) / 12;
 }

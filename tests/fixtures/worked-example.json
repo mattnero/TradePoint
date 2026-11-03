@@ -19,5 +19,9 @@
     "totalInterest": 8919,
     "expectedAllIn": 33004,
     "unexplainedGap": 1877
+  },
+  "benchmarks": {
+    "preApprovalApr": 0.0599,
+    "outsideTradeOffer": 9200
   }
 }

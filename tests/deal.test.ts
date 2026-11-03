@@ -1,5 +1,5 @@
 import { decodeDeal, type DealInputs } from "../src/math/deal";
-import { amountFinanced, monthlyEquivalent, paymentFor, periodicRate } from "../src/math/loan";
+import { amountFinanced, monthlyEquivalent, paymentFor, periodicRate, rateGap } from "../src/math/loan";
 import fixture from "./fixtures/worked-example.json";
 
 const inputs = fixture.inputs as DealInputs;
@@ -14,9 +14,12 @@ describe("worked example from workshop doc 03", () => {
   });
 
   it("rate markup of 2 points costs about $2,371 over the term", () => {
-    const financed = amountFinanced(inputs);
-    const atBankRate = paymentFor(financed, periodicRate(0.0599, "monthly"), 84);
-    expect(Math.round((inputs.payment - atBankRate) * 84)).toBe(2371);
+    expect(Math.round(rateGap(inputs, 0.0599))).toBe(2371);
+  });
+
+  it("rate gap is zero at the quoted rate and negative below a cheaper dealer rate", () => {
+    expect(rateGap(inputs, inputs.apr)).toBeCloseTo(0, 6);
+    expect(rateGap(inputs, 0.0899)).toBeLessThan(0);
   });
 
   it("same principal at 60 months is $585.46 and $6,247 interest", () => {

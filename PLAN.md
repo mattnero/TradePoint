@@ -79,6 +79,13 @@ Picked so Phase 0 isn't blocked. Reverse any of them later.
   truck) to prove the thresholds scale.
 - Done when: `verdict(workedExample)` returns three "ask" gaps with the numbers in
   docs 03.
+- **Status 2026-11-02: done.** `verdict(quote: DealQuote, benchmarks)` takes the cents-based
+  quote, not a `DealBreakdown`, because the rate gap needs payment, term and frequency.
+  `src/model/deal.ts` holds `DealQuote` (cents) and `dealFigures` (wraps the dollar math,
+  returns cents). Gap sign: price/rate positive = costs the buyer; trade = allowance −
+  offer, negative = costs the buyer. Gaps in the buyer's favour are always "match".
+  Thresholds compared in integer basis points, strict `>`. `rateGap` added to
+  `src/math/loan.ts`. Worked-example benchmarks (5.99%, $9,200 offer) are in the fixture.
 
 ### Session 3 · Decoder screen
 - Six inputs + frequency segmented control + optional advertised price, as mocked.
