@@ -1,0 +1,26 @@
+src/screens/Verdict.svelte
+  s_5924c5434f5e41::t_0b1a6c08e47c56 2-3,5-6,16-19,27-28,31,33-35,37-38,45-67,71-78,123-125,128,130-131,292-300
+  s_5924c5434f5e41::t_ff0fb8b42ff36d 301
+src/share/codec.ts
+  s_5924c5434f5e41::t_9fd755d7372d87 1-94
+tests/codec.test.ts
+  s_5924c5434f5e41::t_9fd755d7372d87 1-130
+PLAN.md
+  s_5924c5434f5e41::t_1a2c6dca4ecfde 123-130
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "002d435dbb70be8cf6c26580e53b8310c8648083",
+  "prompts": {},
+  "sessions": {
+    "s_5924c5434f5e41": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "5cdb72cd-20ac-4f31-a7e2-630070744025",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
