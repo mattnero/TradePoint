@@ -1,0 +1,41 @@
+.gitignore
+  s_c773a4b86741f1::t_5430dbc73d9f77 1-4
+LICENSE
+  s_c773a4b86741f1::t_576c55d99c6127 1-21
+README.md
+  s_c773a4b86741f1::t_8690bf9c65b0a9 1-30
+package-lock.json
+  s_c773a4b86741f1::t_d7bfecb16afff1 1-1497
+package.json
+  s_c773a4b86741f1::t_b5dbd633af89a0 1-17
+src/math/deal.ts
+  s_c773a4b86741f1::t_c57d8c1885b780 1-38
+src/math/loan.ts
+  s_c773a4b86741f1::t_490dc55b6ae76c 1-55
+src/math/tax.ts
+  s_c773a4b86741f1::t_f51c3d45947f96 1-21
+tests/deal.test.ts
+  s_c773a4b86741f1::t_da6fb7ae17242d 1-52
+tests/fixtures/worked-example.json
+  s_c773a4b86741f1::t_ec2da9dfee8431 1-23
+tsconfig.json
+  s_c773a4b86741f1::t_1b907088196c05 1-13
+vitest.config.ts
+  s_c773a4b86741f1::t_ce857750b3c1ba 1-5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9e3bd64f15c2968378e59101bce8df64abe06c7d",
+  "prompts": {},
+  "sessions": {
+    "s_c773a4b86741f1": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "498250e7-ee8b-4c2d-bcc4-5bcd69bd6f32",
+        "model": "claude-fable-5.1"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
