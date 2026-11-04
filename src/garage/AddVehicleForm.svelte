@@ -41,8 +41,8 @@
         {/each}
       </datalist>
     </div>
-    <Field id="v-model" label="Model" bind:value={model} />
-    <Field id="v-trim" label="Trim (optional)" bind:value={trim} />
+    <Field id="v-model" label="Model" mode="text" capitalize="words" bind:value={model} />
+    <Field id="v-trim" label="Trim (optional)" mode="text" capitalize="words" bind:value={trim} />
   </div>
   <Field id="v-km" label="Odometer (km)" mode="numeric" bind:value={km} />
 

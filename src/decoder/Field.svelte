@@ -4,6 +4,7 @@
     label,
     value = $bindable(),
     mode = "decimal",
+    capitalize = "off",
     hint,
     error,
     prefilled = false,
@@ -11,7 +12,8 @@
     id: string;
     label: string;
     value: string;
-    mode?: "decimal" | "numeric";
+    mode?: "decimal" | "numeric" | "text";
+    capitalize?: "off" | "words" | "characters";
     hint?: string;
     error?: string | undefined;
     prefilled?: boolean;
@@ -25,7 +27,7 @@
     type="text"
     inputmode={mode}
     autocomplete="off"
-    autocapitalize="off"
+    autocapitalize={capitalize}
     spellcheck="false"
     enterkeyhint="next"
     aria-invalid={error !== undefined}

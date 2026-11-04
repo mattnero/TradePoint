@@ -75,7 +75,7 @@
         Same model year and about your kilometres. Your postal code only goes into the link you tap.
       </p>
       <div class="fields">
-        <Field id="r-postal" label="Postal code (optional)" bind:value={postalCode} />
+        <Field id="r-postal" label="Postal code (optional)" mode="text" capitalize="characters" bind:value={postalCode} />
         <div class="field">
           <label for="r-radius">Radius</label>
           <select id="r-radius" bind:value={radiusKm}>
