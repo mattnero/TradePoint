@@ -1,0 +1,62 @@
+tests/equity.test.ts
+  s_68991ad4a82c3c::t_c8cab69b4f9df8 1,90-95
+  s_68991ad4a82c3c::t_cb50261a493b58 113
+  s_68991ad4a82c3c::t_139acfe1639acf 78-79
+  s_68991ad4a82c3c::t_25af40c53d0b0d 2-77,80-89,96-112,114-121
+src/model/value.ts
+  s_68991ad4a82c3c::t_261eb54e652ab1 1-37,40-70
+  s_68991ad4a82c3c::t_ad3652790d9f91 38-39
+src/garage/inputs.ts
+  s_68991ad4a82c3c::t_5904ecc45383b8 5,74-85
+  s_68991ad4a82c3c::t_6c681bd0bc4fe4 86
+src/model/valueCopy.ts
+  s_68991ad4a82c3c::t_5904ecc45383b8 1-22
+src/model/dates.ts
+  s_68991ad4a82c3c::t_eae8e3bd639a86 4
+PLAN.md
+  s_68991ad4a82c3c::t_992c6c55b25270 282-311
+tests/valueCopy.test.ts
+  s_68991ad4a82c3c::t_24ec35c7e0e267 1-32
+src/model/equity.ts
+  s_68991ad4a82c3c::t_c296c32bb399d2 1-34
+tests/value.test.ts
+  s_68991ad4a82c3c::t_272f6f0d151cff 53-54,56-57
+  s_68991ad4a82c3c::t_b54093ee8690bd 2-52,55,58-149
+  s_68991ad4a82c3c::t_f12b822baeabec 1
+src/model/vehicle.ts
+  s_68991ad4a82c3c::t_eae8e3bd639a86 1,17-26,40,98-101,134-141,182-186
+  s_68991ad4a82c3c::t_92397a2fba6cb3 187
+src/garage/VehicleSetup.svelte
+  s_68991ad4a82c3c::t_a1e0840a845d17 8,12-14,28-30,42,72,87-103,187,191-215
+  s_68991ad4a82c3c::t_449ad17ff27fff 216
+src/model/cliffs.ts
+  s_68991ad4a82c3c::t_409b19b1e41781 2
+  s_68991ad4a82c3c::t_ea0351c69e6a3c 198-203,205
+tests/garageInputs.test.ts
+  s_68991ad4a82c3c::t_24ec35c7e0e267 7,96-111
+  s_68991ad4a82c3c::t_aef4d6bf90d030 112-113
+tests/vehicle.test.ts
+  s_68991ad4a82c3c::t_215f9f6ce9dd92 147-150
+  s_68991ad4a82c3c::t_410f44df08c5e7 185-189
+docs/mockups/tradepoint-mockups.html
+  s_68991ad4a82c3c::t_f8fea8c1fd92c8 215,217,220,248,253
+src/screens/Garage.svelte
+  s_68991ad4a82c3c::t_a1e0840a845d17 14,23-26,101-102
+  s_68991ad4a82c3c::t_4eaa38f5aa839d 103-104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "793f7eaa7b5cd2a6a6c7046d404c0caf3696af9b",
+  "prompts": {},
+  "sessions": {
+    "s_68991ad4a82c3c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65c81dcd-15dc-4c5a-b2c4-a122973344d4",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
