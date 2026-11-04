@@ -1,0 +1,55 @@
+src/decoder/Field.svelte
+  s_ec848b8a55e716::t_28f954f30fa97e 8,16,21,31-32,35-39,77-81,91-95
+src/screens/Dealer.svelte
+  s_ec848b8a55e716::t_e41db205365211 15-18,43-48,56,71-75,80,99,106,112,192
+tests/garage.test.ts
+  s_ec848b8a55e716::t_b129d7c629cc18 6,8,22,73,110,121,125-168
+tests/decoder.test.ts
+  s_ec848b8a55e716::t_315fe8c728d086 96-131
+src/store/garage.ts
+  s_ec848b8a55e716::t_b129d7c629cc18 16,112-124,126,128-129
+  s_ec848b8a55e716::t_54c6ba0a4c3a48 125,127
+src/store/garage.svelte.ts
+  s_ec848b8a55e716::t_1fa46c11af580c 1-9,23,33,43,52-59
+src/screens/Settings.svelte
+  s_ec848b8a55e716::t_871cccc2b6899a 2-42,45-87,90-98,100-108,111-125
+package.json
+  s_ec848b8a55e716::t_74fe75299536f2 3
+src/screens/Verdict.svelte
+  s_ec848b8a55e716::t_8b6926b9af8f81 134-137
+src/screens/Garage.svelte
+  s_ec848b8a55e716::t_9701a09fe4a3fe 164-165
+PLAN.md
+  s_ec848b8a55e716::t_3742a2b1057093 403-423
+src/decoder/state.svelte.ts
+  s_ec848b8a55e716::t_1fa46c11af580c 27-31
+src/decoder/inputs.ts
+  s_ec848b8a55e716::t_4a4485fc3bf3ee 19-22,26,31-37
+  s_ec848b8a55e716::t_5f141c7a7e7b75 137
+  s_ec848b8a55e716::t_94f7e744d9b552 76-103,105,115-122
+  s_ec848b8a55e716::t_250cb34fff350b 38
+src/styles/base.css
+  s_ec848b8a55e716::t_9cc7c8becfb738 64-68
+public/favicon.svg
+  s_ec848b8a55e716::t_74fe75299536f2 1
+index.html
+  s_ec848b8a55e716::t_74fe75299536f2 9
+package-lock.json
+  s_ec848b8a55e716::t_b089c7c8db49e0 3,9
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cf0f10dea2e6912b1d87d08bd8b53fbe6fab0305",
+  "prompts": {},
+  "sessions": {
+    "s_ec848b8a55e716": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "214b6484-7734-413a-9123-c50ec44b88c6",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
