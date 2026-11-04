@@ -279,6 +279,36 @@ a real quote before continuing; fix what hurt.
 - Tests: with no anchors it follows the segment curve; with one anchor it passes
   through it; crossover matches a hand calculation.
 - Done when: the example vehicle crosses positive at month 4.
+- **Status 2026-11-03: done, with the month corrected to 3.** The mockup copy said ~4 months
+  / March, but the mockup's own chart code crosses at month 3, and so does every honest
+  version of the spec's curve (whole or fractional months, plain or anchored): $14,200 on
+  Oct 28 at 1.1%/mo is $13,708 on 2027-02-02 against $13,665 owing, +$43. Nothing defensible
+  moves it to 4, so the mockup copy was changed to Feb / 3 months instead of bending the model.
+  The margin is thin; small rate changes flip it, which is why the UI must say "rough".
+  Model: `src/model/value.ts` `retention(segment, ageMonths)` = (1 − firstYearDrop)^(age/12)
+  through month 12, then (1 − monthlyRate) per month to `flattensAfterMonths`, then
+  `lateMonthlyRate`. Age is fractional months (days / 365.25·12) from the in-service date,
+  falling back to `estimatedInServiceDate(year)` (Jul 1) and flagging `ageEstimated`.
+  `valueCurve(vehicle)` → `{ at(date), basis }` or null (needs a segment and a purchase or an
+  anchor). Anchors = purchase + `Vehicle.valueAnchors` (`{ date, value, source: comps |
+  offer | manual }`, validated in `parseVehicle`, optional so no migration). For a date, the
+  latest anchor on or before it is exact and the curve ratio carries it; before the first
+  anchor, the first one projects backwards. Same-day anchor beats the purchase price.
+  `basis` is the latest anchor, for provenance copy (`src/model/valueCopy.ts`).
+  `src/model/equity.ts` `projectEquity({ loan, valueAt, asOf, months })` → monthly points
+  (month 0..n) and `crossover` (first value ≥ balance; month 0 = already positive).
+  `cliffsFor`'s equity cliff now calls it, so the cliff list and the Session 12 chart can't
+  disagree (a test pins this).
+  UI: Purchase (optional) card in VehicleSetup (price + date, `readPurchase`), showing the
+  provenance line once saved; Garage passes `valueCurve(...).at` into `cliffsFor`, so the
+  free cliff list now dates the equity crossover; a hint asks for purchase + vehicle type
+  when there's a loan but no curve. Checked in Chrome at 375px.
+  **Not done, on purpose: the "your estimate: $X" hint beside trade allowance** (Session 10
+  deferral). A curve from purchase price is a retail-ish number; dealers' trade allowance
+  sits below retail, so the hint would make normal allowances look like lowballs. Revisit
+  in Session 13 once comps/outside offers exist, labelled as retail vs trade.
+  Session 12 notes: comps are asking prices, so a comps anchor overstates trade value;
+  consider saying so in the provenance line. The equity tile is still the dimmed stub.
 
 ### Session 12 · Timeline screen and window sentence
 - SVG chart (two lines, dashed cliff markers, crossover dot) drawn from the

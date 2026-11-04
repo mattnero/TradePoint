@@ -1,5 +1,5 @@
 import { addDays, addMonths, addYears, firstDayOfMonth, lastDayOfMonth, monthOf, type IsoDate } from "./dates";
-import { loanBalanceAt } from "./loan";
+import { projectEquity } from "./equity";
 import { cents, type Cents } from "./money";
 import { segmentFor } from "./segments";
 import { kmPerDay, latestReading, type OdometerReading, type Vehicle } from "./vehicle";
@@ -195,19 +195,14 @@ function equityCliff(inputs: CliffInputs, horizon: number, report: CliffReport):
     report.needs.push("value");
     return [];
   }
-  const loan = vehicle.loan;
-  for (let month = 0; month <= horizon; month++) {
-    const date = addMonths(asOf, month);
-    const value = valueAt(date);
-    const balance = loanBalanceAt(loan, date);
-    if (value < balance) continue;
-    if (month === 0) {
-      report.past.push({ kind: "equity", value, balance });
-      return [];
-    }
-    return [{ kind: "equity", date, value, balance }];
+  const { crossover } = projectEquity({ loan: vehicle.loan, valueAt, asOf, months: horizon });
+  if (crossover === null) return [];
+  const { date, value, balance } = crossover;
+  if (crossover.month === 0) {
+    report.past.push({ kind: "equity", value, balance });
+    return [];
   }
-  return [];
+  return [{ kind: "equity", date, value, balance }];
 }
 
 function compare(a: Cliff, b: Cliff): number {

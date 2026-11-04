@@ -11,6 +11,7 @@
     whenLabel,
   } from "../model/cliffCopy";
   import { cliffsFor } from "../model/cliffs";
+  import { valueCurve } from "../model/value";
   import { todayIso } from "../model/dates";
   import { kmPerMonth, latestReading, type Vehicle } from "../model/vehicle";
   import { applyGarage } from "../decoder/state.svelte";
@@ -19,7 +20,10 @@
   const today = todayIso();
 
   const vehicle = $derived(garageStore.vehicle);
-  const report = $derived(vehicle ? cliffsFor({ vehicle, asOf: today }) : null);
+  const curve = $derived(vehicle ? valueCurve(vehicle) : null);
+  const report = $derived(
+    vehicle ? cliffsFor(curve ? { vehicle, asOf: today, valueAt: curve.at } : { vehicle, asOf: today }) : null,
+  );
   const perMonth = $derived(vehicle ? kmPerMonth(vehicle) : null);
 
   function title(v: Vehicle): string {
@@ -92,6 +96,10 @@
       </section>
     {:else}
       <p class="hint">Nothing coming up in the next 36 months that the app can see yet.</p>
+    {/if}
+
+    {#if report.needs.includes("value")}
+      <p class="hint">Add what you paid and the vehicle type below to see when your equity turns positive.</p>
     {/if}
 
     {#if report.activeSeason}

@@ -5,11 +5,13 @@
   import { loanBalanceAt, monthsRemainingAt } from "../model/loan";
   import { formatCAD } from "../model/money";
   import { SEGMENTS, segmentFor, type SegmentKey } from "../model/segments";
-  import { addOdometerReading, type Vehicle } from "../model/vehicle";
+  import { addOdometerReading, estimatedInServiceDate, type Vehicle } from "../model/vehicle";
   import { formatKm, monthYear } from "../model/cliffCopy";
   import { formatPercentInput } from "../decoder/inputs";
   import { formatInputMoney } from "../model/money";
-  import { readBenchmarks, readInServiceDate, readKm, readLoanSnapshot } from "./inputs";
+  import { valueCurve } from "../model/value";
+  import { valueBasisLine } from "../model/valueCopy";
+  import { readBenchmarks, readInServiceDate, readKm, readLoanSnapshot, readPurchase } from "./inputs";
 
   let {
     vehicle,
@@ -23,6 +25,9 @@
   let kmError = $state("");
   let inService = $state("");
   let inServiceError = $state("");
+  let purchasePrice = $state("");
+  let purchaseDate = $state("");
+  let purchaseError = $state("");
   let balance = $state("");
   let apr = $state("");
   let monthsLeft = $state("");
@@ -34,6 +39,7 @@
   let benchmarksSaved = $state(false);
 
   const latestKm = $derived(vehicle.odometer[vehicle.odometer.length - 1]!.km);
+  const curve = $derived(valueCurve(vehicle));
 
   function updateOdometer(event: SubmitEvent) {
     event.preventDefault();
@@ -63,7 +69,7 @@
   }
 
   function estimateInService() {
-    const guess = `${vehicle.year}-07-01`;
+    const guess = estimatedInServiceDate(vehicle.year);
     onchange({ ...vehicle, inServiceDate: guess <= today ? guess : today, inServiceEstimated: true });
     inServiceError = "";
   }
@@ -76,6 +82,23 @@
       return;
     }
     onchange({ ...vehicle, segment: value as SegmentKey });
+  }
+
+  function savePurchase(event: SubmitEvent) {
+    event.preventDefault();
+    const read = readPurchase({ price: purchasePrice, date: purchaseDate }, today);
+    if (!read.ok) {
+      purchaseError = read.error;
+      return;
+    }
+    purchaseError = "";
+    onchange({ ...vehicle, purchase: read.value });
+    purchasePrice = purchaseDate = "";
+  }
+
+  function removePurchase() {
+    const { purchase: _, ...rest } = vehicle;
+    onchange(rest);
   }
 
   function saveLoan(event: SubmitEvent) {
@@ -161,9 +184,35 @@
       {/each}
     </select>
     {#if !vehicle.segment}
-      <p class="hint">Unlocks seasonal demand and service windows.</p>
+      <p class="hint">Unlocks seasonal demand, service windows and the value estimate.</p>
     {/if}
   </div>
+
+  <details class="card" open={vehicle.purchase === undefined ? undefined : true}>
+    <summary class="label">Purchase (optional)</summary>
+    {#if vehicle.purchase}
+      <p class="line">Paid {formatCAD(vehicle.purchase.price)} in {monthYear(vehicle.purchase.date)}</p>
+      {#if curve}
+        <p class="hint">Value estimate: {valueBasisLine(curve.basis)}</p>
+      {:else}
+        <p class="hint">Set the vehicle type to start the value estimate.</p>
+      {/if}
+      <button class="btn quiet" type="button" onclick={removePurchase}>Remove purchase</button>
+    {:else}
+      <form onsubmit={savePurchase} class="stack">
+        <p class="hint">Starts the value estimate, so the app can date when your equity turns positive.</p>
+        <div class="fields">
+          <Field id="u-price" label="You paid" bind:value={purchasePrice} />
+          <div class="field">
+            <label for="u-bought">Date</label>
+            <input id="u-bought" type="date" max={today} bind:value={purchaseDate} />
+          </div>
+        </div>
+        {#if purchaseError}<p class="error" role="alert">{purchaseError}</p>{/if}
+        <button class="btn quiet" type="submit">Save purchase</button>
+      </form>
+    {/if}
+  </details>
 
   <details class="card" open={vehicle.loan === undefined ? undefined : true}>
     <summary class="label">Loan (optional)</summary>

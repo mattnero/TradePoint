@@ -1,6 +1,7 @@
 export type IsoDate = string;
 
 const MS_PER_DAY = 86_400_000;
+export const DAYS_PER_MONTH = 365.25 / 12;
 
 function parts(date: IsoDate): [number, number, number] {
   const [y = 0, m = 0, d = 0] = date.split("-").map(Number);

@@ -144,6 +144,10 @@ describe("parseVehicle", () => {
     ],
     loan: { kind: "terms", principal: cents(2888100), apr: 0.0799, termMonths: 84, startDate: "2019-03-15" },
     benchmarks: { preApprovalApr: 0.0599, outsideTradeOffer: cents(920000) },
+    valueAnchors: [
+      { date: "2025-07-01", value: cents(2100000), source: "comps" },
+      { date: "2025-09-01", value: cents(1950000), source: "offer" },
+    ],
   };
 
   it("round-trips through JSON", () => {
@@ -178,6 +182,11 @@ describe("parseVehicle", () => {
     ["pre-approval rate over 100%", { ...full, benchmarks: { preApprovalApr: 1.5 } }],
     ["fractional outside offer", { ...full, benchmarks: { outsideTradeOffer: 1.5 } }],
     ["negative outside offer", { ...full, benchmarks: { outsideTradeOffer: -1 } }],
+    ["value anchors not an array", { ...full, valueAnchors: { date: "2025-07-01" } }],
+    ["value anchor with a bad date", { ...full, valueAnchors: [{ date: "2025-13-01", value: 100, source: "comps" }] }],
+    ["value anchor with a fractional value", { ...full, valueAnchors: [{ date: "2025-07-01", value: 1.5, source: "comps" }] }],
+    ["value anchor with an unknown source", { ...full, valueAnchors: [{ date: "2025-07-01", value: 100, source: "guess" }] }],
+    ["value anchor sourced as the purchase", { ...full, valueAnchors: [{ date: "2025-07-01", value: 100, source: "purchase" }] }],
   ])("rejects %s", (_name, value) => {
     expect(parseVehicle(value)).toBeNull();
   });

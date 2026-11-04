@@ -1,4 +1,4 @@
-import { daysBetween, isIsoDate, type IsoDate } from "./dates";
+import { DAYS_PER_MONTH, daysBetween, isIsoDate, type IsoDate } from "./dates";
 import { parseLoan, type Loan } from "./loan";
 import { cents, type Cents } from "./money";
 import { SEGMENTS, type SegmentKey } from "./segments";
@@ -14,6 +14,16 @@ export interface Purchase {
   date: IsoDate;
 }
 
+export const VALUE_SOURCES = ["comps", "offer", "manual"] as const;
+
+export type ValueSource = (typeof VALUE_SOURCES)[number];
+
+export interface ValueAnchor {
+  date: IsoDate;
+  value: Cents;
+  source: ValueSource;
+}
+
 export interface Vehicle {
   id: string;
   year: number;
@@ -27,6 +37,7 @@ export interface Vehicle {
   odometer: OdometerReading[];
   loan?: Loan;
   benchmarks?: Benchmarks;
+  valueAnchors?: ValueAnchor[];
 }
 
 export interface NewVehicle {
@@ -39,7 +50,6 @@ export interface NewVehicle {
 
 const MIN_YEAR = 1900;
 const MAX_YEAR = 2100;
-const DAYS_PER_MONTH = 365.25 / 12;
 const MIN_DAYS_FOR_RATE = 14;
 
 function isCount(value: unknown): value is number {
@@ -85,6 +95,10 @@ export function addOdometerReading(vehicle: Vehicle, reading: OdometerReading): 
   return { ...vehicle, odometer };
 }
 
+export function estimatedInServiceDate(year: number): IsoDate {
+  return `${year}-07-01`;
+}
+
 export function latestReading(vehicle: Vehicle): OdometerReading {
   return vehicle.odometer[vehicle.odometer.length - 1]!;
 }
@@ -115,6 +129,14 @@ function parseBenchmarks(value: unknown): Benchmarks | null {
     out.outsideTradeOffer = cents(b.outsideTradeOffer);
   }
   return out;
+}
+
+function parseValueAnchor(value: unknown): ValueAnchor | null {
+  if (typeof value !== "object" || value === null) return null;
+  const a = value as Record<string, unknown>;
+  if (!isIsoDate(a.date) || !isCount(a.value)) return null;
+  if (!VALUE_SOURCES.includes(a.source as ValueSource)) return null;
+  return { date: a.date, value: cents(a.value), source: a.source as ValueSource };
 }
 
 export function parseVehicle(value: unknown): Vehicle | null {
@@ -156,6 +178,12 @@ export function parseVehicle(value: unknown): Vehicle | null {
     const benchmarks = parseBenchmarks(v.benchmarks);
     if (benchmarks === null) return null;
     vehicle.benchmarks = benchmarks;
+  }
+  if (v.valueAnchors !== undefined) {
+    if (!Array.isArray(v.valueAnchors)) return null;
+    const anchors = v.valueAnchors.map(parseValueAnchor);
+    if (anchors.some((a) => a === null)) return null;
+    vehicle.valueAnchors = anchors as ValueAnchor[];
   }
   if (v.loan !== undefined) {
     const loan = parseLoan(v.loan);

@@ -2,7 +2,7 @@ import { isIsoDate, type IsoDate } from "../model/dates";
 import type { Loan } from "../model/loan";
 import type { Benchmarks } from "../model/verdict";
 import { parseMoneyInput } from "../model/money";
-import type { NewVehicle } from "../model/vehicle";
+import type { NewVehicle, Purchase } from "../model/vehicle";
 import { parsePercentInput } from "../decoder/inputs";
 
 export type Result<T> = { ok: true; value: T } | { ok: false; error: string };
@@ -69,6 +69,19 @@ export function readLoanSnapshot(form: LoanForm, today: IsoDate): Result<Loan> {
   const months = readCount(form.monthsLeft);
   if (months === null || months < 1) return { ok: false, error: "Enter the months left, 1 or more." };
   return { ok: true, value: { kind: "snapshot", balance, apr, monthsRemaining: months, asOf: today } };
+}
+
+export interface PurchaseForm {
+  price: string;
+  date: string;
+}
+
+export function readPurchase(form: PurchaseForm, today: IsoDate): Result<Purchase> {
+  const price = parseMoneyInput(form.price);
+  if (price === null || price === 0) return { ok: false, error: "Enter what you paid, like 32995." };
+  if (!isIsoDate(form.date)) return { ok: false, error: "Pick the date you bought it." };
+  if (form.date > today) return { ok: false, error: "That date is in the future." };
+  return { ok: true, value: { price, date: form.date } };
 }
 
 export interface BenchmarksForm {

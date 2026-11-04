@@ -4,6 +4,7 @@ import {
   readBenchmarks,
   readLoanSnapshot,
   readNewVehicle,
+  readPurchase,
   type NewVehicleForm,
 } from "../src/garage/inputs";
 import { cents } from "../src/model/money";
@@ -89,6 +90,24 @@ describe("readLoanSnapshot", () => {
     ["fractional months", { balance: "15000", apr: "4.49", monthsLeft: "2.5" }, "Enter the months left, 1 or more."],
   ])("explains a bad %s", (_name, f, error) => {
     expect(readLoanSnapshot(f, TODAY)).toEqual({ ok: false, error });
+  });
+});
+
+describe("readPurchase", () => {
+  it("reads the price and date paid", () => {
+    expect(readPurchase({ price: "$32,995", date: "2023-03-15" }, TODAY)).toEqual({
+      ok: true,
+      value: { price: cents(3299500), date: "2023-03-15" },
+    });
+  });
+
+  it.each([
+    ["missing price", { price: "", date: "2023-03-15" }, "Enter what you paid, like 32995."],
+    ["zero price", { price: "0", date: "2023-03-15" }, "Enter what you paid, like 32995."],
+    ["missing date", { price: "32995", date: "" }, "Pick the date you bought it."],
+    ["future date", { price: "32995", date: "2026-11-04" }, "That date is in the future."],
+  ])("explains a %s", (_name, f, error) => {
+    expect(readPurchase(f, TODAY)).toEqual({ ok: false, error });
   });
 });
 
