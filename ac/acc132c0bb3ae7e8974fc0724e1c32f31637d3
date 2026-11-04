@@ -1,0 +1,25 @@
+src/decoder/Field.svelte
+  s_ec848b8a55e716::t_4b7effdb19b930 7,15-16,30
+src/BottomNav.svelte
+  s_ec848b8a55e716::t_c4c6dd2131171a 6-26,37-39,66-72,81
+src/garage/AddVehicleForm.svelte
+  s_ec848b8a55e716::t_4b7effdb19b930 44-45
+src/timeline/ValueRefresh.svelte
+  s_ec848b8a55e716::t_4b7effdb19b930 78
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "acacc132c0bb3ae7e8974fc0724e1c32f31637d3",
+  "prompts": {},
+  "sessions": {
+    "s_ec848b8a55e716": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "214b6484-7734-413a-9123-c50ec44b88c6",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
