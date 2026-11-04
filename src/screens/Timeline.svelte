@@ -3,15 +3,21 @@
   import { cliffTitle, monthLabel, monthYear, pastLine, timelineDetail } from "../model/cliffCopy";
   import { todayIso } from "../model/dates";
   import { outlookFor } from "../model/outlook";
+  import type { Vehicle } from "../model/vehicle";
   import { valueBasisLine } from "../model/valueCopy";
   import { garageStore } from "../store/garage.svelte";
   import EquityChart from "../timeline/EquityChart.svelte";
   import { chartMarkers } from "../timeline/chart";
+  import ValueRefresh from "../timeline/ValueRefresh.svelte";
 
   const today = todayIso();
 
   const vehicle = $derived(garageStore.vehicle);
   const outlook = $derived(vehicle ? outlookFor(vehicle, today) : null);
+
+  function save(next: Vehicle) {
+    garageStore.update((g) => ({ ...g, vehicles: [next] }));
+  }
 
   function chartLabel(crossover: { date: string; month: number } | null, hasLoan: boolean): string {
     const base = "Estimated value and loan balance over 36 months";
@@ -56,11 +62,14 @@
       <section class="card">
         <span class="label">Value vs loan</span>
         <p class="hint">
-          Add what you paid and the vehicle type on the Garage tab to chart its value against your loan.
+          To chart its value against your loan, set the vehicle type on the Garage tab and add either what you
+          paid or a value from comps below.
         </p>
         <a class="btn quiet" href="#garage">Go to Garage</a>
       </section>
     {/if}
+
+    <ValueRefresh {vehicle} onchange={save} />
 
     {#if outlook.report.upcoming.length > 0}
       <CliffList

@@ -5,6 +5,7 @@ import {
   readLoanSnapshot,
   readNewVehicle,
   readPurchase,
+  readValueEntry,
   type NewVehicleForm,
 } from "../src/garage/inputs";
 import { cents } from "../src/model/money";
@@ -108,6 +109,64 @@ describe("readPurchase", () => {
     ["future date", { price: "32995", date: "2026-11-04" }, "That date is in the future."],
   ])("explains a %s", (_name, f, error) => {
     expect(readPurchase(f, TODAY)).toEqual({ ok: false, error });
+  });
+});
+
+describe("readValueEntry", () => {
+  const entry = { kind: "comps" as const, comps: "", amount: "", date: TODAY };
+
+  it("turns pasted comp prices into a comps anchor at their median", () => {
+    expect(readValueEntry({ ...entry, comps: "$16,950\n15,900\n17,500" }, TODAY)).toEqual({
+      ok: true,
+      value: { date: TODAY, value: cents(1695000), source: "comps" },
+    });
+  });
+
+  it("reads prices separated by spaces, commas or semicolons as well as lines", () => {
+    const r = readValueEntry({ ...entry, comps: "16950, 15900; 17500 18200" }, TODAY);
+    expect(r.ok && r.value.value).toBe(cents(1722500));
+  });
+
+  it("dates the comps by the chosen day", () => {
+    const r = readValueEntry({ ...entry, comps: "16950 15900 17500", date: "2026-10-28" }, TODAY);
+    expect(r.ok && r.value.date).toBe("2026-10-28");
+  });
+
+  it.each([
+    ["two prices", "16950 15900", "Enter 3 to 5 prices, one per line."],
+    ["six prices", "1 2 3 4 5 6".replace(/\d/g, "16950"), "Enter 3 to 5 prices, one per line."],
+    ["nothing", "", "Enter 3 to 5 prices, one per line."],
+    ["a word", "16950 15900 about17500", "Couldn't read “about17500” as a price."],
+    ["a price that is clearly not one", "16950 15900 170", "“170” doesn't look like a price for a car."],
+    ["a km figure run into a price", "16950 15900 17500,119194", "“17500,119194” doesn't look like a price for a car."],
+  ])("explains %s", (_name, comps, error) => {
+    expect(readValueEntry({ ...entry, comps }, TODAY)).toEqual({ ok: false, error });
+  });
+
+  it("reads a single amount as an outside offer", () => {
+    expect(readValueEntry({ kind: "offer", comps: "", amount: "$9,200", date: TODAY }, TODAY)).toEqual({
+      ok: true,
+      value: { date: TODAY, value: cents(920000), source: "offer" },
+    });
+  });
+
+  it("reads a single amount as the owner's own figure", () => {
+    const r = readValueEntry({ kind: "manual", comps: "", amount: "14200", date: TODAY }, TODAY);
+    expect(r.ok && r.value.source).toBe("manual");
+  });
+
+  it.each([
+    ["no amount", { kind: "manual" as const, amount: "" }, "Enter the value in dollars, like 14200."],
+    ["a tiny amount", { kind: "offer" as const, amount: "50" }, "Enter the value in dollars, like 14200."],
+    ["a huge amount", { kind: "manual" as const, amount: "5000000" }, "Enter the value in dollars, like 14200."],
+  ])("explains %s", (_name, partial, error) => {
+    expect(readValueEntry({ ...entry, ...partial }, TODAY)).toEqual({ ok: false, error });
+  });
+
+  it("needs a real date that is not in the future", () => {
+    const good = { kind: "manual" as const, comps: "", amount: "14200", date: TODAY };
+    expect(readValueEntry({ ...good, date: "" }, TODAY)).toEqual({ ok: false, error: "Pick the date for this value." });
+    expect(readValueEntry({ ...good, date: "2026-11-04" }, TODAY)).toEqual({ ok: false, error: "That date is in the future." });
   });
 });
 

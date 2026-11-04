@@ -357,6 +357,43 @@ a real quote before continuing; fix what hurt.
 - Deep-link builder for AutoTrader.ca and CarGurus searches from year/make/model/km
   and a radius.
 - Done when: adding an anchor moves the chart and the window sentence.
+- **Status 2026-11-03: done.** Checked in Chrome at 375px with the example car holding only a
+  purchase price: the purchase-only curve said "Your window: now to Jun 2027" (equity +$1,743);
+  pasting four comps ($14,350 median) moved the chart and changed the Garage tile and banner to
+  "Feb to Jun 2027" / "−$750 · positive in ~3 months"; the entry survived a reload.
+  Model: `src/model/comps.ts` `medianPrice` (even count averages the middle two, rounded to the
+  cent). `addValueAnchor` / `removeValueAnchor` in `vehicle.ts`: one anchor per date (a new one
+  on the same date replaces it, whatever its source), kept in date order. Entry parsing is
+  `readValueEntry` in `src/garage/inputs.ts`: comps need 3 to 5 prices split on whitespace or
+  semicolons (a trailing comma is dropped; commas inside a number are thousands separators), each
+  between $500 and $500,000, so a km figure run into a price is rejected, not silently taken.
+  Amounts (offer, own figure) use the same bounds. Anchor date defaults to today, not future.
+  `valueBasisLine` for comps now ends "(asking prices)", since asking prices run above what a
+  dealer pays (Session 12's note).
+  UI: `src/timeline/ValueRefresh.svelte` under the Timeline chart: "Refresh value from comps"
+  button opens (1) find comps: optional postal code + radius (25/50/100/250 km) + two links,
+  (2) enter: Comps / Outside offer / My figure, date, "Update value"; below it a list of value
+  entries with Remove. Garage's value tile has a "Refresh value from comps" button to `#timeline`.
+  Postal code is not stored (it only goes into the link); no schema change.
+  **AutoTrader.ca link, verified in Chrome:** `/cars/{make}/{model}/my_{year}?kmfrom=&kmto=`
+  plus `zip=<postal>&zipr=<km>` when a valid Canadian postal code is given (radius honoured: 50 km
+  gave 17 results, 100 km gave 19). Slugs are lowercase with non-alphanumerics as hyphens; checked
+  on CX-5, RAV4, F-150, Grand Cherokee, Silverado 1500, 3 Series, Sienna, Odyssey, Pacifica,
+  Carnival. An unknown model degrades to all of that make's cars in that year, not an error. Km band
+  is ±20% (at least ±15,000) widened to whole 5,000s. The old `?make=&mdl=&yRng=` form redirects
+  but drops radius and postal code, so it is not used.
+  **Deviation: CarGurus is a Google search, not a filtered link.** CarGurus.ca filters by internal
+  model ids (the id in a URL decides the model, not the name; a guessed id opened a Jeep Renegade
+  page) and its search endpoint returns 403 to headless Chrome. A table of ids would be data to
+  maintain and verify per model, so the button opens
+  `google.com/search?q=<year make model> for sale site:cargurus.ca`. Headless Chrome got Google's
+  bot check on it, so that link is unverified in a real browser; Matt should tap it once.
+  **Still not done: the "your estimate: $X" hint beside the Dealer's trade allowance** (Session
+  10 deferral). With comps in, it would show a retail-ish number next to a number that is
+  normally lower; the outside-offer benchmark already carries the trade-side figure. Left out
+  unless Matt asks.
+  Found, not fixed: the app declares no favicon, so browsers log a 404 for `/favicon.ico`.
+  Session 14 (or Phase 1 icons) should add one.
 
 ### Session 14 · Polish pass and Phase 0 close
 - Phone-width audit on a real phone via the GitHub Pages URL: tap targets, keypad

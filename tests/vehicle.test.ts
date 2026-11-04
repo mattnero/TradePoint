@@ -1,6 +1,8 @@
 import { cents } from "../src/model/money";
 import {
   addOdometerReading,
+  addValueAnchor,
+  removeValueAnchor,
   createVehicle,
   kmPerMonth,
   latestReading,
@@ -189,5 +191,48 @@ describe("parseVehicle", () => {
     ["value anchor sourced as the purchase", { ...full, valueAnchors: [{ date: "2025-07-01", value: 100, source: "purchase" }] }],
   ])("rejects %s", (_name, value) => {
     expect(parseVehicle(value)).toBeNull();
+  });
+});
+
+describe("value anchors", () => {
+  const anchor = (date: string, dollars: number, source: "comps" | "offer" | "manual" = "comps") => ({
+    date,
+    value: cents(dollars * 100),
+    source,
+  });
+
+  it("adds an anchor to a vehicle that has none", () => {
+    expect(addValueAnchor(santaFe(), anchor("2026-11-03", 14200)).valueAnchors).toEqual([anchor("2026-11-03", 14200)]);
+  });
+
+  it("keeps anchors in date order", () => {
+    let v = addValueAnchor(santaFe(), anchor("2026-11-03", 14200));
+    v = addValueAnchor(v, anchor("2026-06-01", 15000));
+    expect(v.valueAnchors!.map((a) => a.date)).toEqual(["2026-06-01", "2026-11-03"]);
+  });
+
+  it("replaces the anchor already on that date, whatever its source", () => {
+    let v = addValueAnchor(santaFe(), anchor("2026-11-03", 14200));
+    v = addValueAnchor(v, anchor("2026-11-03", 13900, "offer"));
+    expect(v.valueAnchors).toEqual([anchor("2026-11-03", 13900, "offer")]);
+  });
+
+  it("does not change the vehicle it was given", () => {
+    const v = santaFe();
+    addValueAnchor(v, anchor("2026-11-03", 14200));
+    expect(v.valueAnchors).toBeUndefined();
+  });
+
+  it("removes an anchor by date, and drops the list when it empties", () => {
+    let v = addValueAnchor(santaFe(), anchor("2026-11-03", 14200));
+    v = addValueAnchor(v, anchor("2026-06-01", 15000));
+    v = removeValueAnchor(v, "2026-11-03");
+    expect(v.valueAnchors).toEqual([anchor("2026-06-01", 15000)]);
+    expect("valueAnchors" in removeValueAnchor(v, "2026-06-01")).toBe(false);
+  });
+
+  it("ignores removing a date that has no anchor", () => {
+    const v = addValueAnchor(santaFe(), anchor("2026-11-03", 14200));
+    expect(removeValueAnchor(v, "2020-01-01")).toEqual(v);
   });
 });

@@ -11,7 +11,7 @@ function anchoredTo(basis: ValueBasis): string {
     case "purchase":
       return `anchored to what you paid in ${when}`;
     case "comps":
-      return `re-anchored to your comps from ${when}`;
+      return `re-anchored to your comps from ${when} (asking prices)`;
     case "offer":
       return `re-anchored to the outside offer from ${when}`;
     case "manual":

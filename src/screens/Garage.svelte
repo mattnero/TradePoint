@@ -102,6 +102,7 @@
           <span class="pill {pill.tone}">{pill.text}</span>
         </div>
         <p class="hint">{valueBasisLine(outlook.curve.basis)} A rough estimate.</p>
+        <a class="btn quiet" href="#timeline">Refresh value from comps</a>
       </section>
     {:else}
       <section class="card dimmed" aria-label="Value, loan and equity">

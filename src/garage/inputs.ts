@@ -1,8 +1,9 @@
 import { isIsoDate, type IsoDate } from "../model/dates";
 import type { Loan } from "../model/loan";
 import type { Benchmarks } from "../model/verdict";
-import { parseMoneyInput } from "../model/money";
-import type { NewVehicle, Purchase } from "../model/vehicle";
+import { cents, parseMoneyInput, type Cents } from "../model/money";
+import { medianPrice } from "../model/comps";
+import type { NewVehicle, Purchase, ValueAnchor, ValueSource } from "../model/vehicle";
 import { parsePercentInput } from "../decoder/inputs";
 
 export type Result<T> = { ok: true; value: T } | { ok: false; error: string };
@@ -82,6 +83,51 @@ export function readPurchase(form: PurchaseForm, today: IsoDate): Result<Purchas
   if (!isIsoDate(form.date)) return { ok: false, error: "Pick the date you bought it." };
   if (form.date > today) return { ok: false, error: "That date is in the future." };
   return { ok: true, value: { price, date: form.date } };
+}
+
+export interface ValueEntryForm {
+  kind: ValueSource;
+  comps: string;
+  amount: string;
+  date: string;
+}
+
+const MIN_PRICE = cents(50_000);
+const MAX_PRICE = cents(50_000_000);
+const MIN_COMPS = 3;
+const MAX_COMPS = 5;
+
+function readComps(text: string): Result<Cents> {
+  const tokens = text.split(/[\s;]+/).map((t) => t.replace(/,+$/, "")).filter((t) => t !== "");
+  if (tokens.length < MIN_COMPS || tokens.length > MAX_COMPS) {
+    return { ok: false, error: `Enter ${MIN_COMPS} to ${MAX_COMPS} prices, one per line.` };
+  }
+  const prices: Cents[] = [];
+  for (const token of tokens) {
+    const price = parseMoneyInput(token);
+    if (price === null) return { ok: false, error: `Couldn't read “${token}” as a price.` };
+    if (price < MIN_PRICE || price > MAX_PRICE) {
+      return { ok: false, error: `“${token}” doesn't look like a price for a car.` };
+    }
+    prices.push(price);
+  }
+  return { ok: true, value: medianPrice(prices) };
+}
+
+function readAmount(text: string): Result<Cents> {
+  const amount = parseMoneyInput(text);
+  if (amount === null || amount < MIN_PRICE || amount > MAX_PRICE) {
+    return { ok: false, error: "Enter the value in dollars, like 14200." };
+  }
+  return { ok: true, value: amount };
+}
+
+export function readValueEntry(form: ValueEntryForm, today: IsoDate): Result<ValueAnchor> {
+  const value = form.kind === "comps" ? readComps(form.comps) : readAmount(form.amount);
+  if (!value.ok) return value;
+  if (!isIsoDate(form.date)) return { ok: false, error: "Pick the date for this value." };
+  if (form.date > today) return { ok: false, error: "That date is in the future." };
+  return { ok: true, value: { date: form.date, value: value.value, source: form.kind } };
 }
 
 export interface BenchmarksForm {

@@ -95,6 +95,18 @@ export function addOdometerReading(vehicle: Vehicle, reading: OdometerReading): 
   return { ...vehicle, odometer };
 }
 
+export function addValueAnchor(vehicle: Vehicle, anchor: ValueAnchor): Vehicle {
+  const others = (vehicle.valueAnchors ?? []).filter((a) => a.date !== anchor.date);
+  const valueAnchors = [...others, { ...anchor }].sort((a, b) => (a.date < b.date ? -1 : 1));
+  return { ...vehicle, valueAnchors };
+}
+
+export function removeValueAnchor(vehicle: Vehicle, date: IsoDate): Vehicle {
+  const { valueAnchors, ...rest } = vehicle;
+  const kept = (valueAnchors ?? []).filter((a) => a.date !== date);
+  return kept.length === 0 ? rest : { ...rest, valueAnchors: kept };
+}
+
 export function estimatedInServiceDate(year: number): IsoDate {
   return `${year}-07-01`;
 }

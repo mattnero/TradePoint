@@ -17,7 +17,7 @@ describe("valueBasisLine", () => {
   });
 
   it.each([
-    ["comps", "Mid-size SUV average curve, re-anchored to your comps from Oct 2026."],
+    ["comps", "Mid-size SUV average curve, re-anchored to your comps from Oct 2026 (asking prices)."],
     ["offer", "Mid-size SUV average curve, re-anchored to the outside offer from Oct 2026."],
     ["manual", "Mid-size SUV average curve, re-anchored to the value you entered for Oct 2026."],
   ] as const)("names a %s anchor", (source, line) => {
