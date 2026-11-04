@@ -400,6 +400,27 @@ a real quote before continuing; fix what hurt.
   behaviour, no horizontal scroll, safe-area padding.
 - Empty states for every screen. Error copy that says what to do.
 - Tag `v0.1.0`.
+- **Status 2026-11-03: done in emulation, tagged `v0.1.0`; the real-phone pass is Matt's.** Headless
+  Chrome (DevTools protocol, mobile emulation with touch) at 320 and 375px over every route × three
+  garages (example car, empty, unreadable blob): no horizontal scroll, no control under 44px except an
+  inline text link, no input under 16px (no iOS focus zoom), no console errors. Still unchecked: real
+  keypad behaviour and safe-area padding on a notched phone. Matt should open the Pages URL on his
+  phone once and tap through.
+  **Bug fixed, test-first: the decoder silently treated unreadable input as zero/blank** ("3k" down
+  became $0, "84 mo" said "enter the term"). `fieldProblems` in `src/decoder/inputs.ts` returns a
+  message per typed-but-unreadable field; `readDecoder` now returns `problems` and no quote while any
+  exist, so it never guesses. `Field` takes `error` (red state, `aria-invalid`, described-by); the
+  readout and the Verdict's empty state say to fix the red field.
+  Settings screen (was a stub): where data lives, the Safari ~7-day storage caveat, that share links
+  carry the numbers, "Copy the unreadable data" when the backup key exists (the Garage recovery notice
+  now points there), "Erase everything" (`eraseGarage` removes the garage and backup keys;
+  `KeyValueStore` gained `removeItem`; decoder reset too), and an About card (not advice; Ontario rule
+  figures read from `TAX_RULES`; values rough; Pro open while testing; version from package.json).
+  Polish: Dealer and Verdict now use base.css (Session 9 note closed); `.card .btn.quiet` gets a white
+  fill and border, because quiet buttons inside grey cards were invisible app-wide; SVG favicon in
+  `public/` (Vite rewrites it under `/TradePoint/`). Apple touch icon waits for Phase 1 icons.
+  Not built, and in no session: the spec's free "Prep checklist". The garage's "Your benchmarks" card
+  is the closest thing. Plan it with Phase 1 if Matt wants it.
 
 ## Phase 1 — stores (sketch, plan properly after Phase 0)
 

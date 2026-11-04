@@ -1,4 +1,12 @@
-import { loadGarage, saveGarage, type Garage, type KeyValueStore } from "./garage";
+import {
+  emptyGarage,
+  eraseGarage,
+  loadGarage,
+  readUnreadableCopy,
+  saveGarage,
+  type Garage,
+  type KeyValueStore,
+} from "./garage";
 import type { Vehicle } from "../model/vehicle";
 
 function browserStorage(): KeyValueStore {
@@ -12,6 +20,7 @@ function browserStorage(): KeyValueStore {
     return {
       getItem: (key) => memory.get(key) ?? null,
       setItem: (key, value) => void memory.set(key, value),
+      removeItem: (key) => void memory.delete(key),
     };
   }
 }
@@ -21,6 +30,7 @@ const loaded = loadGarage(storage);
 
 let current = $state<Garage>(loaded.garage);
 let saveFailed = $state(false);
+let recovered = $state(loaded.recovered);
 
 export const garageStore = {
   get garage(): Garage {
@@ -30,7 +40,7 @@ export const garageStore = {
     return current.vehicles[0];
   },
   get recoveredFromBrokenData(): boolean {
-    return loaded.recovered;
+    return recovered;
   },
   get saveFailed(): boolean {
     return saveFailed;
@@ -38,5 +48,13 @@ export const garageStore = {
   update(change: (garage: Garage) => Garage): void {
     current = change(current);
     saveFailed = !saveGarage(current, storage);
+  },
+  unreadableCopy(): string | null {
+    return readUnreadableCopy(storage);
+  },
+  erase(): boolean {
+    current = emptyGarage();
+    recovered = false;
+    return eraseGarage(storage);
   },
 };

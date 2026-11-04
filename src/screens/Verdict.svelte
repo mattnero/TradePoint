@@ -131,6 +131,10 @@
     <textarea bind:this={fallback} readonly rows="6" aria-label="Text to copy" value={fallbackText}
     ></textarea>
   {/if}
+{:else if Object.keys(reading.problems).length > 0}
+  <h1>Some numbers can't be read</h1>
+  <p class="empty">Go back to the decoder and fix the fields marked in red.</p>
+  <a class="btn primary" href="#dealer">Go to the decoder</a>
 {:else}
   <h1>Nothing to check yet</h1>
   <p class="empty">Enter the payment, term and rate from the dealer's quote first.</p>
@@ -174,17 +178,7 @@
     color: var(--ink);
   }
 
-  .card {
-    background: var(--surface-2);
-    border-radius: 12px;
-    padding: 12px 14px;
-    display: grid;
-    gap: 8px;
-  }
-
   .card.flat {
-    background: transparent;
-    border: 1px solid var(--line);
     gap: 12px;
   }
 
@@ -239,15 +233,6 @@
     color: var(--bad);
   }
 
-  .label {
-    display: block;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
-  }
-
   .kv {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -297,33 +282,6 @@
     margin: 0;
     font-size: 12px;
     color: var(--muted);
-  }
-
-  .btn {
-    font: inherit;
-    font-weight: 600;
-    min-height: 48px;
-    display: grid;
-    place-items: center;
-    border: 0;
-    border-radius: 10px;
-    text-decoration: none;
-    cursor: pointer;
-  }
-
-  .btn.primary {
-    background: var(--accent);
-    color: var(--accent-ink);
-  }
-
-  .btn.quiet {
-    background: var(--surface-2);
-    color: var(--ink);
-  }
-
-  .btn:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
   }
 
   .copy-status {

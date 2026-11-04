@@ -161,7 +161,8 @@
 {:else}
   {#if garageStore.recoveredFromBrokenData}
     <p class="notice" role="status">
-      Your saved garage couldn't be read, so you're starting fresh. A copy of the old data was kept on this device.
+      Your saved garage couldn't be read, so you're starting fresh. A copy of the old data was kept on this device;
+      you can copy it out from <a href="#settings">Settings</a>.
     </p>
   {/if}
   <AddVehicleForm onadd={save} />

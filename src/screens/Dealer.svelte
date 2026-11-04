@@ -12,7 +12,10 @@
     { value: "weekly", label: "Weekly" },
   ];
 
-  const quote = $derived(currentReading().quote);
+  const reading = $derived(currentReading());
+  const quote = $derived(reading.quote);
+  const problems = $derived(reading.problems);
+  const problemCount = $derived(Object.keys(problems).length);
   const figures = $derived(quote ? dealFigures(quote) : null);
   const monthly = $derived(
     quote && quote.frequency !== "monthly"
@@ -37,6 +40,12 @@
     {#if monthly !== null}
       <span class="sub">{formatCAD(monthly, { showCents: true })} a month once you convert it</span>
     {/if}
+  {:else if problemCount > 0}
+    <span class="label">Amount financed</span>
+    <span class="sub">
+      {problemCount === 1 ? "One number below can't be read." : `${problemCount} numbers below can't be read.`}
+      Fix the field marked in red to see it.
+    </span>
   {:else}
     <span class="label">Amount financed</span>
     <span class="sub">Enter the payment, term and rate to see it.</span>
@@ -44,7 +53,7 @@
 </section>
 
 <div class="stack">
-  <Field id="in-payment" label="Payment" bind:value={decoder.payment} />
+  <Field id="in-payment" label="Payment" error={problems.payment} bind:value={decoder.payment} />
 
   <div class="seg" role="group" aria-label="Payment frequency">
     {#each frequencies as f (f.value)}
@@ -59,15 +68,16 @@
   </div>
 
   <div class="fields">
-    <Field id="in-term" label="Term (months)" mode="numeric" bind:value={decoder.term} />
-    <Field id="in-apr" label="Rate % APR" bind:value={decoder.apr} />
-    <Field id="in-down" label="Down payment" bind:value={decoder.down} />
-    <Field id="in-adv" label="Advertised price (optional)" bind:value={decoder.advertised} />
-    <Field id="in-trade" label="Trade allowance" bind:value={decoder.tradeAllowance} />
+    <Field id="in-term" label="Term (months)" mode="numeric" error={problems.term} bind:value={decoder.term} />
+    <Field id="in-apr" label="Rate % APR" error={problems.apr} bind:value={decoder.apr} />
+    <Field id="in-down" label="Down payment" error={problems.down} bind:value={decoder.down} />
+    <Field id="in-adv" label="Advertised price (optional)" error={problems.advertised} bind:value={decoder.advertised} />
+    <Field id="in-trade" label="Trade allowance" error={problems.tradeAllowance} bind:value={decoder.tradeAllowance} />
     <Field
       id="in-payoff"
       label="Trade payoff"
       prefilled={isFromGarage("tradePayoff")}
+      error={problems.tradePayoff}
       bind:value={decoder.tradePayoff}
     />
   </div>
@@ -86,18 +96,20 @@
       id="in-bank"
       label="Pre-approval % APR"
       prefilled={isFromGarage("preApprovalApr")}
+      error={problems.preApprovalApr}
       bind:value={decoder.preApprovalApr}
     />
     <Field
       id="in-offer"
       label="Outside trade offer"
       prefilled={isFromGarage("outsideOffer")}
+      error={problems.outsideOffer}
       bind:value={decoder.outsideOffer}
     />
   </div>
   <p class="hint">Leave benchmarks empty and the verdict shows the price gap only.</p>
 
-  <button class="primary" type="button" disabled={!quote} onclick={checkNumbers}>
+  <button class="btn primary" type="button" disabled={!quote} onclick={checkNumbers}>
     Check the numbers
   </button>
 </div>
@@ -126,14 +138,6 @@
     border-radius: 12px;
     padding: 12px 14px;
     margin-bottom: 14px;
-  }
-
-  .label {
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 600;
   }
 
   .big {
@@ -185,32 +189,8 @@
     font-weight: 600;
   }
 
-  .seg button:focus-visible,
-  .primary:focus-visible {
+  .seg button:focus-visible {
     outline: 2px solid var(--accent);
     outline-offset: 2px;
-  }
-
-  .hint {
-    margin: 0;
-    font-size: 12px;
-    color: var(--muted);
-  }
-
-  .primary {
-    font: inherit;
-    font-weight: 600;
-    min-height: 48px;
-    border: 0;
-    border-radius: 10px;
-    background: var(--accent);
-    color: var(--accent-ink);
-    cursor: pointer;
-  }
-
-  .primary:disabled {
-    background: var(--line);
-    color: var(--muted);
-    cursor: not-allowed;
   }
 </style>

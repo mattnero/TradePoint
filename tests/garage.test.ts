@@ -3,7 +3,9 @@ import {
   CURRENT_SCHEMA_VERSION,
   STORAGE_KEY,
   emptyGarage,
+  eraseGarage,
   loadGarage,
+  readUnreadableCopy,
   runMigrations,
   saveGarage,
   type Garage,
@@ -17,6 +19,7 @@ function fakeStorage(initial: Record<string, string> = {}): KeyValueStore & { da
     data,
     getItem: (key) => data.get(key) ?? null,
     setItem: (key, value) => void data.set(key, value),
+    removeItem: (key) => void data.delete(key),
   };
 }
 
@@ -67,6 +70,7 @@ describe("save and load", () => {
       setItem: () => {
         throw new DOMException("full", "QuotaExceededError");
       },
+      removeItem: () => undefined,
     };
     expect(saveGarage(garageWithCar, storage)).toBe(false);
   });
@@ -103,6 +107,7 @@ describe("a broken stored blob", () => {
       setItem: () => {
         throw new Error("denied");
       },
+      removeItem: () => undefined,
     };
     expect(loadGarage(storage)).toEqual({ garage: emptyGarage(), recovered: true });
   });
@@ -113,8 +118,53 @@ describe("a broken stored blob", () => {
         throw new DOMException("blocked", "SecurityError");
       },
       setItem: () => undefined,
+      removeItem: () => undefined,
     };
     expect(loadGarage(storage)).toEqual({ garage: emptyGarage(), recovered: false });
+  });
+
+  it("can be read back as the raw text that was copied aside", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: "{not json" });
+    loadGarage(storage);
+    expect(readUnreadableCopy(storage)).toBe("{not json");
+  });
+});
+
+describe("readUnreadableCopy", () => {
+  it("is null when nothing was ever copied aside", () => {
+    expect(readUnreadableCopy(fakeStorage())).toBeNull();
+  });
+
+  it("is null instead of throwing when storage is blocked", () => {
+    const storage: KeyValueStore = {
+      getItem: () => {
+        throw new DOMException("blocked", "SecurityError");
+      },
+      setItem: () => undefined,
+      removeItem: () => undefined,
+    };
+    expect(readUnreadableCopy(storage)).toBeNull();
+  });
+});
+
+describe("eraseGarage", () => {
+  it("removes the garage and the copied-aside data, so a reload starts empty", () => {
+    const storage = fakeStorage({ [BACKUP_KEY]: "{old" });
+    saveGarage(garageWithCar, storage);
+    expect(eraseGarage(storage)).toBe(true);
+    expect(storage.data.size).toBe(0);
+    expect(loadGarage(storage)).toEqual({ garage: emptyGarage(), recovered: false });
+  });
+
+  it("reports failure instead of throwing when storage refuses", () => {
+    const storage: KeyValueStore = {
+      getItem: () => null,
+      setItem: () => undefined,
+      removeItem: () => {
+        throw new DOMException("blocked", "SecurityError");
+      },
+    };
+    expect(eraseGarage(storage)).toBe(false);
   });
 });
 

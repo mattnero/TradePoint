@@ -24,3 +24,8 @@ export function isFromGarage(field: GarageField): boolean {
 export function anyFromGarage(): boolean {
   return GARAGE_FIELDS.some(isFromGarage);
 }
+
+export function resetDecoder(): void {
+  Object.assign(decoder, emptyDecoder());
+  garageValues = {};
+}

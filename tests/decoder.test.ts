@@ -93,6 +93,42 @@ describe("readDecoder", () => {
   it("carries the quoted frequency", () => {
     expect(readDecoder({ ...workedExample, frequency: "biweekly" }).quote?.frequency).toBe("biweekly");
   });
+
+  it("reports no problems for the worked example or an empty form", () => {
+    expect(readDecoder(workedExample).problems).toEqual({});
+    expect(readDecoder(emptyDecoder()).problems).toEqual({});
+  });
+
+  it("does not count blank fields as problems", () => {
+    expect(readDecoder({ ...workedExample, down: "", advertised: "", outsideOffer: "" }).problems).toEqual({});
+  });
+
+  it.each([
+    ["payment", "four fifty", "Enter the payment in dollars, like 450."],
+    ["payment", "0", "The payment has to be more than $0."],
+    ["term", "84 mo", "Enter the term in whole months, 1 to 120."],
+    ["term", "400", "Enter the term in whole months, 1 to 120."],
+    ["apr", "7.99.", "Enter the rate as a percent, like 7.99."],
+    ["down", "3k", "Enter dollars only, like 3000."],
+    ["advertised", "29,995 + HST", "Enter dollars only, like 29995."],
+    ["tradeAllowance", "8 grand", "Enter dollars only, like 8000."],
+    ["tradePayoff", "~5000", "Enter dollars only, like 5000."],
+    ["preApprovalApr", "prime", "Enter the rate as a percent, like 5.99."],
+    ["outsideOffer", "9.2k", "Enter dollars only, like 9200."],
+  ] as const)("flags an unreadable %s (%j)", (field, text, message) => {
+    expect(readDecoder({ ...workedExample, [field]: text }).problems).toEqual({ [field]: message });
+  });
+
+  it("gives no quote while any typed field can't be read, so it never guesses zero", () => {
+    expect(readDecoder({ ...workedExample, down: "3k" }).quote).toBeNull();
+    expect(readDecoder({ ...workedExample, outsideOffer: "9.2k" }).quote).toBeNull();
+  });
+
+  it("leaves an unreadable benchmark out of the benchmarks", () => {
+    expect(readDecoder({ ...workedExample, preApprovalApr: "prime" }).benchmarks).toEqual({
+      outsideTradeOffer: 920000,
+    });
+  });
 });
 
 describe("formatPercentInput", () => {

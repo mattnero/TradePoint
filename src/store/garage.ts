@@ -13,6 +13,7 @@ export interface Garage {
 export interface KeyValueStore {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
+  removeItem(key: string): void;
 }
 
 export interface LoadResult {
@@ -103,6 +104,24 @@ export function loadGarage(storage: KeyValueStore): LoadResult {
 export function saveGarage(garage: Garage, storage: KeyValueStore): boolean {
   try {
     storage.setItem(STORAGE_KEY, JSON.stringify(garage));
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function readUnreadableCopy(storage: KeyValueStore): string | null {
+  try {
+    return storage.getItem(BACKUP_KEY);
+  } catch {
+    return null;
+  }
+}
+
+export function eraseGarage(storage: KeyValueStore): boolean {
+  try {
+    storage.removeItem(STORAGE_KEY);
+    storage.removeItem(BACKUP_KEY);
     return true;
   } catch {
     return false;
