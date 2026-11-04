@@ -1,0 +1,51 @@
+src/screens/Timeline.svelte
+  s_68991ad4a82c3c::t_92394c3f9d4cbe 6,11,18-21,65-66,72
+  s_68991ad4a82c3c::t_1e60b66ad3cde6 73
+src/model/valueCopy.ts
+  s_68991ad4a82c3c::t_73a186b5b319af 14
+src/model/vehicle.ts
+  s_68991ad4a82c3c::t_73a186b5b319af 98-109
+src/model/compLinks.ts
+  s_68991ad4a82c3c::t_73a186b5b319af 1-52
+tests/comps.test.ts
+  s_68991ad4a82c3c::t_d20b6bcd8dfd75 1-28
+tests/vehicle.test.ts
+  s_68991ad4a82c3c::t_d20b6bcd8dfd75 4-5,196-237
+  s_68991ad4a82c3c::t_0165f1071bd1dc 238
+src/model/comps.ts
+  s_68991ad4a82c3c::t_73a186b5b319af 1-8
+src/screens/Garage.svelte
+  s_68991ad4a82c3c::t_92394c3f9d4cbe 105
+src/garage/inputs.ts
+  s_68991ad4a82c3c::t_73a186b5b319af 4-6,88-131
+  s_68991ad4a82c3c::t_e6950ce32a4d9d 132
+tests/compLinks.test.ts
+  s_68991ad4a82c3c::t_d20b6bcd8dfd75 1-78
+tests/garageInputs.test.ts
+  s_68991ad4a82c3c::t_d20b6bcd8dfd75 8,115-170
+  s_68991ad4a82c3c::t_ef55a046a02199 171-172
+src/timeline/ValueRefresh.svelte
+  s_68991ad4a82c3c::t_97787fd9a5ef9d 1-91,93-94,96-116,121-256
+  s_68991ad4a82c3c::t_2860538c159b88 92,95
+  s_68991ad4a82c3c::t_15de38c65ec943 117-120
+tests/valueCopy.test.ts
+  s_68991ad4a82c3c::t_d20b6bcd8dfd75 20
+PLAN.md
+  s_68991ad4a82c3c::t_91cc03e50a1045 360-396
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "95dc11a00f407716ae02ec332f802cc4301f45be",
+  "prompts": {},
+  "sessions": {
+    "s_68991ad4a82c3c": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "65c81dcd-15dc-4c5a-b2c4-a122973344d4",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
