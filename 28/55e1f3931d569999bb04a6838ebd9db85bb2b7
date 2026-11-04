@@ -1,0 +1,21 @@
+package-lock.json
+  s_ec848b8a55e716::t_ce654e3a35edc1 3,9
+package.json
+  s_ec848b8a55e716::t_04fb5c73f75147 3
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "2855e1f3931d569999bb04a6838ebd9db85bb2b7",
+  "prompts": {},
+  "sessions": {
+    "s_ec848b8a55e716": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "214b6484-7734-413a-9123-c50ec44b88c6",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
