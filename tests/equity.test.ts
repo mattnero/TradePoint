@@ -114,6 +114,12 @@ describe("projectEquity edges", () => {
     expect(projection.crossover).toBeNull();
   });
 
+  it("owes nothing without a loan, so equity is the value and positive from month 0", () => {
+    const projection = projectEquity({ loan: undefined, valueAt: () => cents(700000), asOf: AS_OF, months: 2 });
+    expect(projection.points.map((p) => p.balance)).toEqual([0, 0, 0]);
+    expect(projection.crossover?.month).toBe(0);
+  });
+
   it("counts equal value and balance as crossed", () => {
     const projection = projectEquity({ loan, valueAt: () => cents(500000), asOf: AS_OF, months: 1 });
     expect(projection.crossover?.month).toBe(0);

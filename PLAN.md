@@ -317,6 +317,39 @@ a real quote before continuing; fix what hurt.
 - `windowSentence(cliffs, equity)`: the plain-language recommendation that always
   includes the "keep it" cost per year.
 - Done when: Garage banner and Timeline agree with each other for the example car.
+- **Status 2026-11-03: done.** Checked in Chrome at 375px with four garages (example car,
+  paid-off 2019 past every deadline, bare car, empty): example banner reads "Your window: Feb
+  to Jun 2027" and the Timeline dates equity Feb 2027 and the warranty Jun 2027; no
+  horizontal scroll, no console errors.
+  Agreement is structural: `src/model/outlook.ts` `outlookFor(vehicle, asOf)` builds the
+  curve, cliff report, 36-month projection, window and keep-it cost once; both screens call
+  it, and a test pins crossover = equity cliff = window open.
+  Model: `src/model/window.ts` `tradeWindow(report, projection)` → `window` (opens date or
+  "now", closes at a deadline) | `late` (deadline on/before equity turns positive) | `open`
+  (no deadline in horizon) | `underwater` (no crossover). Deadlines are warranty ends and the
+  100,000 km mark only (per spec), dated ones only. No loan counts as equity positive now.
+  `keepCost(valueAt, loan, asOf)` = next-12-month depreciation + interest (payments left in
+  the year × payment − principal paid). Copy in `windowCopy.ts`; amounts rounded to $10 and
+  the total is the sum of the rounded parts so the sentence adds up.
+  **Copy deviation:** the mockup said "keeping it is cheaper by about $2,100 a year"; cheaper
+  than what is not computable, so the sentence states the cost: "Keeping it costs about
+  $2,320 over the next year: $1,760 in depreciation and $560 in interest." The mockup board
+  still has the old line; the app is the reference now.
+  `projectEquity` now takes `loan: Loan | undefined` (no loan = zero balance) so a paid-off
+  car still gets a value line.
+  UI: Garage value/loan/equity tile (equity pill "−$931 · positive in ~3 months"), window
+  banner, provenance line ending "A rough estimate." Timeline: chart (`src/timeline/chart.ts`
+  pure geometry, tested; `EquityChart.svelte`), legend, provenance, month-dated cliff list
+  (equity row shows value vs owing), "Already behind you", empty states. Chart details: y
+  top = 3 grid steps of whole $1k; marker labels sit at the bottom, stagger to a second row
+  when within 44px, and turn inward at the right edge; crossover label sits above the dot and
+  faces the open side. Shared `src/garage/CliffList.svelte` replaces Garage's inline list.
+  **Pro is not gated yet:** tile, banner and chart render for everyone with a Pro tag. Gating
+  needs the entitlement check (Phase 1 item 2), and dimming now would hide the feature from
+  the only user. Phase 1 must add the dimmed states (spec: free sees the Timeline list with
+  the chart dimmed).
+  **"Refresh value" button not added:** nothing to refresh into until Session 13 builds
+  anchor entry; Session 13 adds the button with its form.
 
 ### Session 13 · Value refresh and comps
 - Add a value anchor by hand (amount, source, date) and by pasting 3–5 comp prices

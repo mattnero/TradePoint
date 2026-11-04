@@ -16,7 +16,7 @@ export interface EquityProjection {
 }
 
 export interface EquityInputs {
-  loan: Loan;
+  loan: Loan | undefined;
   valueAt: (date: IsoDate) => Cents;
   asOf: IsoDate;
   months: number;
@@ -27,7 +27,7 @@ export function projectEquity({ loan, valueAt, asOf, months }: EquityInputs): Eq
   for (let month = 0; month <= months; month++) {
     const date = addMonths(asOf, month);
     const value = valueAt(date);
-    const balance = loanBalanceAt(loan, date);
+    const balance = loan === undefined ? cents(0) : loanBalanceAt(loan, date);
     points.push({ month, date, value, balance, equity: cents(value - balance) });
   }
   return { points, crossover: points.find((p) => p.value >= p.balance) ?? null };

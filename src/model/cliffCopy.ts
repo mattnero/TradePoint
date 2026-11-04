@@ -8,7 +8,7 @@ export function formatKm(km: number): string {
   return km.toLocaleString("en-CA");
 }
 
-function monthName(month: number): string {
+export function monthName(month: number): string {
   return MONTHS[month - 1] ?? "";
 }
 
@@ -23,6 +23,12 @@ export function whenLabel(cliff: Cliff, asOf: IsoDate): { big: string; small: st
   if (months >= 1) return { big: String(months), small: "mo" };
   const days = Math.max(0, daysBetween(asOf, cliff.date));
   return { big: String(days), small: days === 1 ? "day" : "days" };
+}
+
+export function monthLabel(cliff: Cliff): { big: string; small: string } {
+  if (cliff.date === null) return { big: "?", small: "date" };
+  const { year, month } = monthOf(cliff.date);
+  return { big: monthName(month), small: String(year) };
 }
 
 export function cliffTitle(cliff: Cliff): string {
@@ -63,6 +69,11 @@ export function cliffDetail(cliff: Cliff, make: string): string {
       return `${monthName(start)} to ${monthName(end)}`;
     }
   }
+}
+
+export function timelineDetail(cliff: Cliff, make: string): string {
+  if (cliff.kind === "equity") return `About ${formatCAD(cliff.value)} value vs ${formatCAD(cliff.balance)} owing`;
+  return cliffDetail(cliff, make);
 }
 
 function coverageName(coverages: ("comprehensive" | "powertrain")[]): string {

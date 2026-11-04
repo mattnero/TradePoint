@@ -4,8 +4,10 @@ import {
   cliffDetail,
   cliffTitle,
   formatKm,
+  monthLabel,
   monthYear,
   pastLine,
+  timelineDetail,
   updatedLabel,
   whenLabel,
 } from "../src/model/cliffCopy";
@@ -158,5 +160,23 @@ describe("updatedLabel", () => {
 
   it("includes the year when it is not this year", () => {
     expect(updatedLabel("2025-12-24", "2026-11-03")).toBe("Updated Dec 24, 2025");
+  });
+});
+
+describe("timeline labels", () => {
+  const equity: Cliff = { kind: "equity", date: "2027-02-02", value: cents(1370817), balance: cents(1366499) };
+
+  it("dates a cliff by month and year", () => {
+    expect(monthLabel(equity)).toEqual({ big: "Feb", small: "2027" });
+    expect(monthLabel({ kind: "odometer", date: null, km: 100000 })).toEqual({ big: "?", small: "date" });
+  });
+
+  it("gives the equity row its numbers", () => {
+    expect(timelineDetail(equity, "Hyundai")).toBe("About $13,708 value vs $13,665 owing");
+  });
+
+  it("uses the garage detail for everything else", () => {
+    const odo: Cliff = { kind: "odometer", date: "2027-08-01", km: 100000 };
+    expect(timelineDetail(odo, "Hyundai")).toBe(cliffDetail(odo, "Hyundai"));
   });
 });

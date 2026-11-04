@@ -44,7 +44,7 @@ export interface CliffInputs {
 }
 
 export const ODOMETER_THRESHOLDS = [100_000, 150_000, 200_000];
-const DEFAULT_HORIZON_MONTHS = 36;
+export const DEFAULT_HORIZON_MONTHS = 36;
 const COVERAGES: Coverage[] = ["comprehensive", "powertrain"];
 const KIND_ORDER: Cliff["kind"][] = ["equity", "warranty", "odometer", "maintenance", "season"];
 

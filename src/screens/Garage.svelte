@@ -1,5 +1,6 @@
 <script lang="ts">
   import AddVehicleForm from "../garage/AddVehicleForm.svelte";
+  import CliffList from "../garage/CliffList.svelte";
   import VehicleSetup from "../garage/VehicleSetup.svelte";
   import {
     activeSeasonLine,
@@ -10,9 +11,12 @@
     updatedLabel,
     whenLabel,
   } from "../model/cliffCopy";
-  import { cliffsFor } from "../model/cliffs";
-  import { valueCurve } from "../model/value";
   import { todayIso } from "../model/dates";
+  import { loanBalanceAt, monthsRemainingAt } from "../model/loan";
+  import { formatCAD } from "../model/money";
+  import { outlookFor } from "../model/outlook";
+  import { equityPill, valueBasisLine } from "../model/valueCopy";
+  import { windowSentence } from "../model/windowCopy";
   import { kmPerMonth, latestReading, type Vehicle } from "../model/vehicle";
   import { applyGarage } from "../decoder/state.svelte";
   import { garageStore } from "../store/garage.svelte";
@@ -20,10 +24,9 @@
   const today = todayIso();
 
   const vehicle = $derived(garageStore.vehicle);
-  const curve = $derived(vehicle ? valueCurve(vehicle) : null);
-  const report = $derived(
-    vehicle ? cliffsFor(curve ? { vehicle, asOf: today, valueAt: curve.at } : { vehicle, asOf: today }) : null,
-  );
+  const outlook = $derived(vehicle ? outlookFor(vehicle, today) : null);
+  const report = $derived(outlook?.report ?? null);
+  const sentence = $derived(outlook?.window && outlook.keep ? windowSentence(outlook.window, outlook.keep) : null);
   const perMonth = $derived(vehicle ? kmPerMonth(vehicle) : null);
 
   function title(v: Vehicle): string {
@@ -72,34 +75,61 @@
       {/if}
     </section>
 
-    <section class="card dimmed" aria-label="Value, loan and equity (Pro)">
-      <div class="row">
-        <span class="label">Value vs loan</span>
-        <span class="pill pro">Pro</span>
+    {#if outlook?.curve && outlook.projection}
+      {@const now = outlook.projection.points[0]!}
+      {@const pill = equityPill(outlook.projection, today)}
+      <section class="card" aria-label="Value, loan and equity">
+        <div class="row">
+          <div>
+            <span class="label">Estimated value</span>
+            <div class="big">{formatCAD(now.value)}</div>
+          </div>
+          <div class="right">
+            <span class="label">Loan balance</span>
+            {#if vehicle.loan}
+              <div class="big">{formatCAD(loanBalanceAt(vehicle.loan, today))}</div>
+              <p class="hint">
+                {(vehicle.loan.apr * 100).toFixed(2)}% · {monthsRemainingAt(vehicle.loan, today)} mo left
+              </p>
+            {:else}
+              <div class="big">$0</div>
+              <p class="hint">No loan</p>
+            {/if}
+          </div>
+        </div>
+        <div class="row">
+          <span class="label">Equity <span class="pill pro">Pro</span></span>
+          <span class="pill {pill.tone}">{pill.text}</span>
+        </div>
+        <p class="hint">{valueBasisLine(outlook.curve.basis)} A rough estimate.</p>
+      </section>
+    {:else}
+      <section class="card dimmed" aria-label="Value, loan and equity">
+        <div class="row">
+          <span class="label">Value vs loan</span>
+          <span class="pill pro">Pro</span>
+        </div>
+        <p class="hint">Add what you paid and the vehicle type below to estimate its value and when equity turns positive.</p>
+      </section>
+    {/if}
+
+    {#if sentence}
+      <div class="banner" role="note">
+        <strong>{sentence.title}</strong>
+        {sentence.body}
       </div>
-      <p class="hint">Estimated value, loan balance and when equity turns positive.</p>
-    </section>
+    {/if}
 
     <span class="label">Next cliffs</span>
     {#if report.upcoming.length > 0}
-      <section class="card flat list">
-        {#each report.upcoming as cliff, i (i)}
-          {@const when = whenLabel(cliff, today)}
-          <div class="cliff">
-            <div class="when">{when.big}<small>{when.small}</small></div>
-            <div class="what">
-              {cliffTitle(cliff)}
-              <span>{cliffDetail(cliff, vehicle.make)}</span>
-            </div>
-          </div>
-        {/each}
-      </section>
+      <CliffList
+        cliffs={report.upcoming}
+        when={(c) => whenLabel(c, today)}
+        title={cliffTitle}
+        detail={(c) => cliffDetail(c, vehicle.make)}
+      />
     {:else}
       <p class="hint">Nothing coming up in the next 36 months that the app can see yet.</p>
-    {/if}
-
-    {#if report.needs.includes("value")}
-      <p class="hint">Add what you paid and the vehicle type below to see when your equity turns positive.</p>
     {/if}
 
     {#if report.activeSeason}
@@ -164,6 +194,49 @@
     gap: 10px;
   }
 
+  .right {
+    text-align: right;
+  }
+
+  .big {
+    font-family: var(--display);
+    font-weight: 700;
+    font-size: 34px;
+    line-height: 1;
+  }
+
+  .pill.good {
+    background: var(--good-soft);
+    color: var(--good);
+  }
+
+  .pill.bad {
+    background: var(--bad-soft);
+    color: var(--bad);
+  }
+
+  .label .pill {
+    font-size: 9px;
+    padding: 1px 6px;
+    margin-left: 4px;
+    vertical-align: 1px;
+  }
+
+  .banner {
+    border-left: 4px solid var(--accent);
+    padding: 8px 12px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    font-size: 13px;
+  }
+
+  .banner strong {
+    display: block;
+    font-family: var(--display);
+    font-size: 17px;
+    font-weight: 600;
+  }
+
   .mid {
     font-family: var(--display);
     font-weight: 600;
@@ -173,46 +246,6 @@
 
   .dimmed {
     opacity: 0.55;
-  }
-
-  .list {
-    gap: 12px;
-  }
-
-  .cliff {
-    display: grid;
-    grid-template-columns: 44px 1fr;
-    gap: 10px;
-    align-items: center;
-  }
-
-  .when {
-    font-family: var(--display);
-    font-weight: 600;
-    font-size: 20px;
-    line-height: 1;
-    text-align: center;
-  }
-
-  .when small {
-    display: block;
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-family: var(--body);
-    font-weight: 600;
-  }
-
-  .what {
-    font-size: 14px;
-    font-weight: 500;
-  }
-
-  .what span {
-    display: block;
-    color: var(--muted);
-    font-weight: 400;
-    font-size: 12px;
   }
 
   .past {
