@@ -1,0 +1,23 @@
+PLAN.md
+  s_6759ff498a1f12::t_d917280c25cb69 23-24,425-564
+  s_6759ff498a1f12::t_f93bb760784609 578-581
+docs/spec.md
+  s_6759ff498a1f12::t_f93bb760784609 101,110-145
+  s_6759ff498a1f12::t_d1781e7ae53acc 146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ebf150e6071921234aac9b48d95be2cf346c24c3",
+  "prompts": {},
+  "sessions": {
+    "s_6759ff498a1f12": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "cd4b2e76-bedd-4550-abcf-7cc3621278d3",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
