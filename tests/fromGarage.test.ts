@@ -11,15 +11,23 @@ const santaFe: Vehicle = {
   model: "Santa Fe",
   odometer: [{ date: "2026-11-02", km: 86800 }],
   loan: { kind: "snapshot", balance: cents(1510000), apr: 0.0449, monthsRemaining: 30, asOf: "2026-11-02" },
-  benchmarks: { preApprovalApr: 0.0599, outsideTradeOffer: cents(920000) },
+  prep: {
+    preApprovalApr: 0.0599,
+    tradeOffers: [
+      { source: "Second dealer", amount: cents(875000), date: "2026-11-01" },
+      { source: "Clutch", amount: cents(920000), date: "2026-11-02" },
+    ],
+    walkAway: cents(3300000),
+  },
 };
 
 describe("garageDecoderValues", () => {
-  it("fills the payoff from the loan balance today, and the benchmarks from the vehicle", () => {
+  it("fills the payoff from the loan balance today, and the prep figures from the vehicle", () => {
     expect(garageDecoderValues(santaFe, "2027-05-02")).toEqual({
       tradePayoff: "12213.81",
       preApprovalApr: "5.99",
       outsideOffer: "9200",
+      walkAway: "33000",
     });
   });
 
@@ -32,9 +40,10 @@ describe("garageDecoderValues", () => {
   });
 
   it("leaves out whatever the garage does not know", () => {
-    const { loan: _l, benchmarks: _b, ...bare } = santaFe;
+    const { loan: _l, prep: _p, ...bare } = santaFe;
     expect(garageDecoderValues(bare, "2026-11-02")).toEqual({});
-    expect(garageDecoderValues({ ...bare, benchmarks: { outsideTradeOffer: cents(920000) } }, "2026-11-02")).toEqual({
+    const oneOffer = { tradeOffers: [{ source: "Clutch", amount: cents(920000) }] };
+    expect(garageDecoderValues({ ...bare, prep: oneOffer }, "2026-11-02")).toEqual({
       outsideOffer: "9200",
     });
   });

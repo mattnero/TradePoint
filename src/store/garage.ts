@@ -2,7 +2,8 @@ import { parseVehicle, type Vehicle } from "../model/vehicle";
 
 export const STORAGE_KEY = "tradepoint.garage.v1";
 export const BACKUP_KEY = "tradepoint.garage.backup";
-export const CURRENT_SCHEMA_VERSION = 1;
+export const CURRENT_SCHEMA_VERSION = 2;
+export const V1_OFFER_SOURCE = "Outside offer";
 
 export interface Garage {
   schemaVersion: number;
@@ -23,7 +24,31 @@ export interface LoadResult {
 
 type Migration = (blob: unknown) => unknown;
 
-const MIGRATIONS: Record<number, Migration> = {};
+function v1BenchmarksToPrep(benchmarks: unknown): unknown {
+  if (typeof benchmarks !== "object" || benchmarks === null) return benchmarks;
+  const { outsideTradeOffer, ...rest } = benchmarks as Record<string, unknown>;
+  if (outsideTradeOffer === undefined) return rest;
+  return { ...rest, tradeOffers: [{ source: V1_OFFER_SOURCE, amount: outsideTradeOffer }] };
+}
+
+function isEmptyObject(value: unknown): boolean {
+  return typeof value === "object" && value !== null && Object.keys(value).length === 0;
+}
+
+function vehicleV1ToV2(vehicle: unknown): unknown {
+  if (typeof vehicle !== "object" || vehicle === null || !("benchmarks" in vehicle)) return vehicle;
+  const { benchmarks, ...rest } = vehicle as Record<string, unknown>;
+  const prep = v1BenchmarksToPrep(benchmarks);
+  return isEmptyObject(prep) ? rest : { ...rest, prep };
+}
+
+function garageV1ToV2(blob: unknown): unknown {
+  const g = blob as Record<string, unknown>;
+  const vehicles = Array.isArray(g.vehicles) ? g.vehicles.map(vehicleV1ToV2) : g.vehicles;
+  return { ...g, schemaVersion: 2, vehicles };
+}
+
+const MIGRATIONS: Record<number, Migration> = { 1: garageV1ToV2 };
 
 export function emptyGarage(): Garage {
   return { schemaVersion: CURRENT_SCHEMA_VERSION, vehicles: [], deals: [] };

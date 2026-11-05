@@ -1,7 +1,9 @@
 import {
   readInServiceDate,
   readKm,
-  readBenchmarks,
+  readPreApproval,
+  readTradeOffer,
+  readWalkAway,
   readLoanSnapshot,
   readNewVehicle,
   readPurchase,
@@ -170,38 +172,54 @@ describe("readValueEntry", () => {
   });
 });
 
-describe("readBenchmarks", () => {
-  it("reads both", () => {
-    expect(readBenchmarks({ preApprovalApr: "5.99", outsideOffer: "9,200" })).toEqual({
+describe("readPreApproval", () => {
+  it("reads a rate, including 0%", () => {
+    expect(readPreApproval("5.99")).toEqual({ ok: true, value: 0.0599 });
+    expect(readPreApproval("0")).toEqual({ ok: true, value: 0 });
+  });
+
+  it("treats blank as cleared", () => {
+    expect(readPreApproval(" ")).toEqual({ ok: true, value: undefined });
+  });
+
+  it("explains a bad entry", () => {
+    expect(readPreApproval("five")).toEqual({ ok: false, error: "Enter the pre-approval rate, like 5.99." });
+  });
+});
+
+describe("readTradeOffer", () => {
+  it("reads who made it and the amount, dated today", () => {
+    expect(readTradeOffer({ source: " Clutch ", amount: "9,200" }, TODAY)).toEqual({
       ok: true,
-      value: { preApprovalApr: 0.0599, outsideTradeOffer: cents(920000) },
+      value: { source: "Clutch", amount: cents(920000), date: TODAY },
     });
   });
 
-  it("reads either alone, and blank means cleared", () => {
-    expect(readBenchmarks({ preApprovalApr: "5.99", outsideOffer: "" })).toEqual({ ok: true, value: { preApprovalApr: 0.0599 } });
-    expect(readBenchmarks({ preApprovalApr: "", outsideOffer: "9200" })).toEqual({
-      ok: true,
-      value: { outsideTradeOffer: cents(920000) },
-    });
-    expect(readBenchmarks({ preApprovalApr: " ", outsideOffer: "" })).toEqual({ ok: true, value: {} });
-  });
-
-  it("accepts a zero offer and a 0% rate", () => {
-    expect(readBenchmarks({ preApprovalApr: "0", outsideOffer: "0" })).toEqual({
-      ok: true,
-      value: { preApprovalApr: 0, outsideTradeOffer: cents(0) },
-    });
-  });
-
-  it("explains a bad entry instead of dropping it", () => {
-    expect(readBenchmarks({ preApprovalApr: "five", outsideOffer: "" })).toEqual({
+  it("needs both", () => {
+    expect(readTradeOffer({ source: "", amount: "9200" }, TODAY)).toEqual({
       ok: false,
-      error: "Enter the pre-approval rate, like 5.99.",
+      error: "Say where the figure came from, like Clutch or a second dealer.",
     });
-    expect(readBenchmarks({ preApprovalApr: "", outsideOffer: "lots" })).toEqual({
+    expect(readTradeOffer({ source: "Clutch", amount: "" }, TODAY)).toEqual({
       ok: false,
-      error: "Enter the outside offer in dollars, like 9200.",
+      error: "Enter the figure in dollars, like 9200.",
     });
+    expect(readTradeOffer({ source: "Clutch", amount: "9.2k" }, TODAY)).toEqual({
+      ok: false,
+      error: "Enter the figure in dollars, like 9200.",
+    });
+  });
+});
+
+describe("readWalkAway", () => {
+  it("reads dollars and treats blank as cleared", () => {
+    expect(readWalkAway("33,000")).toEqual({ ok: true, value: cents(3300000) });
+    expect(readWalkAway("")).toEqual({ ok: true, value: undefined });
+  });
+
+  it("refuses zero and unreadable amounts", () => {
+    const error = "Enter the most you'll pay all-in, like 33000.";
+    expect(readWalkAway("0")).toEqual({ ok: false, error });
+    expect(readWalkAway("33k")).toEqual({ ok: false, error });
   });
 });

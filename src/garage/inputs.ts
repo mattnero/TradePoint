@@ -1,6 +1,6 @@
 import { isIsoDate, type IsoDate } from "../model/dates";
 import type { Loan } from "../model/loan";
-import type { Benchmarks } from "../model/verdict";
+import type { TradeOffer } from "../model/prep";
 import { cents, parseMoneyInput, type Cents } from "../model/money";
 import { medianPrice } from "../model/comps";
 import type { NewVehicle, Purchase, ValueAnchor, ValueSource } from "../model/vehicle";
@@ -130,22 +130,29 @@ export function readValueEntry(form: ValueEntryForm, today: IsoDate): Result<Val
   return { ok: true, value: { date: form.date, value: value.value, source: form.kind } };
 }
 
-export interface BenchmarksForm {
-  preApprovalApr: string;
-  outsideOffer: string;
+export function readPreApproval(text: string): Result<number | undefined> {
+  if (text.trim() === "") return { ok: true, value: undefined };
+  const apr = parsePercentInput(text);
+  if (apr === null) return { ok: false, error: "Enter the pre-approval rate, like 5.99." };
+  return { ok: true, value: apr };
 }
 
-export function readBenchmarks(form: BenchmarksForm): Result<Benchmarks> {
-  const value: Benchmarks = {};
-  if (form.preApprovalApr.trim() !== "") {
-    const apr = parsePercentInput(form.preApprovalApr);
-    if (apr === null) return { ok: false, error: "Enter the pre-approval rate, like 5.99." };
-    value.preApprovalApr = apr;
-  }
-  if (form.outsideOffer.trim() !== "") {
-    const offer = parseMoneyInput(form.outsideOffer);
-    if (offer === null) return { ok: false, error: "Enter the outside offer in dollars, like 9200." };
-    value.outsideTradeOffer = offer;
-  }
-  return { ok: true, value };
+export interface TradeOfferForm {
+  source: string;
+  amount: string;
+}
+
+export function readTradeOffer(form: TradeOfferForm, today: IsoDate): Result<TradeOffer> {
+  const source = form.source.trim();
+  if (source === "") return { ok: false, error: "Say where the figure came from, like Clutch or a second dealer." };
+  const amount = parseMoneyInput(form.amount);
+  if (amount === null) return { ok: false, error: "Enter the figure in dollars, like 9200." };
+  return { ok: true, value: { source, amount, date: today } };
+}
+
+export function readWalkAway(text: string): Result<Cents | undefined> {
+  if (text.trim() === "") return { ok: true, value: undefined };
+  const amount = parseMoneyInput(text);
+  if (amount === null || amount === 0) return { ok: false, error: "Enter the most you'll pay all-in, like 33000." };
+  return { ok: true, value: amount };
 }

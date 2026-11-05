@@ -12,6 +12,7 @@ const workedExample: DecoderInputs = {
   tradePayoff: "5000",
   preApprovalApr: "5.99",
   outsideOffer: "9200",
+  walkAway: "",
 };
 
 function encodeInputs(inputs: DecoderInputs): string {
@@ -73,6 +74,14 @@ describe("round trip", () => {
   it("keeps a zero benchmark distinct from an absent one", () => {
     const decoded = decodeShare(encodeInputs({ ...workedExample, outsideOffer: "0" }))!;
     expect(decoded.outsideOffer).toBe("0");
+  });
+});
+
+describe("walk-away", () => {
+  it("never goes into the link", () => {
+    const withWalkAway = { ...workedExample, walkAway: "33000" };
+    expect(encodeInputs(withWalkAway)).toBe(encodeInputs(workedExample));
+    expect(decodeShare(encodeInputs(withWalkAway))!.walkAway).toBe("");
   });
 });
 

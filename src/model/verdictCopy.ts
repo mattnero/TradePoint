@@ -90,3 +90,11 @@ export function tenMinutesText(quote: DealQuote, v: Verdict): string {
   lines.push("Can you look it over with me?");
   return lines.join("\n");
 }
+
+export function walkAwayLine(allIn: Cents, walkAway: Cents): string {
+  const difference = cents(allIn - walkAway);
+  const limit = formatCAD(walkAway);
+  if (formatCAD(difference) === formatCAD(cents(0))) return `Right at your walk-away of ${limit}.`;
+  const side = difference > 0 ? "over" : "under";
+  return `${formatCAD(cents(Math.abs(difference)))} ${side} your walk-away of ${limit}.`;
+}

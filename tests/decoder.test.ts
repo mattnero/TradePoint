@@ -12,6 +12,7 @@ const workedExample: DecoderInputs = {
   tradePayoff: "5000",
   preApprovalApr: "5.99",
   outsideOffer: "9200",
+  walkAway: "33000",
 };
 
 describe("parsePercentInput", () => {
@@ -115,6 +116,7 @@ describe("readDecoder", () => {
     ["tradePayoff", "~5000", "Enter dollars only, like 5000."],
     ["preApprovalApr", "prime", "Enter the rate as a percent, like 5.99."],
     ["outsideOffer", "9.2k", "Enter dollars only, like 9200."],
+    ["walkAway", "33k", "Enter dollars only, like 33000."],
   ] as const)("flags an unreadable %s (%j)", (field, text, message) => {
     expect(readDecoder({ ...workedExample, [field]: text }).problems).toEqual({ [field]: message });
   });
@@ -128,6 +130,23 @@ describe("readDecoder", () => {
     expect(readDecoder({ ...workedExample, preApprovalApr: "prime" }).benchmarks).toEqual({
       outsideTradeOffer: 920000,
     });
+  });
+});
+
+describe("walk-away", () => {
+  it("reads it apart from the benchmarks, so it never reaches the verdict or a share link", () => {
+    const reading = readDecoder(workedExample);
+    expect(reading.walkAway).toBe(3300000);
+    expect(reading.benchmarks).not.toHaveProperty("walkAway");
+  });
+
+  it("is absent when blank or unreadable", () => {
+    expect(readDecoder({ ...workedExample, walkAway: "" })).not.toHaveProperty("walkAway");
+    expect(readDecoder({ ...workedExample, walkAway: "33k" })).not.toHaveProperty("walkAway");
+  });
+
+  it("starts blank", () => {
+    expect(emptyDecoder().walkAway).toBe("");
   });
 });
 

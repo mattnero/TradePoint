@@ -14,6 +14,7 @@ export interface DecoderInputs {
   tradePayoff: string;
   preApprovalApr: string;
   outsideOffer: string;
+  walkAway: string;
 }
 
 export type DecoderField = Exclude<keyof DecoderInputs, "frequency">;
@@ -24,16 +25,18 @@ export interface DecoderReading {
   quote: DealQuote | null;
   benchmarks: Benchmarks;
   problems: FieldProblems;
+  walkAway?: Cents;
 }
 
 const MAX_TERM_MONTHS = 120;
 
-const MONEY_EXAMPLES: Record<"down" | "advertised" | "tradeAllowance" | "tradePayoff" | "outsideOffer", string> = {
+const MONEY_EXAMPLES: Record<"down" | "advertised" | "tradeAllowance" | "tradePayoff" | "outsideOffer" | "walkAway", string> = {
   down: "3000",
   advertised: "29995",
   tradeAllowance: "8000",
   tradePayoff: "5000",
   outsideOffer: "9200",
+  walkAway: "33000",
 };
 
 export function emptyDecoder(): DecoderInputs {
@@ -48,6 +51,7 @@ export function emptyDecoder(): DecoderInputs {
     tradePayoff: "",
     preApprovalApr: "",
     outsideOffer: "",
+    walkAway: "",
   };
 }
 
@@ -80,7 +84,10 @@ function isBlank(input: string): boolean {
 export function fieldProblems(inputs: DecoderInputs): FieldProblems {
   const problems: FieldProblems = {};
   if (!isBlank(inputs.payment)) {
-    const payment = parseMoneyInput(inputs.payment);
+    const walkAway = optionalMoney(inputs.walkAway);
+  const extras = walkAway === undefined ? {} : { walkAway };
+
+  const payment = parseMoneyInput(inputs.payment);
     if (payment === null) problems.payment = "Enter the payment in dollars, like 450.";
     else if (payment <= 0) problems.payment = "The payment has to be more than $0.";
   }
@@ -109,6 +116,9 @@ export function readDecoder(inputs: DecoderInputs): DecoderReading {
   const outsideTradeOffer = optionalMoney(inputs.outsideOffer);
   if (outsideTradeOffer !== undefined) benchmarks.outsideTradeOffer = outsideTradeOffer;
 
+  const walkAway = optionalMoney(inputs.walkAway);
+  const extras = walkAway === undefined ? {} : { walkAway };
+
   const payment = parseMoneyInput(inputs.payment);
   const termMonths = parseTerm(inputs.term);
   const apr = parsePercentInput(inputs.apr);
@@ -119,7 +129,7 @@ export function readDecoder(inputs: DecoderInputs): DecoderReading {
     termMonths === null ||
     apr === null
   ) {
-    return { quote: null, benchmarks, problems };
+    return { quote: null, benchmarks, problems, ...extras };
   }
 
   const quote: DealQuote = {
@@ -134,5 +144,5 @@ export function readDecoder(inputs: DecoderInputs): DecoderReading {
   };
   const advertisedPrice = optionalMoney(inputs.advertised);
   if (advertisedPrice !== undefined) quote.advertisedPrice = advertisedPrice;
-  return { quote, benchmarks, problems };
+  return { quote, benchmarks, problems, ...extras };
 }

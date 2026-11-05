@@ -1,0 +1,21 @@
+{
+  "preApproval": [
+    {
+      "label": "How to shop around for car financing (Government of Canada)",
+      "url": "https://www.canada.ca/en/financial-consumer-agency/services/loans/financing-car/shop-around.html",
+      "verifiedOn": "2026-11-04"
+    }
+  ],
+  "tradeOffers": [
+    {
+      "label": "Canada Drives instant offer",
+      "url": "https://www.canadadrives.ca/sell-your-car",
+      "verifiedOn": "2026-11-04"
+    },
+    {
+      "label": "Clutch firm offer",
+      "url": "https://www.clutch.ca/sell-or-trade",
+      "verifiedOn": "2026-11-04"
+    }
+  ]
+}

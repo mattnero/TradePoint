@@ -5,7 +5,7 @@
   import { router } from "../router/router.svelte";
   import { decodeShare, encodeShare } from "../share/codec";
   import { headline, verdict, type VerdictLevel } from "../model/verdict";
-  import { askFor, gapRows, subtitle, tenMinutesText } from "../model/verdictCopy";
+  import { askFor, gapRows, subtitle, tenMinutesText, walkAwayLine } from "../model/verdictCopy";
 
   const tone: Record<VerdictLevel, "good" | "warn" | "bad"> = {
     match: "good",
@@ -111,6 +111,10 @@
       <span class="v total">{formatCAD(result.figures.totalPaid)}</span>
     </div>
   </section>
+
+  {#if reading.walkAway !== undefined}
+    <p class="walkaway">{walkAwayLine(result.figures.impliedAllIn, reading.walkAway)}</p>
+  {/if}
 
   <span class="label">Ask for</span>
   <div class="chips">
@@ -303,5 +307,11 @@
 
   .empty {
     color: var(--muted);
+  }
+
+  .walkaway {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
   }
 </style>

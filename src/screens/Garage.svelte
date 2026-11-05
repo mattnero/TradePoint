@@ -1,6 +1,7 @@
 <script lang="ts">
   import AddVehicleForm from "../garage/AddVehicleForm.svelte";
   import CliffList from "../garage/CliffList.svelte";
+  import PrepChecklist from "../garage/PrepChecklist.svelte";
   import VehicleSetup from "../garage/VehicleSetup.svelte";
   import {
     activeSeasonLine,
@@ -18,6 +19,7 @@
   import { equityPill, valueBasisLine } from "../model/valueCopy";
   import { windowSentence } from "../model/windowCopy";
   import { kmPerMonth, latestReading, type Vehicle } from "../model/vehicle";
+  import type { Prep } from "../model/prep";
   import { applyGarage } from "../decoder/state.svelte";
   import { garageStore } from "../store/garage.svelte";
 
@@ -35,6 +37,11 @@
 
   function save(next: Vehicle) {
     garageStore.update((g) => ({ ...g, vehicles: [next] }));
+  }
+
+  function savePrep(v: Vehicle, prep: Prep) {
+    const { prep: _, ...rest } = v;
+    save(Object.keys(prep).length === 0 ? rest : { ...rest, prep });
   }
 
   function startDealerVisit(v: Vehicle) {
@@ -151,6 +158,10 @@
         The app has no Canadian warranty terms for {vehicle.make} yet, so it can't date your warranty.
       </p>
     {/if}
+
+    {#key vehicle.id}
+      <PrepChecklist prep={vehicle.prep} onchange={(prep) => savePrep(vehicle, prep)} />
+    {/key}
 
     <button class="btn primary" type="button" onclick={() => startDealerVisit(vehicle)}>
       I'm at a dealership

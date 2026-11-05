@@ -15,6 +15,34 @@
         "url": "https://www.ontario.ca/page/driver-and-vehicle-fees",
         "verifiedOn": "2026-11-02"
       }
-    ]
+    ],
+    "rules": [
+      {
+        "text": "The advertised price has to include every fee the dealer means to charge: freight, PDI, admin fees and pre-installed extras like etching or nitrogen. Only HST and licensing can be added on top.",
+        "url": "https://www.omvic.ca/buying/your-rights/all-in-price-advertising/",
+        "verifiedOn": "2026-11-04"
+      },
+      {
+        "text": "There's no cooling-off period. Once you sign, the contract is binding.",
+        "url": "https://www.omvic.ca/buying/complaints/cancelling-an-agreement/",
+        "verifiedOn": "2026-11-04"
+      },
+      {
+        "text": "A deposit with no signed contract can be asked back at any time, and the dealer has to return it.",
+        "url": "https://www.omvic.ca/buying/complaints/cancelling-an-agreement/",
+        "verifiedOn": "2026-11-04"
+      },
+      {
+        "text": "Put any conditions in the written contract. Verbal promises are hard to prove.",
+        "url": "https://www.omvic.ca/buying/complaints/cancelling-an-agreement/",
+        "verifiedOn": "2026-11-04"
+      },
+      {
+        "text": "On a used car, you can cancel within 90 days of delivery if the dealer didn't disclose past taxi, police or daily-rental use, a salvage or rebuilt brand, or the real kilometres.",
+        "url": "https://www.omvic.ca/buying/complaints/cancelling-an-agreement/",
+        "verifiedOn": "2026-11-04"
+      }
+    ],
+    "rulesAuthority": "OMVIC"
   }
 }

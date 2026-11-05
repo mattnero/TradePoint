@@ -4,6 +4,7 @@ import warranty from "../src/data/warranty.json";
 import { isIsoDate } from "../src/model/dates";
 import { segmentFor, SEGMENTS } from "../src/model/segments";
 import { TAX_RULES, expectedAllIn } from "../src/math/tax";
+import { PREP_LINKS, PROVINCE_RULES } from "../src/model/prepGuide";
 
 describe("provinces.json", () => {
   it("drives the Ontario tax rule", () => {
@@ -21,6 +22,37 @@ describe("provinces.json", () => {
         expect(s.url).toMatch(/^https:\/\//);
         expect(isIsoDate(s.verifiedOn)).toBe(true);
       }
+    }
+  });
+});
+
+describe("province rules for the prep checklist", () => {
+  it("has the Ontario rules from OMVIC, each with a dated source", () => {
+    const on = PROVINCE_RULES.ON;
+    expect(on.name).toBe("Ontario");
+    expect(on.authority).toBe("OMVIC");
+    expect(on.rules.length).toBeGreaterThanOrEqual(3);
+    for (const rule of on.rules) {
+      expect(rule.text.trim()).not.toBe("");
+      expect(rule.url).toMatch(/^https:\/\/www\.omvic\.ca\//);
+      expect(isIsoDate(rule.verifiedOn)).toBe(true);
+    }
+  });
+
+  it("says only HST and licensing go on top of the advertised price", () => {
+    expect(PROVINCE_RULES.ON.rules[0]!.text).toMatch(/Only HST and licensing/);
+  });
+});
+
+describe("prepLinks.json", () => {
+  it("has plain, dated https links for pre-approval and outside offers", () => {
+    const all = [...PREP_LINKS.preApproval, ...PREP_LINKS.tradeOffers];
+    expect(PREP_LINKS.preApproval.length).toBeGreaterThan(0);
+    expect(PREP_LINKS.tradeOffers.length).toBeGreaterThan(0);
+    for (const link of all) {
+      expect(link.url).toMatch(/^https:\/\//);
+      expect(link.url).not.toMatch(/[?&](ref|aff|utm_|partner)/i);
+      expect(isIsoDate(link.verifiedOn)).toBe(true);
     }
   });
 });

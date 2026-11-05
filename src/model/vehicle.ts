@@ -2,7 +2,7 @@ import { DAYS_PER_MONTH, daysBetween, isIsoDate, type IsoDate } from "./dates";
 import { parseLoan, type Loan } from "./loan";
 import { cents, type Cents } from "./money";
 import { SEGMENTS, type SegmentKey } from "./segments";
-import type { Benchmarks } from "./verdict";
+import { parsePrep, type Prep } from "./prep";
 
 export interface OdometerReading {
   date: IsoDate;
@@ -36,7 +36,7 @@ export interface Vehicle {
   purchase?: Purchase;
   odometer: OdometerReading[];
   loan?: Loan;
-  benchmarks?: Benchmarks;
+  prep?: Prep;
   valueAnchors?: ValueAnchor[];
 }
 
@@ -128,21 +128,6 @@ export function kmPerMonth(vehicle: Vehicle): number | null {
   return perDay === null ? null : Math.round(perDay * DAYS_PER_MONTH);
 }
 
-function parseBenchmarks(value: unknown): Benchmarks | null {
-  if (typeof value !== "object" || value === null) return null;
-  const b = value as Record<string, unknown>;
-  const out: Benchmarks = {};
-  if (b.preApprovalApr !== undefined) {
-    if (typeof b.preApprovalApr !== "number" || b.preApprovalApr < 0 || b.preApprovalApr > 1) return null;
-    out.preApprovalApr = b.preApprovalApr;
-  }
-  if (b.outsideTradeOffer !== undefined) {
-    if (!isCount(b.outsideTradeOffer)) return null;
-    out.outsideTradeOffer = cents(b.outsideTradeOffer);
-  }
-  return out;
-}
-
 function parseValueAnchor(value: unknown): ValueAnchor | null {
   if (typeof value !== "object" || value === null) return null;
   const a = value as Record<string, unknown>;
@@ -186,10 +171,10 @@ export function parseVehicle(value: unknown): Vehicle | null {
     if (typeof p !== "object" || p === null || !isCount(p.price) || !isIsoDate(p.date)) return null;
     vehicle.purchase = { price: cents(p.price), date: p.date };
   }
-  if (v.benchmarks !== undefined) {
-    const benchmarks = parseBenchmarks(v.benchmarks);
-    if (benchmarks === null) return null;
-    vehicle.benchmarks = benchmarks;
+  if (v.prep !== undefined) {
+    const prep = parsePrep(v.prep);
+    if (prep === null) return null;
+    vehicle.prep = prep;
   }
   if (v.valueAnchors !== undefined) {
     if (!Array.isArray(v.valueAnchors)) return null;

@@ -1,4 +1,4 @@
-import { askFor, gapRows, subtitle, tenMinutesText } from "../src/model/verdictCopy";
+import { askFor, gapRows, subtitle, tenMinutesText, walkAwayLine } from "../src/model/verdictCopy";
 import { cents, fromDollars } from "../src/model/money";
 import type { DealQuote } from "../src/model/deal";
 import { verdict } from "../src/model/verdict";
@@ -105,5 +105,16 @@ describe("tenMinutesText", () => {
     const text = tenMinutesText(q, verdict(withoutAdvertised(q)));
     expect(text).toContain("$208.50 bi-weekly");
     expect(text).not.toContain("Gaps to ask about");
+  });
+});
+
+describe("walkAwayLine", () => {
+  it("reads the worked example against a $33,000 walk-away", () => {
+    expect(walkAwayLine(worked.figures.impliedAllIn, cents(3300000))).toBe("$1,881 over your walk-away of $33,000.");
+  });
+
+  it("says under, and says when it lands right on it", () => {
+    expect(walkAwayLine(cents(3200000), cents(3300000))).toBe("$1,000 under your walk-away of $33,000.");
+    expect(walkAwayLine(cents(3300040), cents(3300000))).toBe("Right at your walk-away of $33,000.");
   });
 });

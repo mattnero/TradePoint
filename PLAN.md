@@ -437,7 +437,7 @@ data; Sonnet elsewhere; no Haiku, because redoing a session costs more than it s
 |---------|-------|-----|
 | 15 Prep checklist | Opus | Ontario rules are verified data like Session 7; the trade-offer parser change feeds the verdict |
 | 16 Pro seam | Sonnet | Wiring and one sheet; the flag-off check catches misses |
-| 17 Saved deals, schema v2 | Opus | First real migration; a mistake erases garages |
+| 17 Saved deals, schema v3 | Opus | A migration chain; a mistake erases garages |
 | 18 Side by side | Sonnet | Display of numbers already computed and tested |
 | 19 Multiple vehicles | Sonnet | UI over the v2 shape; switch to Opus if the Pro-loss rules get murky |
 | 20 PDF | Sonnet | Layout and a pure function with tests |
@@ -475,6 +475,29 @@ half set up.
 - Plain links only (bank/credit union pre-approval, outside offer sites); no referrals.
 - Done when: tests cover the parser change and the walk-away line; Matt's worked example
   with a $33,000 walk-away reads "$1,881 over your walk-away".
+- **Status 2026-11-04: done.** Changed from the plan: instead of the parser quietly reading
+  the old field, this was done as a real **schema bump, v1 → v2** (`garageV1ToV2` in
+  `src/store/garage.ts`). `vehicle.benchmarks` became `vehicle.prep`
+  (`src/model/prep.ts`: `preApprovalApr`, `tradeOffers[]` max 2 `{ source, amount, date? }`,
+  `walkAway`, `rulesReadOn`); a v1 `outsideTradeOffer` becomes one offer from "Outside offer"
+  with no date; empty benchmarks are dropped; malformed v1 data goes down the existing
+  backup/recovery path. The stored text stays v1 until the next save. `decoderBenchmarks(prep)`
+  gives the decoder the higher offer. The walk-away lives on `DecoderReading`, not in
+  `Benchmarks`, so it can't reach `verdict()` or the share codec (tested).
+  Ontario rules: five, in `provinces.json` `ON.rules`, each sourced to omvic.ca (all-in price
+  page, cancelling-an-agreement page), checked 2026-11-04: all-in except HST and licensing,
+  no cooling-off, deposit with no contract is refundable, conditions in writing, 90-day cancel
+  for undisclosed used-car history. Links in `src/data/prepLinks.json`: FCAC "shop around for
+  auto-financing", Canada Drives sell page, Clutch `sell-or-trade` (Clutch is a JS app; it was
+  confirmed through its search index, not by loading it). AutoTrader's instant offer URL is a 404;
+  left out. Garage card `PrepChecklist.svelte` replaces the old benchmarks form in VehicleSetup.
+  Checked in headless Chrome at 320 and 375px against a v0.1.1-shaped garage: it upgrades with
+  no recovery notice, all four rows complete, the result survives reload, the decoder fills
+  walk-away 33000 and offer 9200, and the Verdict reads "$1,881 over your walk-away of $33,000."
+  No horizontal scroll, checklist targets ≥ 44px, no console errors. 617 tests.
+  Overlap left alone: an outside offer can also be entered as a value anchor on Timeline
+  (source "offer"). They aren't linked. If Matt enters the same number twice, offer to copy one
+  into the other.
 
 ### Session 16 · Pro seam and paywall sheet
 - `src/pro/`: an `Entitlement` interface (`isPro`, `purchase`, `restore`, subscribe to
@@ -490,14 +513,14 @@ half set up.
 - Done when: with the flag off, every Pro element opens the sheet and nothing Pro
   renders; with it on, nothing changes from v0.1.1.
 
-### Session 17 · Saved deals (schema v2)
+### Session 17 · Saved deals (schema v3)
 - Test-first. `SavedDeal` model and parser; `deals: unknown[]` becomes `SavedDeal[]`.
-  `schemaVersion` 1 → 2 with a migration that keeps every v1 vehicle exactly (test with
-  real v1 blobs, including the unreadable-blob backup path).
+  `schemaVersion` 2 → 3 (Session 15 used v2). The migration keeps every vehicle exactly; test
+  it with real v1 and v2 blobs chained through, including the unreadable-blob backup path.
 - Save from Verdict with a label (dealer name), list on Dealer, open (restores the
   decoder), rename, delete. Saving is Pro.
-- Done when: a v1 garage from the live site survives the upgrade untouched; three saved
-  deals survive reload.
+- Done when: v1 and v2 garages survive the upgrade untouched; three saved deals survive
+  reload.
 
 ### Session 18 · Side by side
 - Pick two saved deals → compare screen: payment and frequency, term, APR, financed,

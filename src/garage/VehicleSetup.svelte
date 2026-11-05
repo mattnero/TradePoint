@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { untrack } from "svelte";
   import Field from "../decoder/Field.svelte";
   import { todayIso } from "../model/dates";
   import { loanBalanceAt, monthsRemainingAt } from "../model/loan";
@@ -7,11 +6,9 @@
   import { SEGMENTS, segmentFor, type SegmentKey } from "../model/segments";
   import { addOdometerReading, estimatedInServiceDate, type Vehicle } from "../model/vehicle";
   import { formatKm, monthYear } from "../model/cliffCopy";
-  import { formatPercentInput } from "../decoder/inputs";
-  import { formatInputMoney } from "../model/money";
   import { valueCurve } from "../model/value";
   import { valueBasisLine } from "../model/valueCopy";
-  import { readBenchmarks, readInServiceDate, readKm, readLoanSnapshot, readPurchase } from "./inputs";
+  import { readInServiceDate, readKm, readLoanSnapshot, readPurchase } from "./inputs";
 
   let {
     vehicle,
@@ -32,11 +29,6 @@
   let apr = $state("");
   let monthsLeft = $state("");
   let loanError = $state("");
-  const saved = untrack(() => vehicle.benchmarks);
-  let preApproval = $state(saved?.preApprovalApr === undefined ? "" : formatPercentInput(saved.preApprovalApr));
-  let outsideOffer = $state(saved?.outsideTradeOffer === undefined ? "" : formatInputMoney(saved.outsideTradeOffer));
-  let benchmarksError = $state("");
-  let benchmarksSaved = $state(false);
 
   const latestKm = $derived(vehicle.odometer[vehicle.odometer.length - 1]!.km);
   const curve = $derived(valueCurve(vehicle));
@@ -111,20 +103,6 @@
     loanError = "";
     onchange({ ...vehicle, loan: read.value });
     balance = apr = monthsLeft = "";
-  }
-
-  function saveBenchmarks(event: SubmitEvent) {
-    event.preventDefault();
-    const read = readBenchmarks({ preApprovalApr: preApproval, outsideOffer });
-    if (!read.ok) {
-      benchmarksError = read.error;
-      benchmarksSaved = false;
-      return;
-    }
-    benchmarksError = "";
-    benchmarksSaved = true;
-    const { benchmarks: _, ...rest } = vehicle;
-    onchange(Object.keys(read.value).length === 0 ? rest : { ...rest, benchmarks: read.value });
   }
 
   function removeLoan() {
@@ -238,20 +216,6 @@
       </form>
     {/if}
   </details>
-
-  <form onsubmit={saveBenchmarks} class="card">
-    <span class="label">Your benchmarks</span>
-    <p class="hint">
-      Prep before you go: a bank pre-approval rate and an outside offer for your trade. The decoder fills them in.
-    </p>
-    <div class="fields">
-      <Field id="u-preapproval" label="Pre-approval % APR" bind:value={preApproval} />
-      <Field id="u-offer" label="Outside trade offer" bind:value={outsideOffer} />
-    </div>
-    {#if benchmarksError}<p class="error" role="alert">{benchmarksError}</p>{/if}
-    <button class="btn quiet" type="submit">Save benchmarks</button>
-    {#if benchmarksSaved}<p class="hint" role="status">Saved.</p>{/if}
-  </form>
 
   <button class="btn quiet remove" type="button" onclick={confirmRemove}>Remove this car</button>
 </section>

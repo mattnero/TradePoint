@@ -88,6 +88,7 @@ export function decodeShare(code: string): DecoderInputs | null {
     tradePayoff: moneyText(payoff),
     preApprovalApr: preApproval === null ? "" : percentText(preApproval),
     outsideOffer: optionalMoneyText(offer),
+    walkAway: "",
   };
   return readDecoder(inputs).quote === null ? null : inputs;
 }

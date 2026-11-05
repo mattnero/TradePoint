@@ -107,7 +107,17 @@
       bind:value={decoder.outsideOffer}
     />
   </div>
-  <p class="hint">Leave benchmarks empty and the verdict shows the price gap only.</p>
+  <Field
+    id="in-walkaway"
+    label="Walk-away all-in (optional)"
+    prefilled={isFromGarage("walkAway")}
+    error={problems.walkAway}
+    bind:value={decoder.walkAway}
+  />
+  <p class="hint">
+    Leave benchmarks empty and the verdict shows the price gap only. Your walk-away stays on this phone; it never goes
+    in a share link.
+  </p>
 
   <button class="btn primary" type="button" disabled={!quote} onclick={checkNumbers}>
     Check the numbers

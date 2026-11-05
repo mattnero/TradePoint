@@ -98,7 +98,8 @@ curve keeps its shape after it). Comps entry: 3–5 prices → median anchor, so
 ## Persistence
 
 localStorage key `tradepoint.garage.v1`, `{ schemaVersion, vehicles[], deals[] }`.
-schemaVersion 2 (Session 17) types `deals` as `SavedDeal[]` and adds `selectedVehicleId`.
+schemaVersion 2 (Session 15): vehicle `benchmarks` → `prep`. schemaVersion 3 (Session 17)
+types `deals` as `SavedDeal[]` and adds `selectedVehicleId`.
 Money in integer cents; rates as decimals; dates ISO strings. load() wraps in try/catch
 and falls back to empty; migrate(fromVersion) chain.
 
@@ -111,12 +112,14 @@ with an Edit path. No server.
 
 ### Prep checklist (free)
 Garage card "Before the dealership", four rows with done states:
-1. Pre-approval rate from a bank or credit union → `benchmarks.preApprovalApr`.
+Stored on the vehicle as `prep` (schemaVersion 2 renamed it from `benchmarks`).
+1. Pre-approval rate from a bank or credit union → `prep.preApprovalApr`.
 2. Trade figures from two independent sources (an outside offer beats an estimate) →
-   `benchmarks.tradeOffers[]`, max 2, `{ source, amountCents, date }`. Verdict trade gap
-   uses the higher one. Old `outsideTradeOffer` parses as one offer.
-3. Walk-away all-in → `benchmarks.walkAwayCents`. Verdict shows one line: implied
+   `prep.tradeOffers[]`, max 2, `{ source, amount, date? }` (cents). Verdict trade gap
+   uses the higher one. A v1 `outsideTradeOffer` migrates to one offer, source "Outside offer".
+3. Walk-away all-in → `prep.walkAway` (cents). Verdict shows one line: implied
    all-in vs walk-away in dollars. Never affects headline or severity. Not in share links.
+   Rules row is done when `prep.rulesReadOn` is set ("Got it").
 4. Province rules card from `provinces.json` `rules[]` (ON: advertised price is all-in
    except HST and licensing; admin fees added at the desk breach OMVIC rules). Each rule
    has `source` and `verifiedOn`.

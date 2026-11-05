@@ -31,9 +31,9 @@ const santaFe = createVehicle(
 const garageWithCar: Garage = { ...emptyGarage(), vehicles: [santaFe] };
 
 describe("emptyGarage", () => {
-  it("is version 1 with nothing in it", () => {
-    expect(emptyGarage()).toEqual({ schemaVersion: 1, vehicles: [], deals: [] });
-    expect(CURRENT_SCHEMA_VERSION).toBe(1);
+  it("is version 2 with nothing in it", () => {
+    expect(emptyGarage()).toEqual({ schemaVersion: 2, vehicles: [], deals: [] });
+    expect(CURRENT_SCHEMA_VERSION).toBe(2);
   });
 });
 
@@ -165,6 +165,92 @@ describe("eraseGarage", () => {
       },
     };
     expect(eraseGarage(storage)).toBe(false);
+  });
+});
+
+describe("upgrading a version 1 garage", () => {
+  const v1Vehicle = {
+    id: "v-santa-fe",
+    year: 2019,
+    make: "Hyundai",
+    model: "Santa Fe",
+    trim: "Preferred",
+    segment: "mid-suv",
+    inServiceDate: "2019-03-15",
+    inServiceEstimated: false,
+    purchase: { price: 3299500, date: "2019-03-15" },
+    odometer: [
+      { date: "2026-10-01", km: 117200 },
+      { date: "2026-11-02", km: 118000 },
+    ],
+    loan: { kind: "snapshot", balance: 1510000, apr: 0.0449, monthsRemaining: 30, asOf: "2026-11-02" },
+    benchmarks: { preApprovalApr: 0.0599, outsideTradeOffer: 920000 },
+    valueAnchors: [{ date: "2026-11-02", value: 1420000, source: "comps" }],
+  };
+  const { benchmarks: _, ...untouched } = v1Vehicle;
+  const v1Blob = (vehicles: unknown[], deals: unknown[] = []) =>
+    JSON.stringify({ schemaVersion: 1, vehicles, deals });
+
+  it("keeps every vehicle field and moves the benchmarks into prep", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v1Blob([v1Vehicle]) });
+    const { garage, recovered } = loadGarage(storage);
+    expect(recovered).toBe(false);
+    expect(garage.vehicles).toEqual([
+      {
+        ...untouched,
+        prep: {
+          preApprovalApr: 0.0599,
+          tradeOffers: [{ source: "Outside offer", amount: 920000 }],
+        },
+      },
+    ]);
+  });
+
+  it("keeps a vehicle that never had benchmarks exactly as it was", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v1Blob([untouched]) });
+    expect(loadGarage(storage).garage.vehicles).toEqual([untouched]);
+  });
+
+  it("moves a lone pre-approval or a lone offer", () => {
+    const rateOnly = { ...untouched, benchmarks: { preApprovalApr: 0 } };
+    const offerOnly = { ...untouched, id: "v2", benchmarks: { outsideTradeOffer: 0 } };
+    const storage = fakeStorage({ [STORAGE_KEY]: v1Blob([rateOnly, offerOnly]) });
+    const [a, b] = loadGarage(storage).garage.vehicles;
+    expect(a!.prep).toEqual({ preApprovalApr: 0 });
+    expect(b!.prep).toEqual({ tradeOffers: [{ source: "Outside offer", amount: 0 }] });
+  });
+
+  it("drops empty benchmarks instead of leaving an empty prep", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v1Blob([{ ...untouched, benchmarks: {} }]) });
+    expect(loadGarage(storage).garage.vehicles).toEqual([untouched]);
+  });
+
+  it("keeps deals through the upgrade", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v1Blob([untouched], [{ anything: 1 }]) });
+    expect(loadGarage(storage).garage.deals).toEqual([{ anything: 1 }]);
+  });
+
+  it("leaves the stored v1 text alone until the next save, then writes version 2", () => {
+    const raw = v1Blob([v1Vehicle]);
+    const storage = fakeStorage({ [STORAGE_KEY]: raw });
+    const { garage } = loadGarage(storage);
+    expect(storage.data.get(STORAGE_KEY)).toBe(raw);
+    saveGarage(garage, storage);
+    const saved = JSON.parse(storage.data.get(STORAGE_KEY)!);
+    expect(saved.schemaVersion).toBe(2);
+    expect(saved.vehicles[0]).not.toHaveProperty("benchmarks");
+    expect(loadGarage(storage).garage).toEqual(garage);
+  });
+
+  it.each([
+    ["an unreadable offer", { ...v1Vehicle, benchmarks: { outsideTradeOffer: "lots" } }],
+    ["benchmarks that are not an object", { ...v1Vehicle, benchmarks: 5 }],
+    ["a vehicle that is not an object", 7],
+  ])("treats %s as unreadable and keeps a copy", (_name, vehicle) => {
+    const raw = v1Blob([vehicle]);
+    const storage = fakeStorage({ [STORAGE_KEY]: raw });
+    expect(loadGarage(storage)).toEqual({ garage: emptyGarage(), recovered: true });
+    expect(storage.data.get(BACKUP_KEY)).toBe(raw);
   });
 });
 
