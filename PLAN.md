@@ -430,9 +430,22 @@ Studio or a developer account, and Matt can sort those out in parallel. Native w
 (21–25) comes last. Product rules for everything below are in `docs/spec.md`
 under "Phase 1 (2026-11-04)".
 
-Model: Sonnet by default. Use Opus for 17 (schema v2 migration), 22 (native storage
-move) and 23 (entitlements): a wrong answer there loses someone's garage or their
-purchase.
+Model per session (same rule as Phase 0: Opus where a wrong answer looks right or loses
+data; Sonnet elsewhere; no Haiku, because redoing a session costs more than it saves):
+
+| Session | Model | Why |
+|---------|-------|-----|
+| 15 Prep checklist | Opus | Ontario rules are verified data like Session 7; the trade-offer parser change feeds the verdict |
+| 16 Pro seam | Sonnet | Wiring and one sheet; the flag-off check catches misses |
+| 17 Saved deals, schema v2 | Opus | First real migration; a mistake erases garages |
+| 18 Side by side | Sonnet | Display of numbers already computed and tested |
+| 19 Multiple vehicles | Sonnet | UI over the v2 shape; switch to Opus if the Pro-loss rules get murky |
+| 20 PDF | Sonnet | Layout and a pure function with tests |
+| 21 Capacitor shell | Sonnet | Toolchain trial and error; speed matters more than depth |
+| 22 Native storage | Opus | Async storage behind a sync interface, plus a one-way copy on first launch |
+| 23 RevenueCat | Opus | Purchase edge cases (pending, refund, offline) that look right when wrong |
+| 24 Store listings | Sonnet | Copy and forms; the guideline check is a checklist |
+| 25 Launch | Sonnet | Switch to Opus if a rejection reason is ambiguous |
 
 ### Matt's prerequisites (blocking, with the session that needs them)
 
