@@ -20,8 +20,8 @@ comes first. Mockups: `docs/mockups/tradepoint-mockups.html`.
 | Routing | Hash router (`#garage`, `#timeline`, `#dealer`, `#verdict`, `#d=<deal>`) | Share links must work on static hosting with no server |
 | Tests | Vitest for math/model; Playwright smoke test later | Math is where bugs would cost credibility |
 | Hosting (web) | GitHub Pages from `main` via Actions | Free, already on GitHub; swap to Cloudflare Pages if a custom domain needs it |
-| Mobile (Phase 1) | Capacitor 6 | Wraps the same build; iOS needs Xcode on this Mac, Android needs Android Studio |
-| Payments (Phase 1) | RevenueCat | Free under US$2.5k monthly revenue; handles both stores' IAP and receipt validation |
+| Mobile (Phase 1) | Capacitor 8 | Wraps the same build; iOS needs Xcode on this Mac, Android needs Android Studio |
+| Payments (Phase 1) | RevenueCat (`@revenuecat/purchases-capacitor`) | Free under US$2.5k monthly revenue; handles both stores' IAP and receipt validation |
 | Analytics | None in Phase 0 | Add a privacy-respecting counter (Plausible or GoatCounter) only if curious |
 
 No backend. No accounts. If a feature needs a server, it waits for Phase 2 and gets a
@@ -422,18 +422,146 @@ a real quote before continuing; fix what hurt.
   Not built, and in no session: the spec's free "Prep checklist". The garage's "Your benchmarks" card
   is the closest thing. Plan it with Phase 1 if Matt wants it.
 
-## Phase 1 — stores (sketch, plan properly after Phase 0)
+## Phase 1 — stores and Pro (planned 2026-11-04)
 
-1. Capacitor init; iOS and Android projects; app icons and splash from the token
-   palette; test on both devices.
-2. RevenueCat: one non-consumable product (`pro`), entitlement check gates the
-   equity tile, chart, multi-vehicle, saved deals, PDF.
-3. Paywall sheet as mocked; restore purchases; "Not now" never nags again that session.
-4. Saved deals + side-by-side; PDF export via the browser print pipeline is blocked
-   in Capacitor webviews, so use a small client-side PDF library or render to image.
-5. Store listings: screenshots from the mockup palette, privacy labels (no data
-   collected), review guideline check for financial calculators (disclaimer text).
-6. Apple Developer Program enrolment takes days; start it during Phase 0 session 12.
+Eleven sessions, 15–25. At one a week that's late January 2027 plus store review time.
+Order: the web-only features come first (15–20) because none of them need Xcode, Android
+Studio or a developer account, and Matt can sort those out in parallel. Native work
+(21–25) comes last. Product rules for everything below are in `docs/spec.md`
+under "Phase 1 (2026-11-04)".
+
+Model: Sonnet by default. Use Opus for 17 (schema v2 migration), 22 (native storage
+move) and 23 (entitlements): a wrong answer there loses someone's garage or their
+purchase.
+
+### Matt's prerequisites (blocking, with the session that needs them)
+
+| Needed by | What | Notes |
+|-----------|------|-------|
+| 21 | Full Xcode from the Mac App Store | Today the Mac only has Command Line Tools. After install: `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`, open Xcode once, install an iOS simulator |
+| 21 | Android Studio with the SDK and one emulator | `~/Library/Android/sdk` does not exist yet |
+| 21 | iPhone with Developer Mode on, USB cable | For the real-phone pass Phase 0 never got |
+| 23 | Apple Developer Program, active | US$99/yr; enrolment takes days. Then in App Store Connect: Paid Apps agreement, banking, tax forms. IAP doesn't work until those are accepted |
+| 23 | Google Play Console account | US$25 one-time; identity check takes days. **New personal accounts must run a closed test with at least 12 opted-in testers for 14 consecutive days before production access.** Matt needs 12 people (family, friends) with Android phones |
+| 23 | RevenueCat account | Free. One project, iOS and Android apps added |
+
+If 21's tools aren't ready when 15–20 are done, stop and ask; don't start native work
+half set up.
+
+### Session 15 · Prep checklist (free)
+- Spec "Prep checklist". Garage card "Before the dealership" with four rows, each with a
+  done state: pre-approval rate, two trade figures, walk-away all-in, Ontario rules.
+- Benchmarks gain `tradeOffers` (up to two, each `{ source, amountCents, date }`) and
+  `walkAwayCents`. Parser reads the old single `outsideTradeOffer` as one offer. The
+  decoder's outside-offer benchmark is the higher offer; the share codec is unchanged.
+- Ontario rules card is data (`provinces.json` gains `rules[]` with `source`, `verifiedOn`).
+  Verify against OMVIC's site; never from memory.
+- Dealer screen gets a walk-away field (optional; works with no garage). Verdict gets
+  one line under the breakdown: all-in vs walk-away in dollars. It never changes the
+  headline or severity. Walk-away stays out of the share link.
+- Plain links only (bank/credit union pre-approval, outside offer sites); no referrals.
+- Done when: tests cover the parser change and the walk-away line; Matt's worked example
+  with a $33,000 walk-away reads "$1,881 over your walk-away".
+
+### Session 16 · Pro seam and paywall sheet
+- `src/pro/`: an `Entitlement` interface (`isPro`, `purchase`, `restore`, subscribe to
+  changes) and a web implementation. A build flag (`VITE_PRO_OPEN`, default true until
+  Session 25) keeps everything open on the web while testing.
+- One `requirePro(feature)` path used by every Pro element: equity tile, window banner,
+  Timeline chart, second vehicle, save deal, compare, PDF. Dimmed elements open the sheet.
+- Paywall sheet copied from mockup screen 6: price, "once", four inclusions, what stays
+  free, Unlock, Not now. "Not now" suppresses the sheet for the rest of the session
+  (in memory, not stored). Never shown on launch.
+- Settings: replace the "open while testing" line with a dev toggle that is only shown
+  when the flag is on.
+- Done when: with the flag off, every Pro element opens the sheet and nothing Pro
+  renders; with it on, nothing changes from v0.1.1.
+
+### Session 17 · Saved deals (schema v2)
+- Test-first. `SavedDeal` model and parser; `deals: unknown[]` becomes `SavedDeal[]`.
+  `schemaVersion` 1 → 2 with a migration that keeps every v1 vehicle exactly (test with
+  real v1 blobs, including the unreadable-blob backup path).
+- Save from Verdict with a label (dealer name), list on Dealer, open (restores the
+  decoder), rename, delete. Saving is Pro.
+- Done when: a v1 garage from the live site survives the upgrade untouched; three saved
+  deals survive reload.
+
+### Session 18 · Side by side
+- Pick two saved deals → compare screen: payment and frequency, term, APR, financed,
+  all-in, total interest, total paid, gap vs advertised, verdict level each.
+- Differences in dollars ("B is $1,240 less all-in, $3,100 less interest"). No winner,
+  no good/bad wording; a lower payment over a longer term says so.
+- Done when: checked at 320/375px with two deals that differ in term and rate.
+
+### Session 19 · Multiple vehicles
+- Vehicle switcher on Garage and Timeline; selected vehicle id persisted. Adding a second
+  vehicle is Pro.
+- Losing Pro (refund, flag off) never deletes or hides data: the selected vehicle stays
+  fully usable, the rest show read-only with a Pro tag.
+- Garage → decoder handoff uses the selected vehicle.
+- Done when: three vehicles, switch, reload, remove one; the flag-off case keeps all three.
+
+### Session 20 · PDF export
+- One saved or current deal → one-page PDF: verdict headline, gap rows, breakdown,
+  ask-for list, the not-advice line and the date. pdf-lib, loaded with a dynamic
+  `import()` so it stays out of the main bundle; standard fonts are fine.
+- Built as a pure function from deal → bytes, tested in Vitest (parse the output, check the
+  text). Web: download. Native file sharing is Session 22.
+- Done when: the worked example's PDF shows the same numbers as the Verdict screen and
+  the main bundle size didn't grow by more than a few KB.
+
+### Session 21 · Capacitor shell
+- Needs Xcode and Android Studio (see prerequisites). Capacitor 8 (`@capacitor/core`
+  8.6 on 2026-11-04). App id `io.github.mattnero.tradepoint`, name TradePoint.
+- `vite build` with `base` set per target: `/TradePoint/` for Pages, `./` for native.
+  The Pages deploy must keep working.
+- Icons and splash from the token palette (teal mark on white). Safe-area insets on nav
+  and sheets. Status bar dark text on white.
+- Done when: the app runs on the iOS simulator, an Android emulator and Matt's iPhone;
+  the real-phone tap-through from Session 14 is done there.
+
+### Session 22 · Native storage, share and files
+- Test-first. iOS can clear WebView localStorage under storage pressure, so native
+  builds store the garage in `@capacitor/preferences`. It's async and `KeyValueStore`
+  is sync: load once at startup into memory, write through. On first native launch,
+  copy any existing localStorage garage across before reading. Web is unchanged.
+- Settings: "Restore from a backup" (paste the backup text), so Matt's web garage can
+  move into the app.
+- Share button and PDF use the native share sheet (`@capacitor/share`, `@capacitor/filesystem`).
+  Share links still point at the Pages URL.
+- Done when: kill and relaunch keeps the garage on both platforms; a web backup pasted
+  into the app restores the Santa Fe; a PDF reaches Messages/Files.
+
+### Session 23 · RevenueCat
+- Needs the developer accounts and agreements (see prerequisites). One non-consumable
+  product `pro`, $4.99 CAD, in App Store Connect and Play Console; one RevenueCat
+  entitlement `pro`. `@revenuecat/purchases-capacitor` (14.0 on 2026-11-04).
+- Native `Entitlement` implementation; public SDK keys come from untracked `.env`
+  (they end up in the app binary; that's how RevenueCat's public keys are meant to work).
+  Restore purchases in the sheet and Settings. Offline launch uses the SDK's cached
+  customer info; never lock someone out because there's no signal at a dealership.
+- Cancelled purchase, pending purchase (Ask to Buy), refund → rules from Session 19.
+- Upload the first signed Android build to a Play closed test now so the 14-day clock starts.
+- Done when: sandbox purchase and restore work on the iPhone and an Android test device;
+  airplane mode after purchase keeps Pro.
+
+### Session 24 · Store listings
+- Privacy policy page on Pages (no data collected, nothing leaves the device except what
+  the user shares). App Store privacy label "Data Not Collected"; Play data-safety form to match.
+- Screenshots at the required sizes from the real app with the example car. Listing copy:
+  what it does, Ontario first, not financial advice, "Numbers match" language only.
+- Review check: Apple 4.2 (minimum functionality; the app must work offline and use
+  native share, which 22 covers), 3.1.1 (IAP only; the app never links to a web
+  purchase), financial-calculator disclaimer in the app and listing.
+- TestFlight build out to Matt; Play closed test running with 12+ testers.
+- Done when: both listings are complete, with no missing-field warnings.
+
+### Session 25 · Launch
+- Submit to both stores; fix review feedback (may take more than one sitting; that's fine).
+- Web build flips `VITE_PRO_OPEN` off: Pro elements on the web open a sheet that says
+  Pro is in the iPhone and Android apps, with store links. No web purchase.
+- Tag `v1.0.0`.
+- Done when: both apps are live and a real purchase on Matt's phone unlocks Pro.
 
 ## Phase 2 — if still fun
 
@@ -447,5 +575,9 @@ provinces; share image card; lease decoder. Each gets its own plan.
   a yearly check is enough for a hobby.
 - **Scope creep toward a maintenance log.** The companion tracks cliffs, not oil
   changes. If a maintenance feature doesn't change the trade window, it's out.
+- **Play's 12-tester closed test.** 14 consecutive days before production access; start it
+  in Session 23, not 25.
+- **Apple guideline 4.2 (wrapped websites).** Offline use, native share and local files are
+  what make it an app; don't cut them to save time.
 - **The van happens before session 5.** Then the decoder page at session 3 plus a
   calculator in the test file is the fallback; it still beats the four-square.

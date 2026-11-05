@@ -98,6 +98,7 @@ curve keeps its shape after it). Comps entry: 3–5 prices → median anchor, so
 ## Persistence
 
 localStorage key `tradepoint.garage.v1`, `{ schemaVersion, vehicles[], deals[] }`.
+schemaVersion 2 (Session 17) types `deals` as `SavedDeal[]` and adds `selectedVehicleId`.
 Money in integer cents; rates as decimals; dates ISO strings. load() wraps in try/catch
 and falls back to empty; migrate(fromVersion) chain.
 
@@ -105,6 +106,43 @@ and falls back to empty; migrate(fromVersion) chain.
 
 `#d=<base64url>` of a versioned fixed-order array of decoder inputs. Opens on Verdict
 with an Edit path. No server.
+
+## Phase 1 (2026-11-04)
+
+### Prep checklist (free)
+Garage card "Before the dealership", four rows with done states:
+1. Pre-approval rate from a bank or credit union → `benchmarks.preApprovalApr`.
+2. Trade figures from two independent sources (an outside offer beats an estimate) →
+   `benchmarks.tradeOffers[]`, max 2, `{ source, amountCents, date }`. Verdict trade gap
+   uses the higher one. Old `outsideTradeOffer` parses as one offer.
+3. Walk-away all-in → `benchmarks.walkAwayCents`. Verdict shows one line: implied
+   all-in vs walk-away in dollars. Never affects headline or severity. Not in share links.
+4. Province rules card from `provinces.json` `rules[]` (ON: advertised price is all-in
+   except HST and licensing; admin fees added at the desk breach OMVIC rules). Each rule
+   has `source` and `verifiedOn`.
+Links are plain (no referral) until Phase 2.
+
+### Pro entitlement
+`Entitlement` interface: `isPro`, `purchase`, `restore`, change subscription. Web
+implementation is controlled by `VITE_PRO_OPEN` (open until store launch; afterwards
+web Pro elements point to the store apps, no web purchase). Native implementation is
+RevenueCat, entitlement `pro`, non-consumable product `pro`, $4.99 CAD. Offline uses
+cached customer info. Losing Pro never deletes or hides data: the selected vehicle and
+all saved deals stay readable; Pro-only actions get the Pro tag.
+
+### Saved deals (Pro)
+`SavedDeal { id, label, savedAt, quote, benchmarks, vehicleId? }`; quote/benchmarks are
+the decoder's shapes in cents and decimals. Compare takes exactly two: differences in
+dollars, no winner wording.
+
+### PDF (Pro)
+One page per deal: headline, gap rows, breakdown, ask-for list, date, not-advice line.
+Pure function deal → bytes (pdf-lib, lazy-loaded).
+
+### Native storage
+Native builds keep the garage in Capacitor Preferences (iOS may evict WebView
+localStorage). Loaded once into memory at startup, written through. First native
+launch copies any localStorage garage across.
 
 ## Visual
 
