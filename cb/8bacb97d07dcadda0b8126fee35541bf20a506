@@ -1,0 +1,50 @@
+src/deals/SaveDeal.svelte
+  s_86879f60f11863::t_33e511a6e6e12a 1-112
+src/screens/Dealer.svelte
+  s_86879f60f11863::t_28f282b765c7ff 2,245
+  s_86879f60f11863::t_1e7f4c77ac93bd 246
+src/screens/Settings.svelte
+  s_86879f60f11863::t_28f282b765c7ff 33,52
+src/screens/Verdict.svelte
+  s_86879f60f11863::t_28f282b765c7ff 2,134
+  s_86879f60f11863::t_44b7c716034961 135
+src/model/savedDeal.ts
+  s_86879f60f11863::t_c4ef35112e9b3b 3-4,6-7,156-190
+  s_86879f60f11863::t_582c6ae6bc0f01 1-2,5,8-155,191
+tests/savedDeal.test.ts
+  s_86879f60f11863::t_e6eda161933c0e 1,96-99,101-105,109
+  s_86879f60f11863::t_a2cd929fcceceb 224-226
+  s_86879f60f11863::t_cfa05bf84941f3 10,16,206-223,227-231
+  s_86879f60f11863::t_b4256bb19015ab 2-9,11-15,17-95,100,106-108,110-205,232-233
+tests/garage.test.ts
+  s_86879f60f11863::t_c044b436af9afd 14-15,35-55,57-59,83,85-103,129-134,273,275-278,281,288,305-410
+  s_86879f60f11863::t_0bb92b61727703 411
+src/store/garage.ts
+  s_86879f60f11863::t_59e5700db78f2c 1,6,12-13,53-58,98-107
+src/store/garage.svelte.ts
+  s_86879f60f11863::t_33e511a6e6e12a 10,27-28
+  s_86879f60f11863::t_8da849d22aef3c 29
+src/deals/SavedDeals.svelte
+  s_86879f60f11863::t_77d1ad2bbb8e76 123,135-136,140-141
+  s_86879f60f11863::t_28f282b765c7ff 30
+  s_86879f60f11863::t_8f735c6938d8ea 70-74,124-125,127-134,137-139,148
+  s_86879f60f11863::t_b4b0d5ebe3ca4d 1-29,31-69,75-122,126,142-147,149-179
+PLAN.md
+  s_86879f60f11863::t_cd760bc05c638e 553-571
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "cb8bacb97d07dcadda0b8126fee35541bf20a506",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
