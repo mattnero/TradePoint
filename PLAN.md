@@ -512,6 +512,19 @@ half set up.
   when the flag is on.
 - Done when: with the flag off, every Pro element opens the sheet and nothing Pro
   renders; with it on, nothing changes from v0.1.1.
+- **Status 2026-11-07: done.** `src/pro/`: `Entitlement` interface + `createWebEntitlement`
+  (`entitlement.ts`), `createProGate` (`gate.ts`: `request(feature)`, `dismiss`, `unlock`, session-long
+  "Not now" suppression), `pro.svelte.ts` (`requirePro(feature)`, `pro` reactive state, `PRO_OPEN` from
+  `VITE_PRO_OPEN`, default true), `ProLock.svelte` (dimmed button card), `PaywallSheet.svelte` (native
+  `<dialog>`: focus trap and Escape for free; Escape counts as Not now). `ProFeature` already names
+  `vehicles`, `saveDeal`, `compare`, `pdf` for Sessions 17-20 to call. Wired now: Garage equity tile and
+  window banner, Timeline chart. Locked state renders no numbers. The web purchase is a stub that unlocks
+  in memory only; Session 23 swaps in RevenueCat. Settings shows a "Lock Pro features" testing checkbox
+  (persisted under `tradepoint.testingLock`) only when the flag is on. Price text is `PRO_PRICE` in
+  `src/pro/copy.ts`; Session 23 should take it from the store. `browserStorage` moved to
+  `src/store/browserStorage.ts`. 643 tests. Checked in headless Chrome at 320/375px on a flag-off
+  and a flag-on build. Left free: "Refresh value from comps" on Timeline (not in the Pro list).
+  No Restore button yet (Session 23, store review requires one).
 
 ### Session 17 · Saved deals (schema v3)
 - Test-first. `SavedDeal` model and parser; `deals: unknown[]` becomes `SavedDeal[]`.

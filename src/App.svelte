@@ -7,6 +7,7 @@
   import Verdict from "./screens/Verdict.svelte";
   import Settings from "./screens/Settings.svelte";
   import BottomNav from "./BottomNav.svelte";
+  import PaywallSheet from "./pro/PaywallSheet.svelte";
 
   const route = $derived(router.route);
   const tab = $derived(tabFor(route));
@@ -28,6 +29,7 @@
   </main>
   <BottomNav active={tab} />
 </div>
+<PaywallSheet />
 
 <style>
   .shell {

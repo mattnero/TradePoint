@@ -6,6 +6,8 @@
   import type { Vehicle } from "../model/vehicle";
   import { valueBasisLine } from "../model/valueCopy";
   import { garageStore } from "../store/garage.svelte";
+  import ProLock from "../pro/ProLock.svelte";
+  import { pro } from "../pro/pro.svelte";
   import EquityChart from "../timeline/EquityChart.svelte";
   import { chartMarkers } from "../timeline/chart";
   import ValueRefresh from "../timeline/ValueRefresh.svelte";
@@ -35,7 +37,13 @@
   </div>
 
   {#if vehicle && outlook}
-    {#if outlook.curve && outlook.projection}
+    {#if !pro.isPro}
+      <ProLock
+        feature="chart"
+        label="Value vs loan"
+        hint="See your car's estimated value against your loan over the next 36 months."
+      />
+    {:else if outlook.curve && outlook.projection}
       {@const hasLoan = vehicle.loan !== undefined}
       {@const crossover = hasLoan ? outlook.projection.crossover : null}
       <section class="card">

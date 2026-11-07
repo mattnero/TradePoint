@@ -22,6 +22,8 @@
   import type { Prep } from "../model/prep";
   import { applyGarage } from "../decoder/state.svelte";
   import { garageStore } from "../store/garage.svelte";
+  import ProLock from "../pro/ProLock.svelte";
+  import { pro } from "../pro/pro.svelte";
 
   const today = todayIso();
 
@@ -82,7 +84,13 @@
       {/if}
     </section>
 
-    {#if outlook?.curve && outlook.projection}
+    {#if !pro.isPro}
+      <ProLock
+        feature="equity"
+        label="Value vs loan"
+        hint="See what your car is worth against what you owe, and when equity turns positive."
+      />
+    {:else if outlook?.curve && outlook.projection}
       {@const now = outlook.projection.points[0]!}
       {@const pill = equityPill(outlook.projection, today)}
       <section class="card" aria-label="Value, loan and equity">
@@ -121,7 +129,13 @@
       </section>
     {/if}
 
-    {#if sentence}
+    {#if sentence && !pro.isPro}
+      <ProLock
+        feature="window"
+        label="Your trade window"
+        hint="When trading and keeping change places, and what keeping costs per year."
+      />
+    {:else if sentence}
       <div class="banner" role="note">
         <strong>{sentence.title}</strong>
         {sentence.body}

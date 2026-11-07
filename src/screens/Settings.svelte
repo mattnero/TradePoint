@@ -3,6 +3,7 @@
   import { resetDecoder } from "../decoder/state.svelte";
   import { TAX_RULES } from "../math/tax";
   import { formatCAD, fromDollars } from "../model/money";
+  import { PRO_OPEN, pro } from "../pro/pro.svelte";
   import { garageStore } from "../store/garage.svelte";
 
   const ontario = TAX_RULES.ON;
@@ -80,8 +81,22 @@
       Car values are rough estimates from typical depreciation until you add comps or an outside offer. Warranty
       terms come from each maker's Canadian warranty page; confirm yours with the dealer.
     </p>
-    <p class="hint">Features tagged Pro are open to everyone while the app is being tested.</p>
   </section>
+
+  {#if PRO_OPEN}
+    <section class="card">
+      <span class="label">Testing</span>
+      <label class="toggle">
+        <input
+          type="checkbox"
+          checked={pro.testingLock}
+          onchange={(e) => pro.setTestingLock(e.currentTarget.checked)}
+        />
+        <span>Lock Pro features, as if I hadn't bought Pro</span>
+      </label>
+      <p class="hint">Only shown while Pro is open for testing. Tapping a locked item opens the unlock sheet.</p>
+    </section>
+  {/if}
 
   <p class="hint version">TradePoint {version}</p>
 </div>
@@ -118,6 +133,20 @@
     border-radius: 8px;
     background: var(--surface);
     color: var(--ink);
+  }
+
+  .toggle {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    min-height: 44px;
+    font-size: 14px;
+  }
+
+  .toggle input {
+    width: 20px;
+    height: 20px;
+    flex: none;
   }
 
   .version {
