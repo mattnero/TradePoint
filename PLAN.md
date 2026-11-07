@@ -526,6 +526,22 @@ half set up.
   and a flag-on build. Left free: "Refresh value from comps" on Timeline (not in the Pro list).
   No Restore button yet (Session 23, store review requires one).
 
+### Change 2026-11-07 · Payment planner on the Dealer screen (Matt's request, between 16 and 17)
+- Dealer screen has two modes, segmented at the top: "Plan a payment" (default, title "What will it
+  cost?") and "Check a quote" (the old decoder, "What did they say?"). Both edit the same `decoder`
+  inputs, so shopping figures carry into the desk check; only the payment is left to type.
+- Plan math: `planPayment` in `src/math/deal.ts` (dollars), `paymentPlan` in `src/model/deal.ts`
+  (cents; payment rounded to the cent, totals from the rounded payment). All-in = advertised + HST on
+  (price − trade) + licensing estimate; financed = max(0, all-in − down − net trade). Tested so the
+  planned payment decodes to a $0 gap. `readPlan` in `src/decoder/inputs.ts` reads only the shown
+  fields (price required; benchmarks and walk-away hidden and ignored in plan mode).
+- `dealer.mode` lives in `src/decoder/state.svelte.ts` (memory only). Garage's "I'm at a dealership",
+  Verdict's Edit and "Go to the decoder" set it to "check"; Settings erase resets it to "plan".
+- Not done: saving or sharing a plan. Session 17 (saved deals) should decide whether a plan is
+  saveable; a plan plus its rounded payment is already a valid `DealQuote`.
+- 660 tests. Checked in headless Chrome at 320/375px: worked example plans $420.76/mo, bi-weekly
+  $193.94, unreadable field blocks the result, switching to Check and entering $450 gives the verdict.
+
 ### Session 17 · Saved deals (schema v3)
 - Test-first. `SavedDeal` model and parser; `deals: unknown[]` becomes `SavedDeal[]`.
   `schemaVersion` 2 → 3 (Session 15 used v2). The migration keeps every vehicle exactly; test

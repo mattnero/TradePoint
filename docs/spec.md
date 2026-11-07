@@ -30,7 +30,11 @@ Paywall appears on tapping a dimmed Pro element, never on first launch. States p
    banner (Pro), next-cliffs list, "I'm at a dealership".
 2. Timeline (Pro chart, free list): SVG two lines + dashed cliff markers + crossover
    dot; dated cliff list; "Refresh value from comps".
-3. Dealer: payment, frequency segmented (monthly/bi-weekly/weekly), term, APR, down,
+3. Dealer, two modes (2026-11-07). "Plan a payment" (default): advertised price
+   (required), frequency, term, APR, down, trade-in value, owing on trade → payment at
+   the chosen frequency, plus all-in (price + HST + licensing), financed, total
+   interest, total paid; for shopping before the desk. "Check a quote" (the decoder):
+   payment, frequency segmented (monthly/bi-weekly/weekly), term, APR, down,
    advertised price (optional, visible), trade allowance, trade payoff; benchmarks:
    pre-approval APR, outside trade offer. Garage-sourced fields styled teal.
 4. Verdict: headline + subtitle with threshold in dollars; three gap rows (price, rate,

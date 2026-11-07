@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { currentReading, decoder } from "../decoder/state.svelte";
+  import { currentReading, dealer, decoder } from "../decoder/state.svelte";
   import { readDecoder } from "../decoder/inputs";
   import { formatCAD } from "../model/money";
   import { router } from "../router/router.svelte";
@@ -63,6 +63,7 @@
 
   function edit() {
     if (shared) Object.assign(decoder, shared);
+    dealer.mode = "check";
     window.location.hash = "#dealer";
   }
 </script>
@@ -71,7 +72,7 @@
 {#if brokenLink}
   <h1>This link doesn't open</h1>
   <p class="empty">It looks cut off or damaged. Ask for it again, or enter the quote yourself.</p>
-  <a class="btn primary" href="#dealer">Go to the decoder</a>
+  <a class="btn primary" href="#dealer" onclick={() => (dealer.mode = "check")}>Go to the decoder</a>
 {:else if result && reading.quote}
   {#if shared}
     <p class="shared">Shared deal. These numbers come from the link.</p>
@@ -138,11 +139,11 @@
 {:else if Object.keys(reading.problems).length > 0}
   <h1>Some numbers can't be read</h1>
   <p class="empty">Go back to the decoder and fix the fields marked in red.</p>
-  <a class="btn primary" href="#dealer">Go to the decoder</a>
+  <a class="btn primary" href="#dealer" onclick={() => (dealer.mode = "check")}>Go to the decoder</a>
 {:else}
   <h1>Nothing to check yet</h1>
   <p class="empty">Enter the payment, term and rate from the dealer's quote first.</p>
-  <a class="btn primary" href="#dealer">Go to the decoder</a>
+  <a class="btn primary" href="#dealer" onclick={() => (dealer.mode = "check")}>Go to the decoder</a>
 {/if}
 </div>
 

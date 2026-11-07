@@ -20,7 +20,7 @@
   import { windowSentence } from "../model/windowCopy";
   import { kmPerMonth, latestReading, type Vehicle } from "../model/vehicle";
   import type { Prep } from "../model/prep";
-  import { applyGarage } from "../decoder/state.svelte";
+  import { applyGarage, dealer } from "../decoder/state.svelte";
   import { garageStore } from "../store/garage.svelte";
   import ProLock from "../pro/ProLock.svelte";
   import { pro } from "../pro/pro.svelte";
@@ -48,6 +48,7 @@
 
   function startDealerVisit(v: Vehicle) {
     applyGarage(v, today);
+    dealer.mode = "check";
     window.location.hash = "#dealer";
   }
 

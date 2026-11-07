@@ -1,5 +1,5 @@
 import type { PaymentFrequency } from "../math/loan";
-import type { DealQuote } from "../model/deal";
+import type { DealQuote, PlanQuote } from "../model/deal";
 import { cents, parseMoneyInput, type Cents } from "../model/money";
 import type { Benchmarks } from "../model/verdict";
 
@@ -20,6 +20,13 @@ export interface DecoderInputs {
 export type DecoderField = Exclude<keyof DecoderInputs, "frequency">;
 
 export type FieldProblems = Partial<Record<DecoderField, string>>;
+
+export interface PlanReading {
+  plan: PlanQuote | null;
+  problems: FieldProblems;
+}
+
+const PLAN_FIELDS: DecoderField[] = ["term", "apr", "down", "advertised", "tradeAllowance", "tradePayoff"];
 
 export interface DecoderReading {
   quote: DealQuote | null;
@@ -84,10 +91,7 @@ function isBlank(input: string): boolean {
 export function fieldProblems(inputs: DecoderInputs): FieldProblems {
   const problems: FieldProblems = {};
   if (!isBlank(inputs.payment)) {
-    const walkAway = optionalMoney(inputs.walkAway);
-  const extras = walkAway === undefined ? {} : { walkAway };
-
-  const payment = parseMoneyInput(inputs.payment);
+    const payment = parseMoneyInput(inputs.payment);
     if (payment === null) problems.payment = "Enter the payment in dollars, like 450.";
     else if (payment <= 0) problems.payment = "The payment has to be more than $0.";
   }
@@ -145,4 +149,34 @@ export function readDecoder(inputs: DecoderInputs): DecoderReading {
   const advertisedPrice = optionalMoney(inputs.advertised);
   if (advertisedPrice !== undefined) quote.advertisedPrice = advertisedPrice;
   return { quote, benchmarks, problems, ...extras };
+}
+
+export function readPlan(inputs: DecoderInputs): PlanReading {
+  const all = fieldProblems(inputs);
+  const problems: FieldProblems = {};
+  for (const field of PLAN_FIELDS) {
+    const problem = all[field];
+    if (problem !== undefined) problems[field] = problem;
+  }
+  const advertisedPrice = parseMoneyInput(inputs.advertised);
+  if (advertisedPrice === 0) problems.advertised = "The price has to be more than $0.";
+
+  const termMonths = parseTerm(inputs.term);
+  const apr = parsePercentInput(inputs.apr);
+  if (Object.keys(problems).length > 0 || advertisedPrice === null || termMonths === null || apr === null) {
+    return { plan: null, problems };
+  }
+  return {
+    plan: {
+      frequency: inputs.frequency,
+      termMonths,
+      apr,
+      downPayment: optionalMoney(inputs.down) ?? cents(0),
+      tradeAllowance: optionalMoney(inputs.tradeAllowance) ?? cents(0),
+      tradePayoff: optionalMoney(inputs.tradePayoff) ?? cents(0),
+      province: "ON",
+      advertisedPrice,
+    },
+    problems,
+  };
 }
