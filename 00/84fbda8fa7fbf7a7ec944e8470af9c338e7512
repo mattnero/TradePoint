@@ -1,0 +1,37 @@
+tests/dealPdf.test.ts
+  s_86879f60f11863::t_79db673aae1550 1,24-25,27-29,113,120,147
+  s_86879f60f11863::t_907b8eb8f08292 2-23,26,30-112,114-119,121-146,148-149
+PLAN.md
+  s_86879f60f11863::t_46c24c82e3589d 627-640
+src/pdf/buildDealPdf.ts
+  s_86879f60f11863::t_e7e7271762b812 1-138
+package.json
+  s_86879f60f11863::t_17a275d08fbfba 23-25
+src/screens/Verdict.svelte
+  s_86879f60f11863::t_72bfa847b9b75b 5,7-9,69-91,163-167,321-331
+  s_86879f60f11863::t_a7d68dade92ba6 332
+src/pdf/content.ts
+  s_86879f60f11863::t_e7e7271762b812 1-91
+src/model/verdictCopy.ts
+  s_86879f60f11863::t_60ebd3b59812ba 26
+src/pdf/download.ts
+  s_86879f60f11863::t_72bfa847b9b75b 1-14
+package-lock.json
+  s_86879f60f11863::t_aaf25e866402f8 11-13,83-100,1002-1019,1246-1251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "0084fbda8fa7fbf7a7ec944e8470af9c338e7512",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
