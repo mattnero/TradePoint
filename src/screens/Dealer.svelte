@@ -7,13 +7,13 @@
     currentReading,
     dealer,
     decoder,
+    garageSourceName,
     isFromGarage,
     type DealerMode,
   } from "../decoder/state.svelte";
   import { monthlyEquivalent, type PaymentFrequency } from "../math/loan";
   import { dealFigures, paymentPlan } from "../model/deal";
   import { cents, formatCAD, fromDollars, toDollars, type Cents } from "../model/money";
-  import { garageStore } from "../store/garage.svelte";
 
   const modes: { value: DealerMode; label: string }[] = [
     { value: "plan", label: "Plan a payment" },
@@ -87,10 +87,10 @@
 {/snippet}
 
 {#snippet garageHint()}
-  {#if anyFromGarage() && garageStore.vehicle}
+  {#if anyFromGarage() && garageSourceName()}
     <p class="hint">
       <span class="pill">From your garage</span>
-      Filled in from your {garageStore.vehicle.make} {garageStore.vehicle.model}. The payoff is worked out
+      Filled in from your {garageSourceName()?.make} {garageSourceName()?.model}. The payoff is worked out
       from your loan, so use your lender's figure if you have it. Edit anything the dealer's numbers change.
     </p>
   {/if}

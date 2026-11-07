@@ -5,7 +5,7 @@
   import { createVehicle, type Vehicle } from "../model/vehicle";
   import { readNewVehicle } from "./inputs";
 
-  let { onadd }: { onadd: (vehicle: Vehicle) => void } = $props();
+  let { onadd, oncancel }: { onadd: (vehicle: Vehicle) => void; oncancel?: () => void } = $props();
 
   let year = $state("");
   let make = $state("");
@@ -27,7 +27,7 @@
 </script>
 
 <form onsubmit={submit} class="form">
-  <h1>Your car</h1>
+  <h1>{oncancel ? "Add another car" : "Your car"}</h1>
   <p class="hint">Four details to start. Everything else is optional and unlocks more later.</p>
 
   <div class="fields">
@@ -47,7 +47,10 @@
   <Field id="v-km" label="Odometer (km)" mode="numeric" bind:value={km} />
 
   {#if error}<p class="error" role="alert">{error}</p>{/if}
-  <button class="btn primary" type="submit">Add my car</button>
+  <button class="btn primary" type="submit">{oncancel ? "Add this car" : "Add my car"}</button>
+  {#if oncancel}
+    <button class="btn quiet" type="button" onclick={oncancel}>Cancel</button>
+  {/if}
   <p class="hint">Saved on this device only. Nothing is sent anywhere.</p>
 </form>
 

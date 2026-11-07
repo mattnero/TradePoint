@@ -10,6 +10,11 @@ export const decoder = $state(emptyDecoder());
 export const dealer = $state<{ mode: DealerMode }>({ mode: "plan" });
 
 let garageValues = $state<GarageValues>({});
+let garageSource = $state<{ make: string; model: string } | null>(null);
+
+export function garageSourceName(): { make: string; model: string } | null {
+  return garageSource;
+}
 
 export function currentReading() {
   return readDecoder(decoder);
@@ -23,6 +28,7 @@ export function applyGarage(vehicle: Vehicle, today: IsoDate): void {
   const next = garageDecoderValues(vehicle, today);
   Object.assign(decoder, mergeGarageValues(decoder, garageValues, next));
   garageValues = next;
+  garageSource = { make: vehicle.make, model: vehicle.model };
 }
 
 export function isFromGarage(field: GarageField): boolean {
@@ -36,5 +42,6 @@ export function anyFromGarage(): boolean {
 export function resetDecoder(): void {
   Object.assign(decoder, emptyDecoder());
   garageValues = {};
+  garageSource = null;
   dealer.mode = "plan";
 }

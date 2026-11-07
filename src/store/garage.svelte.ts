@@ -7,6 +7,7 @@ import {
   type Garage,
 } from "./garage";
 import { browserStorage } from "./browserStorage";
+import { addVehicle, removeVehicle, replaceVehicle, selectVehicle, selectedVehicle } from "./vehicles";
 import type { SavedDeal } from "../model/savedDeal";
 import type { Vehicle } from "../model/vehicle";
 
@@ -22,7 +23,22 @@ export const garageStore = {
     return current;
   },
   get vehicle(): Vehicle | undefined {
-    return current.vehicles[0];
+    return selectedVehicle(current);
+  },
+  get vehicles(): Vehicle[] {
+    return current.vehicles;
+  },
+  select(id: string): void {
+    this.update((g) => selectVehicle(g, id));
+  },
+  addVehicle(vehicle: Vehicle): void {
+    this.update((g) => addVehicle(g, vehicle));
+  },
+  updateVehicle(vehicle: Vehicle): void {
+    this.update((g) => replaceVehicle(g, vehicle));
+  },
+  removeVehicle(id: string): void {
+    this.update((g) => removeVehicle(g, id));
   },
   get deals(): SavedDeal[] {
     return current.deals;

@@ -3,6 +3,7 @@
   import CliffList from "../garage/CliffList.svelte";
   import PrepChecklist from "../garage/PrepChecklist.svelte";
   import VehicleSetup from "../garage/VehicleSetup.svelte";
+  import VehicleSwitcher from "../garage/VehicleSwitcher.svelte";
   import {
     activeSeasonLine,
     cliffDetail,
@@ -27,6 +28,8 @@
 
   const today = todayIso();
 
+  let adding = $state(false);
+
   const vehicle = $derived(garageStore.vehicle);
   const outlook = $derived(vehicle ? outlookFor(vehicle, today) : null);
   const report = $derived(outlook?.report ?? null);
@@ -38,7 +41,17 @@
   }
 
   function save(next: Vehicle) {
-    garageStore.update((g) => ({ ...g, vehicles: [next] }));
+    garageStore.updateVehicle(next);
+  }
+
+  function add(next: Vehicle) {
+    garageStore.addVehicle(next);
+    adding = false;
+    window.scrollTo({ top: 0 });
+  }
+
+  function addFirst(next: Vehicle) {
+    garageStore.addVehicle(next);
   }
 
   function savePrep(v: Vehicle, prep: Prep) {
@@ -52,8 +65,8 @@
     window.location.hash = "#dealer";
   }
 
-  function remove() {
-    garageStore.update((g) => ({ ...g, vehicles: [] }));
+  function remove(v: Vehicle) {
+    garageStore.removeVehicle(v.id);
   }
 </script>
 
@@ -63,12 +76,16 @@
   </p>
 {/if}
 
-{#if vehicle && report}
+{#if adding}
+  <AddVehicleForm onadd={add} oncancel={() => (adding = false)} />
+{:else if vehicle && report}
   <div class="stack">
     <div class="title">
-      <h1>Your car</h1>
+      <h1>{garageStore.vehicles.length > 1 ? "Your cars" : "Your car"}</h1>
       <small>{updatedLabel(latestReading(vehicle).date, today)}</small>
     </div>
+
+    <VehicleSwitcher onadd={() => (adding = true)} />
 
     <section class="card">
       <div class="row">
@@ -182,7 +199,9 @@
       I'm at a dealership
     </button>
 
-    <VehicleSetup {vehicle} onchange={save} onremove={remove} />
+    {#key vehicle.id}
+      <VehicleSetup {vehicle} onchange={save} onremove={() => remove(vehicle)} />
+    {/key}
   </div>
 {:else}
   {#if garageStore.recoveredFromBrokenData}
@@ -191,7 +210,7 @@
       you can copy it out from <a href="#settings">Settings</a>.
     </p>
   {/if}
-  <AddVehicleForm onadd={save} />
+  <AddVehicleForm onadd={addFirst} />
 {/if}
 
 <style>

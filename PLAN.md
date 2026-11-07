@@ -599,6 +599,22 @@ half set up.
   fully usable, the rest show read-only with a Pro tag.
 - Garage → decoder handoff uses the selected vehicle.
 - Done when: three vehicles, switch, reload, remove one; the flag-off case keeps all three.
+- **Status 2026-11-07: done.** Pure list logic in `src/store/vehicles.ts` (`selectedVehicle`, `selectVehicle`,
+  `addVehicle` (appends and selects), `replaceVehicle`, `removeVehicle` (falls back to the first remaining),
+  `canAddVehicle`, `isUsable`, `vehicleLabel`), tested first. No schema change: `selectedVehicleId` was added
+  in v3 (Session 17) and the loader already drops an id that names no vehicle. `garageStore` gained
+  `vehicles`, `select`, `addVehicle`, `updateVehicle`, `removeVehicle`; `garageStore.vehicle` is now the
+  selected one. `VehicleSwitcher.svelte` (chips) sits on Garage (with "Add another car") and Timeline;
+  Garage's VehicleSetup, PrepChecklist and Timeline's ValueRefresh are keyed by vehicle id so no stale form
+  state carries over. **Pro-loss rule chosen:** without Pro, the selected vehicle (or the first, if none was
+  chosen) is the only usable one; the others stay listed as dashed chips with a Pro tag, can't be opened or
+  edited, and tapping one opens the paywall sheet. A line says "Your other cars are still saved. Pro opens
+  them again." Nothing is deleted or hidden. Removing the selected car (always allowed) hands usability to
+  the first remaining. Adding a first car is free, a second is Pro. Dealer's "Filled in from your …" hint now
+  names the car the values actually came from (`garageSourceName()` in `state.svelte.ts`), not whichever car
+  is selected now. Saved deals keep their `vehicleId` when a car is removed. 771 tests. Checked in headless
+  Chrome at 320/375: add two cars, switch on Garage and Timeline, reload keeps the selection, handoff uses
+  the selected car's payoff and walk-away, remove one; flag-off build (and the testing lock) keeps all three.
 
 ### Session 20 · PDF export
 - One saved or current deal → one-page PDF: verdict headline, gap rows, breakdown,

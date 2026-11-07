@@ -6,6 +6,7 @@
   import type { Vehicle } from "../model/vehicle";
   import { valueBasisLine } from "../model/valueCopy";
   import { garageStore } from "../store/garage.svelte";
+  import VehicleSwitcher from "../garage/VehicleSwitcher.svelte";
   import ProLock from "../pro/ProLock.svelte";
   import { pro } from "../pro/pro.svelte";
   import EquityChart from "../timeline/EquityChart.svelte";
@@ -18,7 +19,7 @@
   const outlook = $derived(vehicle ? outlookFor(vehicle, today) : null);
 
   function save(next: Vehicle) {
-    garageStore.update((g) => ({ ...g, vehicles: [next] }));
+    garageStore.updateVehicle(next);
   }
 
   function chartLabel(crossover: { date: string; month: number } | null, hasLoan: boolean): string {
@@ -35,6 +36,8 @@
     <h1>Next 36 months</h1>
     <small>Estimate</small>
   </div>
+
+  <VehicleSwitcher />
 
   {#if vehicle && outlook}
     {#if !pro.isPro}
@@ -77,7 +80,9 @@
       </section>
     {/if}
 
-    <ValueRefresh {vehicle} onchange={save} />
+    {#key vehicle.id}
+      <ValueRefresh {vehicle} onchange={save} />
+    {/key}
 
     {#if outlook.report.upcoming.length > 0}
       <CliffList
