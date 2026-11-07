@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SavedDeals from "../deals/SavedDeals.svelte";
   import Field from "../decoder/Field.svelte";
   import {
     anyFromGarage,
@@ -240,6 +241,8 @@
     </button>
   </div>
 {/if}
+
+<SavedDeals />
 
 <style>
   .title {

@@ -30,7 +30,7 @@
   }
 
   function eraseEverything() {
-    if (!window.confirm("Erase your car, loan, value entries and benchmarks from this device? This can't be undone.")) {
+    if (!window.confirm("Erase your car, loan, value entries, benchmarks and saved deals from this device? This can't be undone.")) {
       return;
     }
     resetDecoder();
@@ -49,7 +49,7 @@
   <section class="card">
     <span class="label">Your data</span>
     <p>
-      Your car, loan and benchmarks are saved in this browser, on this device only. Nothing is sent anywhere and
+      Your car, loan, benchmarks and saved deals are saved in this browser, on this device only. Nothing is sent anywhere and
       there's no account.
     </p>
     <p class="hint">

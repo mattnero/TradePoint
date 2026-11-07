@@ -1,4 +1,5 @@
 <script lang="ts">
+  import SaveDeal from "../deals/SaveDeal.svelte";
   import { currentReading, dealer, decoder } from "../decoder/state.svelte";
   import { readDecoder } from "../decoder/inputs";
   import { formatCAD } from "../model/money";
@@ -129,6 +130,8 @@
     <button class="btn quiet" type="button" onclick={copyMessage}>I need 10 minutes</button>
     <button class="btn primary wide" type="button" onclick={share}>Share</button>
   </div>
+
+  <SaveDeal quote={reading.quote} benchmarks={reading.benchmarks} fromLink={shared !== null} />
 
   <div aria-live="polite" class="copy-status">{notice}</div>
 

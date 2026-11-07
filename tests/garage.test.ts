@@ -11,6 +11,8 @@ import {
   type Garage,
   type KeyValueStore,
 } from "../src/store/garage";
+import { cents } from "../src/model/money";
+import type { SavedDeal } from "../src/model/savedDeal";
 import { createVehicle } from "../src/model/vehicle";
 
 function fakeStorage(initial: Record<string, string> = {}): KeyValueStore & { data: Map<string, string> } {
@@ -30,10 +32,31 @@ const santaFe = createVehicle(
 
 const garageWithCar: Garage = { ...emptyGarage(), vehicles: [santaFe] };
 
+const deal = (id: string, label: string, payment: number): SavedDeal => ({
+  id,
+  label,
+  savedAt: "2026-11-07",
+  quote: {
+    payment: cents(payment),
+    frequency: "monthly",
+    termMonths: 84,
+    apr: 0.0799,
+    downPayment: cents(300000),
+    tradeAllowance: cents(800000),
+    tradePayoff: cents(500000),
+    province: "ON",
+    advertisedPrice: cents(2999500),
+  },
+  benchmarks: { preApprovalApr: 0.0599 },
+  vehicleId: "v1",
+});
+
+const threeDeals = [deal("d1", "Honda", 45000), deal("d2", "Toyota", 43900), deal("d3", "Kia", 41250)];
+
 describe("emptyGarage", () => {
-  it("is version 2 with nothing in it", () => {
-    expect(emptyGarage()).toEqual({ schemaVersion: 2, vehicles: [], deals: [] });
-    expect(CURRENT_SCHEMA_VERSION).toBe(2);
+  it("is version 3 with nothing in it", () => {
+    expect(emptyGarage()).toEqual({ schemaVersion: 3, vehicles: [], deals: [] });
+    expect(CURRENT_SCHEMA_VERSION).toBe(3);
   });
 });
 
@@ -57,11 +80,27 @@ describe("save and load", () => {
     expect(storage.data.has(STORAGE_KEY)).toBe(true);
   });
 
-  it("preserves saved deals it does not understand yet", () => {
+  it("brings three saved deals back after a reload, in order", () => {
     const storage = fakeStorage();
-    const withDeals = { ...garageWithCar, deals: [{ anything: 1 }] };
-    saveGarage(withDeals, storage);
-    expect(loadGarage(storage).garage.deals).toEqual([{ anything: 1 }]);
+    saveGarage({ ...garageWithCar, deals: threeDeals }, storage);
+    expect(loadGarage(storage)).toEqual({ garage: { ...garageWithCar, deals: threeDeals }, recovered: false });
+  });
+
+  it("keeps the selected vehicle when it is one of the garage's vehicles", () => {
+    const storage = fakeStorage();
+    const selected = { ...garageWithCar, selectedVehicleId: "v1" };
+    saveGarage(selected, storage);
+    expect(loadGarage(storage).garage).toEqual(selected);
+  });
+
+  it.each([
+    ["an id no vehicle has", "v-gone"],
+    ["something that is not text", 5],
+  ])("forgets a selected vehicle that is %s instead of failing", (_name, selectedVehicleId) => {
+    const storage = fakeStorage({
+      [STORAGE_KEY]: JSON.stringify({ ...garageWithCar, selectedVehicleId }),
+    });
+    expect(loadGarage(storage)).toEqual({ garage: garageWithCar, recovered: false });
   });
 
   it("reports failure instead of throwing when the store refuses a write", () => {
@@ -87,6 +126,12 @@ describe("a broken stored blob", () => {
     ["a non-array deals", JSON.stringify({ schemaVersion: 1, vehicles: [], deals: {} })],
     ["a vehicle with no id", JSON.stringify({ schemaVersion: 1, vehicles: [{ year: 2019 }], deals: [] })],
     ["a schemaVersion from a newer app", JSON.stringify({ schemaVersion: 99, vehicles: [], deals: [] })],
+    ["a version 2 garage with a non-array deals", JSON.stringify({ schemaVersion: 2, vehicles: [], deals: 4 })],
+    ["a saved deal it can't read", JSON.stringify({ schemaVersion: 3, vehicles: [], deals: [{ anything: 1 }] })],
+    [
+      "one bad deal among good ones",
+      JSON.stringify({ schemaVersion: 3, vehicles: [], deals: [threeDeals[0], { ...threeDeals[1], label: "" }] }),
+    ],
   ];
 
   it.each(broken)("%s falls back to an empty garage", (_name, blob) => {
@@ -225,19 +270,22 @@ describe("upgrading a version 1 garage", () => {
     expect(loadGarage(storage).garage.vehicles).toEqual([untouched]);
   });
 
-  it("keeps deals through the upgrade", () => {
+  it("drops placeholder deals, which no version before 3 ever wrote, and keeps the vehicle", () => {
     const storage = fakeStorage({ [STORAGE_KEY]: v1Blob([untouched], [{ anything: 1 }]) });
-    expect(loadGarage(storage).garage.deals).toEqual([{ anything: 1 }]);
+    expect(loadGarage(storage)).toEqual({
+      garage: { schemaVersion: 3, vehicles: [untouched], deals: [] },
+      recovered: false,
+    });
   });
 
-  it("leaves the stored v1 text alone until the next save, then writes version 2", () => {
+  it("leaves the stored v1 text alone until the next save, then writes version 3", () => {
     const raw = v1Blob([v1Vehicle]);
     const storage = fakeStorage({ [STORAGE_KEY]: raw });
     const { garage } = loadGarage(storage);
     expect(storage.data.get(STORAGE_KEY)).toBe(raw);
     saveGarage(garage, storage);
     const saved = JSON.parse(storage.data.get(STORAGE_KEY)!);
-    expect(saved.schemaVersion).toBe(2);
+    expect(saved.schemaVersion).toBe(3);
     expect(saved.vehicles[0]).not.toHaveProperty("benchmarks");
     expect(loadGarage(storage).garage).toEqual(garage);
   });
@@ -251,6 +299,113 @@ describe("upgrading a version 1 garage", () => {
     const storage = fakeStorage({ [STORAGE_KEY]: raw });
     expect(loadGarage(storage)).toEqual({ garage: emptyGarage(), recovered: true });
     expect(storage.data.get(BACKUP_KEY)).toBe(raw);
+  });
+});
+
+describe("upgrading a version 2 garage", () => {
+  const v2Vehicle = {
+    id: "v-santa-fe",
+    year: 2019,
+    make: "Hyundai",
+    model: "Santa Fe",
+    trim: "Preferred",
+    segment: "mid-suv",
+    inServiceDate: "2019-03-15",
+    inServiceEstimated: false,
+    purchase: { price: 3299500, date: "2019-03-15" },
+    odometer: [
+      { date: "2026-10-01", km: 117200 },
+      { date: "2026-11-02", km: 118000 },
+    ],
+    loan: { kind: "snapshot", balance: 500000, apr: 0.0449, monthsRemaining: 12, asOf: "2026-11-02" },
+    prep: {
+      preApprovalApr: 0.0599,
+      tradeOffers: [
+        { source: "Outside offer", amount: 920000 },
+        { source: "Canada Drives", amount: 875000, date: "2026-11-04" },
+      ],
+      walkAway: 3300000,
+      rulesReadOn: "2026-11-04",
+    },
+    valueAnchors: [{ date: "2026-11-02", value: 1420000, source: "comps" }],
+  };
+  const bareVehicle = {
+    id: "v-van",
+    year: 2024,
+    make: "Kia",
+    model: "Carnival",
+    odometer: [{ date: "2026-11-05", km: 21000 }],
+  };
+  const v2Raw = JSON.stringify({ schemaVersion: 2, vehicles: [v2Vehicle, bareVehicle], deals: [] });
+
+  it("keeps every vehicle exactly as it was", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v2Raw });
+    expect(loadGarage(storage)).toEqual({
+      garage: { schemaVersion: 3, vehicles: [v2Vehicle, bareVehicle], deals: [] },
+      recovered: false,
+    });
+  });
+
+  it("does not pick a selected vehicle; the first one stays the one shown", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v2Raw });
+    expect(loadGarage(storage).garage).not.toHaveProperty("selectedVehicleId");
+  });
+
+  it("drops placeholder deals and keeps the vehicles", () => {
+    const raw = JSON.stringify({ schemaVersion: 2, vehicles: [v2Vehicle], deals: [{ anything: 1 }, 7] });
+    const storage = fakeStorage({ [STORAGE_KEY]: raw });
+    expect(loadGarage(storage)).toEqual({
+      garage: { schemaVersion: 3, vehicles: [v2Vehicle], deals: [] },
+      recovered: false,
+    });
+  });
+
+  it("leaves the stored v2 text alone until the next save, then writes version 3 that reads back the same", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v2Raw });
+    const { garage } = loadGarage(storage);
+    expect(storage.data.get(STORAGE_KEY)).toBe(v2Raw);
+    expect(saveGarage(garage, storage)).toBe(true);
+    expect(JSON.parse(storage.data.get(STORAGE_KEY)!).schemaVersion).toBe(3);
+    expect(loadGarage(storage)).toEqual({ garage, recovered: false });
+  });
+
+  it("then takes three saved deals and keeps them and the vehicles through a reload", () => {
+    const storage = fakeStorage({ [STORAGE_KEY]: v2Raw });
+    const { garage } = loadGarage(storage);
+    saveGarage({ ...garage, deals: threeDeals }, storage);
+    const reloaded = loadGarage(storage).garage;
+    expect(reloaded.vehicles).toEqual([v2Vehicle, bareVehicle]);
+    expect(reloaded.deals).toEqual(threeDeals);
+  });
+
+  it("gives a version 1 garage the same result as upgrading it to 2 and then to 3", () => {
+    const { prep: _, ...noPrep } = v2Vehicle;
+    const v1Vehicle = { ...noPrep, benchmarks: { preApprovalApr: 0.0599, outsideTradeOffer: 920000 } };
+    const v1Raw = JSON.stringify({ schemaVersion: 1, vehicles: [v1Vehicle, bareVehicle], deals: [] });
+    const fromV1 = loadGarage(fakeStorage({ [STORAGE_KEY]: v1Raw }));
+    expect(fromV1).toEqual({
+      garage: {
+        schemaVersion: 3,
+        vehicles: [
+          { ...noPrep, prep: { preApprovalApr: 0.0599, tradeOffers: [{ source: "Outside offer", amount: 920000 }] } },
+          bareVehicle,
+        ],
+        deals: [],
+      },
+      recovered: false,
+    });
+  });
+
+  it.each([
+    ["an unreadable prep", { ...v2Vehicle, prep: { walkAway: "lots" } }],
+    ["three trade offers", { ...v2Vehicle, prep: { tradeOffers: [1, 2, 3].map((n) => ({ source: "x", amount: n })) } }],
+    ["a vehicle with no odometer", { ...v2Vehicle, odometer: [] }],
+  ])("treats a v2 garage with %s as unreadable and keeps a copy", (_name, vehicle) => {
+    const raw = JSON.stringify({ schemaVersion: 2, vehicles: [vehicle], deals: [] });
+    const storage = fakeStorage({ [STORAGE_KEY]: raw });
+    expect(loadGarage(storage)).toEqual({ garage: emptyGarage(), recovered: true });
+    expect(storage.data.get(BACKUP_KEY)).toBe(raw);
+    expect(storage.data.get(STORAGE_KEY)).toBe(raw);
   });
 });
 

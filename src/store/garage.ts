@@ -1,14 +1,16 @@
+import { parseSavedDeal, type SavedDeal } from "../model/savedDeal";
 import { parseVehicle, type Vehicle } from "../model/vehicle";
 
 export const STORAGE_KEY = "tradepoint.garage.v1";
 export const BACKUP_KEY = "tradepoint.garage.backup";
-export const CURRENT_SCHEMA_VERSION = 2;
+export const CURRENT_SCHEMA_VERSION = 3;
 export const V1_OFFER_SOURCE = "Outside offer";
 
 export interface Garage {
   schemaVersion: number;
   vehicles: Vehicle[];
-  deals: unknown[];
+  deals: SavedDeal[];
+  selectedVehicleId?: string;
 }
 
 export interface KeyValueStore {
@@ -48,7 +50,12 @@ function garageV1ToV2(blob: unknown): unknown {
   return { ...g, schemaVersion: 2, vehicles };
 }
 
-const MIGRATIONS: Record<number, Migration> = { 1: garageV1ToV2 };
+function garageV2ToV3(blob: unknown): unknown {
+  const g = blob as Record<string, unknown>;
+  return { ...g, schemaVersion: 3, deals: Array.isArray(g.deals) ? [] : g.deals };
+}
+
+const MIGRATIONS: Record<number, Migration> = { 1: garageV1ToV2, 2: garageV2ToV3 };
 
 export function emptyGarage(): Garage {
   return { schemaVersion: CURRENT_SCHEMA_VERSION, vehicles: [], deals: [] };
@@ -88,7 +95,16 @@ function validate(blob: unknown): Garage | null {
     if (vehicle === null) return null;
     vehicles.push(vehicle);
   }
-  return { schemaVersion: CURRENT_SCHEMA_VERSION, vehicles, deals: g.deals };
+  const deals: SavedDeal[] = [];
+  for (const raw of g.deals) {
+    const deal = parseSavedDeal(raw);
+    if (deal === null) return null;
+    deals.push(deal);
+  }
+  const garage: Garage = { schemaVersion: CURRENT_SCHEMA_VERSION, vehicles, deals };
+  const selected = g.selectedVehicleId;
+  if (typeof selected === "string" && vehicles.some((v) => v.id === selected)) garage.selectedVehicleId = selected;
+  return garage;
 }
 
 function parseStored(raw: string): Garage | null {

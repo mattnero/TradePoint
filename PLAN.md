@@ -550,6 +550,25 @@ half set up.
   decoder), rename, delete. Saving is Pro.
 - Done when: v1 and v2 garages survive the upgrade untouched; three saved deals survive
   reload.
+- **Status 2026-11-07: done.** `src/model/savedDeal.ts`: `SavedDeal { id, label, savedAt (IsoDate),
+  quote, benchmarks, vehicleId? }`, `parseSavedDeal` (strict: payment > 0, term 1-120, rates 0-1, ON only,
+  advertised > 0 if present; unknown keys dropped), `savedDealInputs(deal, walkAway)` (round-trips through
+  `readDecoder`), `createSavedDeal` (blank label → "Deal N", label capped at 40), `addDeal`/`renameDeal`/
+  `removeDeal`/`newestFirst`, `findSaved` (field-by-field match), `savedLine` ("$34,881 all-in · Numbers
+  don't match · Saved today"). Schema **v3** (`garageV2ToV3`): vehicles pass through untouched; v1/v2 `deals`
+  become `[]` (no version before 3 ever wrote one; a non-array stays non-array so it still fails); spec's
+  `selectedVehicleId?` added now so Session 19 needs no v4: kept only if it names an existing vehicle,
+  otherwise dropped without failing; nothing sets it yet. A v3 deal that won't parse makes the whole garage
+  unreadable (same rule as vehicles: backup copy + recovery notice). Walk-away is not saved; opening keeps
+  whatever walk-away the decoder already has. `vehicleId` is set only when a garage value was used and the
+  verdict wasn't from a share link. UI: `src/deals/SaveDeal.svelte` on Verdict (Pro via
+  `requirePro("saveDeal")`; shows "Saved as X" when the current numbers match a saved deal, so no duplicates),
+  `src/deals/SavedDeals.svelte` at the bottom of Dealer in both modes (tap → restores decoder in check mode
+  and opens Verdict; Rename inline; Delete with confirm). Listing, opening, renaming and deleting stay free
+  so losing Pro hides nothing. Plans ("Plan a payment") are not saveable; only checked quotes are.
+  721 tests. Checked in headless Chrome at 320/375 on flag-on and flag-off builds: v2 and v1 garages load
+  with the vehicle unchanged after a v3 write, three deals survive reload newest first, open/rename/delete
+  persist, a bad v3 deal goes to the backup, flag-off lists and opens deals but Save opens the sheet.
 
 ### Session 18 · Side by side
 - Pick two saved deals → compare screen: payment and frequency, term, APR, financed,

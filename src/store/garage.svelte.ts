@@ -7,6 +7,7 @@ import {
   type Garage,
 } from "./garage";
 import { browserStorage } from "./browserStorage";
+import type { SavedDeal } from "../model/savedDeal";
 import type { Vehicle } from "../model/vehicle";
 
 const storage = browserStorage();
@@ -22,6 +23,9 @@ export const garageStore = {
   },
   get vehicle(): Vehicle | undefined {
     return current.vehicles[0];
+  },
+  get deals(): SavedDeal[] {
+    return current.deals;
   },
   get recoveredFromBrokenData(): boolean {
     return recovered;
