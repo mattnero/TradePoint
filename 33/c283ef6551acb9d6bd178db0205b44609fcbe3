@@ -1,0 +1,37 @@
+tests/vehicles.test.ts
+  s_86879f60f11863::t_7ecc2fb9de107a 1-156
+src/garage/VehicleSwitcher.svelte
+  s_86879f60f11863::t_fcd5969a5ff289 1-118
+src/store/garage.svelte.ts
+  s_86879f60f11863::t_fcd5969a5ff289 10,26-41
+src/screens/Timeline.svelte
+  s_86879f60f11863::t_fcd5969a5ff289 9,22,40-41,83-85
+src/decoder/state.svelte.ts
+  s_86879f60f11863::t_47e1bfab2b165a 13-17,31,45
+src/store/vehicles.ts
+  s_86879f60f11863::t_b441f374e31e32 1-40
+src/garage/AddVehicleForm.svelte
+  s_86879f60f11863::t_fcd5969a5ff289 8,30,50-53
+src/screens/Dealer.svelte
+  s_86879f60f11863::t_47e1bfab2b165a 10,90,93
+PLAN.md
+  s_86879f60f11863::t_6b71cb99a6d983 602-617
+src/screens/Garage.svelte
+  s_86879f60f11863::t_fcd5969a5ff289 6,31-32,44-54,68-69,79-81,84,88-89,202-204,213
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "33c283ef6551acb9d6bd178db0205b44609fcbe3",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
