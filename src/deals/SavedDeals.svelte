@@ -10,6 +10,7 @@
     savedLine,
     type SavedDeal,
   } from "../model/savedDeal";
+  import { pro, requirePro } from "../pro/pro.svelte";
   import { garageStore } from "../store/garage.svelte";
 
   const today = todayIso();
@@ -17,6 +18,29 @@
 
   let renaming = $state<string | null>(null);
   let draft = $state("");
+  let picking = $state(false);
+  let picked = $state<string[]>([]);
+
+  function startPicking() {
+    if (!requirePro("compare")) return;
+    picking = true;
+    picked = [];
+    renaming = null;
+  }
+
+  function stopPicking() {
+    picking = false;
+    picked = [];
+  }
+
+  function toggle(id: string, on: boolean) {
+    picked = on ? [...picked, id] : picked.filter((p) => p !== id);
+  }
+
+  function compare() {
+    if (picked.length !== 2) return;
+    window.location.hash = `#compare=${picked[0]},${picked[1]}`;
+  }
 
   function open(deal: SavedDeal) {
     Object.assign(decoder, savedDealInputs(deal, decoder.walkAway));
@@ -44,7 +68,20 @@
 
 {#if deals.length > 0}
   <section class="card list" aria-labelledby="saved-title">
-    <span class="label" id="saved-title">Saved deals</span>
+    <div class="top">
+      <span class="label" id="saved-title">Saved deals</span>
+      {#if deals.length >= 2 && !picking}
+        <button class="pick" type="button" onclick={startPicking}>
+          Compare two
+          {#if !pro.isPro}<span class="pill pro">Pro</span>{/if}
+        </button>
+      {/if}
+    </div>
+    {#if picking}
+      <p class="hint" aria-live="polite">
+        {picked.length === 2 ? "Two picked." : `Pick two deals to compare. ${picked.length} of 2 picked.`}
+      </p>
+    {/if}
     <ul>
       {#each deals as deal (deal.id)}
         <li>
@@ -65,6 +102,19 @@
                 <button class="btn primary" type="submit">Save</button>
               </div>
             </form>
+          {:else if picking}
+            <label class="choice">
+              <input
+                type="checkbox"
+                checked={picked.includes(deal.id)}
+                disabled={picked.length >= 2 && !picked.includes(deal.id)}
+                onchange={(e) => toggle(deal.id, e.currentTarget.checked)}
+              />
+              <span class="text">
+                <strong>{deal.label}</strong>
+                <span>{savedLine(deal, today)}</span>
+              </span>
+            </label>
           {:else}
             <button class="open" type="button" onclick={() => open(deal)}>
               <span class="text">
@@ -81,6 +131,12 @@
         </li>
       {/each}
     </ul>
+    {#if picking}
+      <div class="actions">
+        <button class="btn quiet" type="button" onclick={stopPicking}>Cancel</button>
+        <button class="btn primary" type="button" disabled={picked.length !== 2} onclick={compare}>Compare</button>
+      </div>
+    {/if}
     {#if garageStore.saveFailed}
       <p class="error" role="alert">This device won't let the app save, so changes are gone when you close the tab.</p>
     {/if}
@@ -171,6 +227,46 @@
     background: var(--surface);
     color: var(--ink);
     width: 100%;
+  }
+
+  .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .pick {
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    background: transparent;
+    border: 0;
+    min-height: 44px;
+    padding: 0 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+  }
+
+  .choice {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 10px;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  .choice input {
+    width: 22px;
+    height: 22px;
+  }
+
+  .choice strong {
+    font-size: 16px;
   }
 
   .delete {

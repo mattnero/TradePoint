@@ -576,6 +576,21 @@ half set up.
 - Differences in dollars ("B is $1,240 less all-in, $3,100 less interest"). No winner,
   no good/bad wording; a lower payment over a longer term says so.
 - Done when: checked at 320/375px with two deals that differ in term and rate.
+- **Status 2026-11-07: done.** `src/model/compare.ts` (`compareDeals(a, b)`: figures, verdict level and
+  monthly-equivalent payment per side), `src/model/compareCopy.ts` (`compareRows`: payment with frequency
+  note, term, rate, financed, all-in, interest, total paid, gap vs advertised, verdict; `differenceLines`:
+  "B is $2,505 less all-in, $2,865 more interest and $360 more in total paid." then a payment line such as
+  "B's payment is $70 a month lower, but it runs 12 months longer."; "but" when payment and term pull
+  opposite ways, "and" when they agree; figures within a dollar are left out; all equal gets one
+  "same" sentence; no winner or good/bad words, tested). Route `#compare=<idA>,<idB>` (two distinct ids,
+  otherwise `ids: null`), tab stays Dealer. Screen `src/screens/Compare.svelte`: A/B columns, a missing
+  deal or bare route explains itself, reload keeps the comparison. Picker on the Dealer saved list:
+  "Compare two" (shown with 2+ deals, Pro-gated via `requirePro("compare")`), checkboxes, third box
+  disabled at two, first pick is A. With Pro locked the compare screen shows a lock card and no numbers.
+  Differences are always B against A; each deal keeps its own benchmarks for its verdict. `formatPercent`
+  is now exported from `verdictCopy.ts`. 747 tests. Checked in headless Chrome at 320/375 on
+  flag-on and flag-off builds with a 72-month 5.99% and an 84-month 7.99% deal, plus a bi-weekly deal with a
+  long name: no horizontal scroll.
 
 ### Session 19 · Multiple vehicles
 - Vehicle switcher on Garage and Timeline; selected vehicle id persisted. Adding a second

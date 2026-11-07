@@ -5,6 +5,7 @@
   import Timeline from "./screens/Timeline.svelte";
   import Dealer from "./screens/Dealer.svelte";
   import Verdict from "./screens/Verdict.svelte";
+  import Compare from "./screens/Compare.svelte";
   import Settings from "./screens/Settings.svelte";
   import BottomNav from "./BottomNav.svelte";
   import PaywallSheet from "./pro/PaywallSheet.svelte";
@@ -23,6 +24,8 @@
       <Dealer />
     {:else if route.name === "verdict"}
       <Verdict />
+    {:else if route.name === "compare"}
+      <Compare />
     {:else}
       <Settings />
     {/if}

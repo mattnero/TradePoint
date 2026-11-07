@@ -21,7 +21,29 @@ describe("parseHash", () => {
   });
 });
 
+describe("compare route", () => {
+  it("parses two deal ids", () => {
+    expect(parseHash("#compare=abc-1,def-2")).toEqual({ name: "compare", ids: ["abc-1", "def-2"] });
+  });
+
+  it.each([
+    ["#compare"],
+    ["#compare="],
+    ["#compare=abc"],
+    ["#compare=abc,"],
+    ["#compare=,abc"],
+    ["#compare=abc,abc"],
+    ["#compare=a,b,c"],
+  ])("has no ids for %s", (hash) => {
+    expect(parseHash(hash)).toEqual({ name: "compare", ids: null });
+  });
+});
+
 describe("tabFor", () => {
+  it("highlights Dealer while comparing", () => {
+    expect(tabFor({ name: "compare", ids: null })).toBe("dealer");
+  });
+
   it("highlights Dealer while on the verdict", () => {
     expect(tabFor({ name: "verdict", code: null })).toBe("dealer");
   });

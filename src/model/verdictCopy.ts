@@ -19,7 +19,7 @@ const FREQUENCY_WORD: Record<PaymentFrequency, string> = {
 
 const ASK_PERCENT = ASK_BASIS_POINTS / 100;
 
-function formatPercent(rate: number): string {
+export function formatPercent(rate: number): string {
   return `${(rate * 100).toFixed(2)}%`;
 }
 
