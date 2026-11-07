@@ -23,7 +23,7 @@ export function formatPercent(rate: number): string {
   return `${(rate * 100).toFixed(2)}%`;
 }
 
-function formatExact(amount: Cents): string {
+export function formatExact(amount: Cents): string {
   return formatCAD(amount, { showCents: amount % 100 !== 0 });
 }
 

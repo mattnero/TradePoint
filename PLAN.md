@@ -624,6 +624,20 @@ half set up.
   text). Web: download. Native file sharing is Session 22.
 - Done when: the worked example's PDF shows the same numbers as the Verdict screen and
   the main bundle size didn't grow by more than a few KB.
+- **Status 2026-11-07: done.** Added `pdf-lib` (^1.17.1). `src/pdf/content.ts`: `dealPdfContent` builds the page
+  text from the same `verdict`, `subtitle`, `gapRows`, `askFor` and `dealFigures` the Verdict screen uses (so the
+  numbers can't drift), plus `pdfSafe` (swaps U+2212, non-breaking spaces and anything the standard fonts can't
+  draw) and `pdfFileName` (`TradePoint-<label>-<date>.pdf`). `src/pdf/buildDealPdf.ts`: Letter page, Helvetica,
+  headline box in the verdict colour, quote lines, gap rows with severity stripes, breakdown, ask-for bullets,
+  not-advice footer and "Prepared <date>"; `src/pdf/download.ts` does the web Blob download. Walk-away is
+  never in the PDF (tested). Verdict has a "Save as PDF" button (Pro via `requirePro("pdf")`; label comes from
+  the saved deal if the current numbers match one, else "Dealer quote"). It imports `../pdf/download`
+  dynamically, so pdf-lib is its own 425 kB chunk (178 kB gzipped) fetched only on tap; the main bundle grew
+  2.4 kB (1.0 kB gzipped). Tests parse the PDF back with pdf-lib and check the headline, subtitle, gap rows,
+  breakdown, ask-for and footer text, one page. Rendered the worked example to PNG with `sips` and checked it by
+  eye; in headless Chrome at 320/375 a flag-on build downloads the file (name and size right, chunk not loaded
+  before the tap) and a flag-off build opens the sheet with nothing downloaded or fetched. 784 tests.
+  `npm audit` shows 2 low findings (deepmerge via @sveltejs/vite-plugin-svelte); they predate pdf-lib.
 
 ### Session 21 · Capacitor shell
 - Needs Xcode and Android Studio (see prerequisites). Capacitor 8 (`@capacitor/core`

@@ -2,7 +2,11 @@
   import SaveDeal from "../deals/SaveDeal.svelte";
   import { currentReading, dealer, decoder } from "../decoder/state.svelte";
   import { readDecoder } from "../decoder/inputs";
+  import { todayIso } from "../model/dates";
   import { formatCAD } from "../model/money";
+  import { findSaved } from "../model/savedDeal";
+  import { pro, requirePro } from "../pro/pro.svelte";
+  import { garageStore } from "../store/garage.svelte";
   import { router } from "../router/router.svelte";
   import { decodeShare, encodeShare } from "../share/codec";
   import { headline, verdict, type VerdictLevel } from "../model/verdict";
@@ -60,6 +64,29 @@
       }
     }
     await copy(url, "Link copied. Opening it shows this same verdict.");
+  }
+
+  let makingPdf = $state(false);
+
+  async function savePdf() {
+    if (!reading.quote || makingPdf || !requirePro("pdf")) return;
+    makingPdf = true;
+    fallbackText = null;
+    try {
+      const { downloadDealPdf } = await import("../pdf/download");
+      const label = findSaved(garageStore.deals, reading.quote, reading.benchmarks)?.label;
+      await downloadDealPdf({
+        ...(label === undefined ? {} : { label }),
+        quote: reading.quote,
+        benchmarks: reading.benchmarks,
+        date: todayIso(),
+      });
+      notice = "PDF made. Your walk-away number isn't in it.";
+    } catch {
+      notice = "The PDF couldn't be made on this device. Try again, or share the link instead.";
+    } finally {
+      makingPdf = false;
+    }
   }
 
   function edit() {
@@ -132,6 +159,11 @@
   </div>
 
   <SaveDeal quote={reading.quote} benchmarks={reading.benchmarks} fromLink={shared !== null} />
+
+  <button class="btn quiet pdf" type="button" disabled={makingPdf} onclick={savePdf}>
+    {makingPdf ? "Making the PDF…" : "Save as PDF"}
+    {#if !pro.isPro}<span class="pill pro">Pro</span>{/if}
+  </button>
 
   <div aria-live="polite" class="copy-status">{notice}</div>
 
@@ -284,6 +316,18 @@
 
   .actions .wide {
     grid-column: 1 / -1;
+  }
+
+  .pdf {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .pdf:disabled {
+    opacity: 0.6;
   }
 
   .shared {
