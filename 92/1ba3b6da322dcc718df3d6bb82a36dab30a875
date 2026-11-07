@@ -1,0 +1,52 @@
+src/pro/entitlement.ts
+  s_86879f60f11863::t_ef1a4d3a4e6aaa 1-59,61-69
+  s_86879f60f11863::t_82c7231439556a 60
+src/pro/pro.svelte.ts
+  s_86879f60f11863::t_aee705419ea94e 1-41
+src/store/browserStorage.ts
+  s_86879f60f11863::t_aee705419ea94e 1-17
+src/screens/Settings.svelte
+  s_86879f60f11863::t_f0c23ad7ef2049 6,86-100,138-150
+  s_86879f60f11863::t_00b700785e03b3 151
+src/pro/features.ts
+  s_86879f60f11863::t_ef1a4d3a4e6aaa 1
+src/screens/Garage.svelte
+  s_86879f60f11863::t_f0c23ad7ef2049 25-26,87-93,132-138
+tests/entitlement.test.ts
+  s_86879f60f11863::t_d473e22a7239ff 1-123
+tests/proGate.test.ts
+  s_86879f60f11863::t_d473e22a7239ff 1-123,125-132,134-152
+  s_86879f60f11863::t_ef1a4d3a4e6aaa 124,133
+src/pro/ProLock.svelte
+  s_86879f60f11863::t_42e3bc0c8724d4 1-33
+src/screens/Timeline.svelte
+  s_86879f60f11863::t_f0c23ad7ef2049 9-10,40-46
+src/pro/copy.ts
+  s_86879f60f11863::t_aee705419ea94e 1-11
+src/App.svelte
+  s_86879f60f11863::t_f0c23ad7ef2049 10,32
+src/pro/gate.ts
+  s_86879f60f11863::t_ef1a4d3a4e6aaa 1-81
+src/pro/PaywallSheet.svelte
+  s_86879f60f11863::t_42e3bc0c8724d4 1-124
+src/store/garage.svelte.ts
+  s_86879f60f11863::t_aee705419ea94e 9
+PLAN.md
+  s_86879f60f11863::t_b23a85d8208110 515-527
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "921ba3b6da322dcc718df3d6bb82a36dab30a875",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
