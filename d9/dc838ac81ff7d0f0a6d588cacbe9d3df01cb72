@@ -1,0 +1,51 @@
+tests/nativeStorage.test.ts
+  s_2899d9d1e9ac20::t_b3c655b5494687 1-161
+src/store/appStorage.ts
+  s_2899d9d1e9ac20::t_5eaf922ed73b6d 1-24
+src/main.ts
+  s_2899d9d1e9ac20::t_5eba87e5a826e4 11,13
+src/screens/Settings.svelte
+  s_2899d9d1e9ac20::t_8ce5a4cabfb347 138
+  s_2899d9d1e9ac20::t_669630bd8516be 6,8,12,18-20,22-32,34-35,39,47-83,103-118,126-137,139-143,200-214
+  s_2899d9d1e9ac20::t_5efbae0f5c1c15 215
+android/capacitor.settings.gradle
+  s_2899d9d1e9ac20::t_8bc7ef1e0e9adf 8-10
+package.json
+  s_2899d9d1e9ac20::t_f2f2bec6d5d5a2 32
+PLAN.md
+  s_2899d9d1e9ac20::t_ec2fc8221d4815 713-736
+src/store/garage.svelte.ts
+  s_2899d9d1e9ac20::t_5eba87e5a826e4 8,10,16-17,19-28,68-70
+  s_2899d9d1e9ac20::t_dab06170614640 71
+tests/garage.test.ts
+  s_2899d9d1e9ac20::t_bef3c06a9cdd8c 5,9,440-473
+  s_2899d9d1e9ac20::t_cb5685761ce7a5 474
+android/app/capacitor.build.gradle
+  s_2899d9d1e9ac20::t_8bc7ef1e0e9adf 13
+ios/App/CapApp-SPM/Package.swift
+  s_2899d9d1e9ac20::t_8bc7ef1e0e9adf 16,27
+src/store/writeThrough.ts
+  s_2899d9d1e9ac20::t_ef0e69155ff9da 1-89
+src/store/garage.ts
+  s_2899d9d1e9ac20::t_04ec1d35dd9dcc 121-128
+ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+  s_2899d9d1e9ac20::t_592902e974654d 12-20
+package-lock.json
+  s_2899d9d1e9ac20::t_cc49a6cac09c13 16,169-177
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d9dc838ac81ff7d0f0a6d588cacbe9d3df01cb72",
+  "prompts": {},
+  "sessions": {
+    "s_2899d9d1e9ac20": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "682b54c2-6d53-4e4e-ab7a-3706a8f25bb6",
+        "model": "claude-opus-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
