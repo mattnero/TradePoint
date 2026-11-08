@@ -2,9 +2,11 @@ import {
   BACKUP_KEY,
   CURRENT_SCHEMA_VERSION,
   STORAGE_KEY,
+  backupText,
   emptyGarage,
   eraseGarage,
   loadGarage,
+  readBackup,
   readUnreadableCopy,
   runMigrations,
   saveGarage,
@@ -433,5 +435,40 @@ describe("runMigrations", () => {
 
   it("returns null when a step fails to advance the version", () => {
     expect(runMigrations({ schemaVersion: 1 }, { 1: (b: unknown) => b }, 2)).toBeNull();
+  });
+});
+
+describe("backup text", () => {
+  const withDeals: Garage = { ...garageWithCar, deals: threeDeals, selectedVehicleId: "v1" };
+
+  it("round-trips a garage with its cars, deals and selected car", () => {
+    expect(readBackup(backupText(withDeals))).toEqual(withDeals);
+  });
+
+  it("reads a backup copied from an older web version through the same upgrades as loading", () => {
+    const v1 = JSON.stringify({
+      schemaVersion: 1,
+      vehicles: [{ ...santaFe, benchmarks: { outsideTradeOffer: 920000 } }],
+      deals: [],
+    });
+    const restored = readBackup(v1);
+    expect(restored?.schemaVersion).toBe(3);
+    expect(restored?.vehicles[0]?.make).toBe("Hyundai");
+    expect(restored?.vehicles[0]?.prep?.tradeOffers).toEqual([{ source: "Outside offer", amount: 920000 }]);
+  });
+
+  it("ignores whitespace a paste picks up around the text", () => {
+    expect(readBackup(`\n  ${backupText(withDeals)}  \n`)).toEqual(withDeals);
+  });
+
+  it.each([
+    ["nothing", ""],
+    ["plain words", "my santa fe"],
+    ["an empty object", "{}"],
+    ["a cut-off paste", backupText(withDeals).slice(0, 40)],
+    ["a newer version", JSON.stringify({ ...withDeals, schemaVersion: 4 })],
+    ["a broken vehicle", JSON.stringify({ ...withDeals, vehicles: [{ id: "x" }] })],
+  ])("rejects %s", (_name, text) => {
+    expect(readBackup(text)).toBeNull();
   });
 });

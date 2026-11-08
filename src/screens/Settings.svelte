@@ -3,30 +3,82 @@
   import { resetDecoder } from "../decoder/state.svelte";
   import { TAX_RULES } from "../math/tax";
   import { formatCAD, fromDollars } from "../model/money";
+  import { isNativeApp } from "../native/platform";
   import { PRO_OPEN, pro } from "../pro/pro.svelte";
+  import { backupText, readBackup, type Garage } from "../store/garage";
   import { garageStore } from "../store/garage.svelte";
 
   const ontario = TAX_RULES.ON;
+  const native = isNativeApp();
 
   let oldData = $state(garageStore.unreadableCopy());
   let notice = $state("");
   let fallbackText = $state<string | null>(null);
   let fallback = $state<HTMLTextAreaElement>();
+  let restoring = $state(false);
+  let pasted = $state("");
+  let restoreError = $state("");
 
-  async function copyOldData() {
-    if (oldData === null) return;
+  const hasData = $derived(garageStore.vehicles.length > 0 || garageStore.deals.length > 0);
+
+  function count(n: number, one: string, many: string): string {
+    return `${n} ${n === 1 ? one : many}`;
+  }
+
+  function contents(garage: Garage): string {
+    return `${count(garage.vehicles.length, "car", "cars")} and ${count(garage.deals.length, "saved deal", "saved deals")}`;
+  }
+
+  async function copyText(text: string, done: string) {
     try {
-      await navigator.clipboard.writeText(oldData);
-      notice = "Copied. Paste it somewhere safe, or send it to whoever is helping you recover it.";
+      await navigator.clipboard.writeText(text);
+      notice = done;
       fallbackText = null;
     } catch {
       notice = "Copying was refused. The text is selected below; copy it by hand.";
-      fallbackText = oldData;
+      fallbackText = text;
       queueMicrotask(() => {
         fallback?.focus();
         fallback?.select();
       });
     }
+  }
+
+  function copyOldData() {
+    if (oldData === null) return;
+    copyText(oldData, "Copied. Paste it somewhere safe, or send it to whoever is helping you recover it.");
+  }
+
+  function copyBackup() {
+    copyText(
+      backupText(garageStore.garage),
+      "Copied. On the other device, open TradePoint, go to Settings, tap Restore from a backup and paste it.",
+    );
+  }
+
+  function startRestore() {
+    restoring = true;
+    pasted = "";
+    restoreError = "";
+    notice = "";
+    fallbackText = null;
+  }
+
+  function restoreBackup() {
+    const garage = readBackup(pasted);
+    if (garage === null) {
+      restoreError = "That isn't a TradePoint backup, or part of it is missing. Copy it again and paste all of it.";
+      return;
+    }
+    if (hasData && !window.confirm(`Replace the ${contents(garageStore.garage)} on this device with the backup's ${contents(garage)}?`)) {
+      return;
+    }
+    resetDecoder();
+    garageStore.restore(garage);
+    restoring = false;
+    pasted = "";
+    restoreError = "";
+    notice = `Restored ${contents(garage)}.`;
   }
 
   function eraseEverything() {
@@ -48,20 +100,46 @@
 
   <section class="card">
     <span class="label">Your data</span>
-    <p>
-      Your car, loan, benchmarks and saved deals are saved in this browser, on this device only. Nothing is sent anywhere and
-      there's no account.
-    </p>
-    <p class="hint">
-      Clearing this site's data in your browser erases it. On iPhone, Safari can also clear it after about a week
-      without a visit; adding the app to your home screen avoids that.
-    </p>
+    {#if native}
+      <p>
+        Your car, loan, benchmarks and saved deals are saved in the app, on this phone only. Nothing is sent anywhere and
+        there's no account.
+      </p>
+      <p class="hint">Uninstalling the app erases it. Copy a backup first if you want to keep it.</p>
+    {:else}
+      <p>
+        Your car, loan, benchmarks and saved deals are saved in this browser, on this device only. Nothing is sent anywhere and
+        there's no account.
+      </p>
+      <p class="hint">
+        Clearing this site's data in your browser erases it. On iPhone, Safari can also clear it after about a week
+        without a visit; adding the app to your home screen avoids that.
+      </p>
+    {/if}
     <p class="hint">
       A share link carries the deal's numbers inside the link itself, so anyone you send it to can see them.
     </p>
     {#if oldData !== null}
       <p class="hint">Saved data that couldn't be read is still kept on this device.</p>
       <button class="btn quiet" type="button" onclick={copyOldData}>Copy the unreadable data</button>
+    {/if}
+    {#if hasData}
+      <button class="btn quiet" type="button" onclick={copyBackup}>Copy a backup</button>
+    {/if}
+    {#if restoring}
+      <label class="paste">
+        <span class="hint">Paste the backup text copied from Settings on your other device.</span>
+        <textarea rows="5" bind:value={pasted} autocomplete="off" spellcheck="false"></textarea>
+      </label>
+      {#if restoreError}
+        <p class="error" role="alert">{restoreError}</p>
+      {/if}
+      <div class="row">
+        <button class="btn primary" type="button" onclick={restoreBackup} disabled={pasted.trim() === ""}>Restore</button>
+        <button class="btn quiet" type="button" onclick={() => (restoring = false)}>Cancel</button>
+      </div>
+    {:else}
+      <button class="btn quiet" type="button" onclick={startRestore}>Restore from a backup</button>
     {/if}
     <button class="btn quiet erase" type="button" onclick={eraseEverything}>Erase everything</button>
     <div aria-live="polite" class="status">{notice}</div>
@@ -117,6 +195,22 @@
 
   .erase {
     color: var(--bad);
+  }
+
+  .paste {
+    display: grid;
+    gap: 6px;
+  }
+
+  .error {
+    font-size: 14px;
+    color: var(--bad);
+  }
+
+  .row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
   }
 
   .status {

@@ -710,6 +710,30 @@ half set up.
   TradePoint-Honda-of-...-2026-11-07.pdf". **Still open in this session:** garage in `@capacitor/preferences`
   (async behind a sync interface, one-way copy from localStorage on first native launch), and Settings "Restore
   from a backup". Opus per the model table; storage is the part that can lose a garage.
+- **Status 2026-11-07: done.** Added `@capacitor/preferences` 8.0.1 (dynamic import, native only).
+  `src/store/writeThrough.ts`: `openWriteThroughStore(backend, onWriteError)` reads every Preferences key into
+  memory once, then serves the sync `KeyValueStore`; writes and removes go to the backend through one promise
+  queue so they land in order; a refused write calls `onWriteError` (garage store sets `saveFailed`) and later
+  writes still go out; `settled()` says whether every write landed. `openNativeStore` adds the one-time move:
+  if localStorage still holds `STORAGE_KEY`/`BACKUP_KEY`, they're copied in only when Preferences has no garage
+  (never overwrites), and the localStorage copies are removed only after the writes landed. Removing them is
+  what stops an erased garage coming back from localStorage on the next launch (tested). `src/store/appStorage.ts`
+  picks Preferences on native and falls back to localStorage if the plugin fails; web is unchanged.
+  `garage.svelte.ts` now starts empty and `startGarage()` loads it; `main.ts` mounts the app after it resolves.
+  `testingLock` stays in localStorage (testing only). Settings: "Copy a backup" (the current garage as JSON,
+  same clipboard/selected-text fallback as before; there was no way to export a healthy garage, so restore
+  alone couldn't move Matt's web car), "Restore from a backup" (paste; `readBackup` runs the same migrations
+  and validation as loading, so older web backups work; a bad paste explains itself; confirm before replacing
+  a non-empty garage; resets the decoder), and native wording ("saved in the app, on this phone only;
+  uninstalling erases it"). 812 tests. Checked: web at 320/375 in headless Chrome (v1 garage → copy → erase →
+  bad paste → restore → reload keeps it → confirm on replace, no horizontal scroll, no console errors); Android
+  emulator upgraded in place over the Session 21 build that had a real localStorage Santa Fe: the car is there,
+  `CapacitorStorage.xml` holds it, localStorage is cleared, it survives force-stop; erase empties Preferences,
+  paste-restore writes it and survives force-stop, the erased web copy never returns. iOS simulator: builds with
+  the plugin, a garage in UserDefaults (`CapacitorStorage.tradepoint.garage.v1`) loads and survives a relaunch;
+  the iOS write path was not driven through the UI. PDF to Files was checked on the Pixel earlier.
+  Not done on the Pixel itself (not connected): installing this build over Matt's will move his garage the
+  same way the emulator's moved.
 
 ### Session 23 · RevenueCat
 - Needs the developer accounts and agreements (see prerequisites). One non-consumable

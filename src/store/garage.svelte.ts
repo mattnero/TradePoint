@@ -5,18 +5,27 @@ import {
   readUnreadableCopy,
   saveGarage,
   type Garage,
+  type KeyValueStore,
 } from "./garage";
+import { openAppStorage } from "./appStorage";
 import { browserStorage } from "./browserStorage";
 import { addVehicle, removeVehicle, replaceVehicle, selectVehicle, selectedVehicle } from "./vehicles";
 import type { SavedDeal } from "../model/savedDeal";
 import type { Vehicle } from "../model/vehicle";
 
-const storage = browserStorage();
-const loaded = loadGarage(storage);
-
-let current = $state<Garage>(loaded.garage);
+let storage: KeyValueStore = browserStorage();
+let current = $state<Garage>(emptyGarage());
 let saveFailed = $state(false);
-let recovered = $state(loaded.recovered);
+let recovered = $state(false);
+
+export async function startGarage(): Promise<void> {
+  storage = await openAppStorage(() => {
+    saveFailed = true;
+  });
+  const loaded = loadGarage(storage);
+  current = loaded.garage;
+  recovered = loaded.recovered;
+}
 
 export const garageStore = {
   get garage(): Garage {
@@ -55,6 +64,10 @@ export const garageStore = {
   },
   unreadableCopy(): string | null {
     return readUnreadableCopy(storage);
+  },
+  restore(garage: Garage): void {
+    this.update(() => garage);
+    recovered = false;
   },
   erase(): boolean {
     current = emptyGarage();

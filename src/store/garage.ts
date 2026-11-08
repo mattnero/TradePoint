@@ -118,6 +118,14 @@ function parseStored(raw: string): Garage | null {
   return migrated === null ? null : validate(migrated);
 }
 
+export function backupText(garage: Garage): string {
+  return JSON.stringify(garage);
+}
+
+export function readBackup(text: string): Garage | null {
+  return parseStored(text.trim());
+}
+
 function keepCopyOfUnreadable(storage: KeyValueStore, raw: string): void {
   try {
     storage.setItem(BACKUP_KEY, raw);
