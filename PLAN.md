@@ -732,8 +732,10 @@ half set up.
   paste-restore writes it and survives force-stop, the erased web copy never returns. iOS simulator: builds with
   the plugin, a garage in UserDefaults (`CapacitorStorage.tradepoint.garage.v1`) loads and survives a relaunch;
   the iOS write path was not driven through the UI. PDF to Files was checked on the Pixel earlier.
-  Not done on the Pixel itself (not connected): installing this build over Matt's will move his garage the
-  same way the emulator's moved.
+  Pixel 9a (2026-11-07, later): installed over the Session 21 build; a throwaway v1 garage seeded into the old
+  localStorage moved into Preferences on relaunch, localStorage cleared, survived force-stop; app data then cleared
+  for Matt's own pass. Testing note: WebView flushes localStorage lazily, so a seed must sit a few seconds before a
+  force-stop or it never reaches disk (this briefly looked like a failure).
 
 ### Session 23 · RevenueCat
 - Needs the developer accounts and agreements (see prerequisites). One non-consumable
