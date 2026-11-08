@@ -1,0 +1,65 @@
+package.json
+  s_86879f60f11863::t_3af6a9a1f5e571 13-15
+  s_86879f60f11863::t_808466fc3db7ed 19,28-30
+ios/App/App/Info.plist
+  s_86879f60f11863::t_b4e7064d70226a 67-68
+  s_86879f60f11863::t_88fd6362da1d15 1-66,69-72
+ios/App/App/Assets.xcassets/AppIcon.appiconset/Contents.json
+  s_86879f60f11863::t_afb764ff572867 1-14
+vite.config.ts
+  s_86879f60f11863::t_3af6a9a1f5e571 4-5,7
+capacitor.config.ts
+  s_86879f60f11863::t_3af6a9a1f5e571 1-19
+ios/App/App/Assets.xcassets/Splash.imageset/Contents.json
+  s_86879f60f11863::t_afb764ff572867 1-22
+  s_86879f60f11863::t_ad7c766525c754 23
+ios/App/CapApp-SPM/Package.swift
+  s_86879f60f11863::t_88fd6362da1d15 1-27
+ios/App/App.xcodeproj/project.pbxproj
+  s_86879f60f11863::t_88fd6362da1d15 1-315,317-336,338-380
+  s_86879f60f11863::t_b4e7064d70226a 316,337
+.gitignore
+  s_86879f60f11863::t_3af6a9a1f5e571 5
+ios/.gitignore
+  s_86879f60f11863::t_8a0a634b6922c1 1-13
+ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+  s_86879f60f11863::t_657278ec0eb02f 1-8
+ios/App/App/AppDelegate.swift
+  s_86879f60f11863::t_5b16faa302f72c 1-44
+ios/App/App/Assets.xcassets/Contents.json
+  s_86879f60f11863::t_5d5c82be606a9d 1-6
+ios/App/App/Base.lproj/LaunchScreen.storyboard
+  s_86879f60f11863::t_43f8d6e870773c 1-32
+ios/App/App/Base.lproj/Main.storyboard
+  s_86879f60f11863::t_e6e27f84148aeb 1-19
+ios/App/App/SceneDelegate.swift
+  s_86879f60f11863::t_a5b0fb7330819a 1-24
+ios/App/CapApp-SPM/.gitignore
+  s_86879f60f11863::t_7861757fb1123a 1-9
+ios/App/CapApp-SPM/README.md
+  s_86879f60f11863::t_a8f576bdd9edac 1-5
+ios/App/CapApp-SPM/Sources/CapApp-SPM/CapApp-SPM.swift
+  s_86879f60f11863::t_af0d964077f6b3 1
+ios/debug.xcconfig
+  s_86879f60f11863::t_dcd57501b15712 1
+package-lock.json
+  s_86879f60f11863::t_215dbb47d43b6b 12-14,18,27-374,794-820,859-868,882-907,928-947,958-1044,1071-1080,1091-1094,1097-1099,1101,1104-1165,1181-1210,1263-1272,1306-1363,1374-1416,1685-1694,1705-1744,1755-1761,1781-1823,1838-1862,1869-1895,1908-1914,1935-1949,1979-2017,2032-2051,2099-2219,2230-2239,2247-2294,2357-2383,2421-2430,2451-2484,2666-2681,2695-2780
+PLAN.md
+  s_86879f60f11863::t_6e45f33ee80bda 651-668
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "ca6aab93ece8382a3c46a6efe2c5e416e61e832e",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
