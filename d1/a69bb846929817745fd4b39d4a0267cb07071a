@@ -1,0 +1,53 @@
+src/native/share.ts
+  s_86879f60f11863::t_2201f2ae2089d1 1-14
+package.json
+  s_86879f60f11863::t_2201f2ae2089d1 30,32
+tests/verdictCopy.test.ts
+  s_86879f60f11863::t_aca0c846720448 55
+src/screens/Dealer.svelte
+  s_86879f60f11863::t_3f227974544ad0 89-106,111,143,209
+src/screens/Verdict.svelte
+  s_86879f60f11863::t_043057d944511e 11,58-71,92,98-101
+android/app/capacitor.build.gradle
+  s_86879f60f11863::t_043057d944511e 12-13
+src/native/platform.ts
+  s_86879f60f11863::t_2201f2ae2089d1 1-25
+src/pdf/content.ts
+  s_86879f60f11863::t_aca0c846720448 42
+tests/native.test.ts
+  s_86879f60f11863::t_cf1432e71239c2 1-64
+src/BottomNav.svelte
+  s_86879f60f11863::t_ba7d6415bb9324 47-50
+android/capacitor.settings.gradle
+  s_86879f60f11863::t_043057d944511e 5-10
+src/pdf/download.ts
+  s_86879f60f11863::t_043057d944511e 1-2,6-8,10-19,23,28
+src/model/verdictCopy.ts
+  s_86879f60f11863::t_aca0c846720448 62
+ios/App/CapApp-SPM/Package.swift
+  s_86879f60f11863::t_043057d944511e 15-16,25-26
+src/garage/VehicleSetup.svelte
+  s_86879f60f11863::t_3f227974544ad0 204
+tests/dealPdf.test.ts
+  s_86879f60f11863::t_aca0c846720448 87
+PLAN.md
+  s_86879f60f11863::t_fd3ffbdac5a9c7 685-686,688-689,703-712
+package-lock.json
+  s_86879f60f11863::t_f9728d5e65ae5b 14,16,147-158,168-176,186-191
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "d1a69bb846929817745fd4b39d4a0267cb07071a",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
