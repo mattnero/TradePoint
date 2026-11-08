@@ -673,14 +673,21 @@ half set up.
   Chrome: only its own origin; faces load lazily as screens use them; about 137 kB of woff2 plus legacy woff
   fallbacks, JS bundle unchanged).
   **Decision 2026-11-07:** Matt has no iPhone, a Pixel 9a. iOS is verified on the simulator only and stays a
-  build target; the real-device pass is the Pixel. **Still to do before 21 is closed:** (1) Matt's real-phone
-  tap-through on the Pixel 9a: enable Developer options and USB debugging, plug in, accept the prompt, then
-  `adb install -r android/app/build/outputs/apk/debug/app-debug.apk` (rebuild with `npm run cap:sync` and
-  `./gradlew assembleDebug` under Android Studio's bundled JDK as `JAVA_HOME`). (2) Android debug build only: no
-  release signing or keystore yet (Session 24/25). (3) No tap-by-tap pass of every screen on either platform.
-  Emulator cold start shows several seconds of white; worth a glance on the Pixel. (4) The Apple developer
-  account (Session 23) is only needed if iOS ships; with no iPhone to test on, decide whether to ship iOS at all
-  before paying for it.
+  build target; the real-device pass is the Pixel.
+  **Pixel 9a (Android 17), 2026-11-07:** the debug APK is installed over USB (`adb install -r
+  android/app/build/outputs/apk/debug/app-debug.apk`; rebuild with `npm run cap:sync` and `./gradlew
+  assembleDebug` in `android/` under Android Studio's bundled JDK as `JAVA_HOME`). Found and fixed on the
+  phone: the Pixel runs in system dark mode, so the status bar drew white clock and icons on the app's white
+  page (invisible); `capacitor.config.ts` now sets `SystemBars.style` = `LIGHT` (dark icons) with
+  `initialViewportFitValueHint` = `cover`. Checked on the phone: edge-to-edge with safe-area padding, the
+  numeric keypad for the odometer with the field and Add button kept above the keyboard, a car added through
+  the form survives a force-stop and relaunch (app data then cleared for Matt's own pass).
+  **Still to do before 21 is closed:** (1) Matt's own tap-through on the Pixel (Session 14's open item).
+  (2) Android debug build only: no release signing or keystore yet (Session 24/25). (3) Known gap, not yet
+  tried on the phone: the PDF button makes a Blob download and Share uses `navigator.share`/clipboard, which an
+  Android WebView does not turn into a saved file or share sheet; that is exactly Session 22's native
+  share/files work. (4) The Apple developer account (Session 23) is only needed if iOS ships; with no iPhone
+  to test on, decide whether to ship iOS at all before paying for it.
 
 ### Session 22 · Native storage, share and files
 - Test-first. iOS can clear WebView localStorage under storage pressure, so native

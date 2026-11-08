@@ -9,6 +9,10 @@ const config: CapacitorConfig = {
     backgroundColor: "#FFFFFF",
   },
   plugins: {
+    SystemBars: {
+      style: "LIGHT",
+      initialViewportFitValueHint: "cover",
+    },
     StatusBar: {
       style: "LIGHT",
       backgroundColor: "#FFFFFF",
