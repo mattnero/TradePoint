@@ -1,0 +1,21 @@
+capacitor.config.ts
+  s_86879f60f11863::t_7fe69df172848d 12-15
+PLAN.md
+  s_86879f60f11863::t_02eaf9faec2d6d 676-690
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "56f49ee0b01698cba0bc84da689bbe63204ad3c0",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
