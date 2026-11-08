@@ -1,0 +1,25 @@
+src/main.ts
+  s_86879f60f11863::t_bcd789c7a8aae7 1-6
+package.json
+  s_86879f60f11863::t_2c042bf7d0fe5f 32-33
+PLAN.md
+  s_86879f60f11863::t_26013528782832 670-683
+package-lock.json
+  s_86879f60f11863::t_6c9113cc2d9385 16-17,163-180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "9767b39e93a0541cc2eeb20a1131dd667e3cdbf1",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
