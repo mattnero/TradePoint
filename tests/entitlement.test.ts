@@ -35,18 +35,24 @@ describe("web entitlement", () => {
     expect(createWebEntitlement({ open: false, storage: fakeStorage() }).isPro()).toBe(false);
   });
 
+  it("has no store price and can't restore", () => {
+    const entitlement = createWebEntitlement({ open: false, storage: fakeStorage() });
+    expect(entitlement.price()).toBeNull();
+    expect(entitlement.canRestore).toBe(false);
+  });
+
   it("purchase makes a closed build Pro and tells subscribers", async () => {
     const entitlement = createWebEntitlement({ open: false, storage: fakeStorage() });
     const calls: number[] = [];
     entitlement.subscribe(() => calls.push(1));
-    await entitlement.purchase();
+    expect(await entitlement.purchase()).toBe("purchased");
     expect(entitlement.isPro()).toBe(true);
     expect(calls).toHaveLength(1);
   });
 
   it("restore with nothing to restore leaves a closed build locked", async () => {
     const entitlement = createWebEntitlement({ open: false, storage: fakeStorage() });
-    await entitlement.restore();
+    expect(await entitlement.restore()).toBe("nothing");
     expect(entitlement.isPro()).toBe(false);
   });
 

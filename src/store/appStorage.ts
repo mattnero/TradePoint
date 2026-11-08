@@ -13,7 +13,7 @@ async function preferencesBackend(): Promise<AsyncKeyValueStore> {
   };
 }
 
-export async function openAppStorage(onWriteError: () => void): Promise<KeyValueStore> {
+async function open(onWriteError: () => void): Promise<KeyValueStore> {
   const web = browserStorage();
   if (!isNativeApp()) return web;
   try {
@@ -21,4 +21,11 @@ export async function openAppStorage(onWriteError: () => void): Promise<KeyValue
   } catch {
     return web;
   }
+}
+
+let opened: Promise<KeyValueStore> | undefined;
+
+export function openAppStorage(onWriteError: () => void): Promise<KeyValueStore> {
+  opened ??= open(onWriteError);
+  return opened;
 }

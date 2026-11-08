@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { PRO_INCLUDES, PRO_PRICE, PRO_STAYS_FREE } from "./copy";
+  import { PRO_INCLUDES, PRO_STAYS_FREE } from "./copy";
   import { pro } from "./pro.svelte";
 
   let dialog = $state<HTMLDialogElement>();
@@ -18,7 +18,7 @@
 <dialog bind:this={dialog} aria-labelledby="pro-title" onclose={closed}>
   <div class="sheet">
     <span class="label" id="pro-title">TradePoint Pro</span>
-    <div class="price">{PRO_PRICE} <small>once. No subscription.</small></div>
+    <div class="price">{pro.price} <small>once. No subscription.</small></div>
     <ul class="includes">
       {#each PRO_INCLUDES as line (line)}
         <li><span class="tick" aria-hidden="true"></span><span>{line}</span></li>
@@ -28,9 +28,15 @@
     {#if pro.error}
       <p class="error" role="alert">{pro.error}</p>
     {/if}
+    {#if pro.notice}
+      <p class="hint" role="status">{pro.notice}</p>
+    {/if}
     <button class="btn primary" type="button" disabled={pro.working} onclick={() => pro.unlock()}>
-      {pro.working ? "Unlocking…" : `Unlock Pro · ${PRO_PRICE}`}
+      {pro.working ? "Unlocking…" : `Unlock Pro · ${pro.price}`}
     </button>
+    {#if pro.canRestore}
+      <button class="btn quiet" type="button" disabled={pro.working} onclick={() => pro.restore()}>Restore purchase</button>
+    {/if}
     <button class="btn quiet" type="button" disabled={pro.working} onclick={() => pro.dismiss()}>Not now</button>
   </div>
 </dialog>

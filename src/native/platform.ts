@@ -5,6 +5,11 @@ export function isNativeApp(): boolean {
   return capacitor?.isNativePlatform?.() === true;
 }
 
+export function nativePlatform(): string {
+  const capacitor = (globalThis as { Capacitor?: { getPlatform?: () => string } }).Capacitor;
+  return capacitor?.getPlatform?.() ?? "web";
+}
+
 export function shareUrl(code: string, where: { native: boolean; origin: string; pathname: string }): string {
   const base = where.native ? PUBLIC_APP_URL : `${where.origin}${where.pathname}`;
   return `${base}#d=${code}`;

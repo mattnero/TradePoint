@@ -161,6 +161,17 @@
     </p>
   </section>
 
+  {#if pro.canRestore}
+    <section class="card">
+      <span class="label">TradePoint Pro</span>
+      <p>{pro.isPro ? "Pro is unlocked on this phone." : "Pro isn't unlocked on this phone."}</p>
+      <button class="btn quiet" type="button" disabled={pro.working} onclick={() => pro.restore()}>Restore purchase</button>
+      <div aria-live="polite" class="status">
+        {#if pro.error}{pro.error}{:else if pro.notice}{pro.notice}{/if}
+      </div>
+    </section>
+  {/if}
+
   {#if PRO_OPEN}
     <section class="card">
       <span class="label">Testing</span>

@@ -454,7 +454,7 @@ data; Sonnet elsewhere; no Haiku, because redoing a session costs more than it s
 | 21 | Full Xcode from the Mac App Store | Today the Mac only has Command Line Tools. After install: `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`, open Xcode once, install an iOS simulator |
 | 21 | Android Studio with the SDK and one emulator | `~/Library/Android/sdk` does not exist yet |
 | 21 | iPhone with Developer Mode on, USB cable | For the real-phone pass Phase 0 never got |
-| 23 | Apple Developer Program, active | US$99/yr; enrolment takes days. Then in App Store Connect: Paid Apps agreement, banking, tax forms. IAP doesn't work until those are accepted |
+| 23 | ~~Apple Developer Program, active~~ skipped 2026-11-07 (Android only for now) | US$99/yr; enrolment takes days. Then in App Store Connect: Paid Apps agreement, banking, tax forms. IAP doesn't work until those are accepted |
 | 23 | Google Play Console account | US$25 one-time; identity check takes days. **New personal accounts must run a closed test with at least 12 opted-in testers for 14 consecutive days before production access.** Matt needs 12 people (family, friends) with Android phones |
 | 23 | RevenueCat account | Free. One project, iOS and Android apps added |
 
@@ -749,6 +749,40 @@ half set up.
 - Upload the first signed Android build to a Play closed test now so the 14-day clock starts.
 - Done when: sandbox purchase and restore work on the iPhone and an Android test device;
   airplane mode after purchase keeps Pro.
+
+- **Status 2026-11-07: code done, store setup and the real purchase still open (need Matt's accounts).
+  Decision: Apple is skipped for now (Matt, 2026-11-07); Android only. The iOS target still builds.**
+  `Entitlement` now returns outcomes: `purchase()` is `"purchased" | "cancelled" | "pending"`, `restore()` is
+  `"restored" | "nothing"`, plus `price()` and `canRestore` (web: stub purchase, no price, no restore). The gate
+  keeps the sheet open on cancelled (no message) and pending ("waiting for approval", clears when Pro arrives),
+  has `restore()` with "No Pro purchase found for this store account." and a store-unreachable error, and a
+  `notice` field. `src/pro/storeEntitlement.ts`: `createStoreEntitlement({ open, storage, store })` over a small
+  `ProStore` port (`customerHasPro`, `onChange`, `price`, `buy`, `restore`). Offline rule: Pro is remembered in app
+  storage (`tradepoint.proOwned`) and used at launch before the store answers; a failed check keeps it; only a
+  successful answer saying "not Pro" (refund) or a customer-info update clears it, which hands off to the
+  Session 19 rules. A slow launch check cannot undo a purchase made while it was running. Remembered Pro is not
+  tamper-proof; accepted for a $4.99 hobby app. `src/pro/revenueCatStore.ts`: the RevenueCat adapter
+  (`@revenuecat/purchases-capacitor` 14.1.0, dynamic import; entitlement id `pro`; buys the current offering's
+  lifetime package, else its first; error code `"1"` or `userCancelled` = cancelled, `"20"` = pending; price from
+  the package's `priceString`, falling back to `PRO_PRICE` in the sheet). `createUnavailableStore()`: a native
+  build with no key (or a failed SDK start) gets a store whose buy and restore always fail, so a closed build can
+  never fall back to the web stub that unlocks for free. `startPro()` runs after `startGarage()` in `main.ts`;
+  the launch check isn't awaited, so there is no signal wait before the app shows. Paywall sheet: store price,
+  Restore purchase (native only), pending notice. Settings: a TradePoint Pro card (status + Restore purchase,
+  native only). Keys: `VITE_REVENUECAT_ANDROID_KEY` / `VITE_REVENUECAT_IOS_KEY` and `VITE_PRO_OPEN=false` go in an
+  untracked `.env.native.local` (see `.env.example`; `.env*` is now git-ignored). Native builds stay open
+  (everything Pro) until `VITE_PRO_OPEN=false` is set. 854 tests. Checked on the Android emulator with
+  `VITE_PRO_OPEN=false`, once with no key and once with a deliberately fake key: the native Purchases plugin
+  registers and receives `configure`; Settings and the sheet show Restore; Unlock and Restore fail with their
+  messages, the sheet stays open, Pro stays locked, no uncaught errors. **Not verified: a real purchase, restore,
+  refund or airplane-mode-after-purchase** (needs the Play listing, a licence tester and RevenueCat set up).
+  **Matt's steps:** (1) Play Console account ($25, identity check takes days). (2) Create the app, upload any
+  signed build to internal testing (a purchase product needs a build with the BILLING permission on Play), add
+  yourself as a licence tester. (3) In Play: in-app product `pro` (one-time, CAD 4.99). (4) RevenueCat: project,
+  Android app (package `io.github.mattnero.tradepoint`), a service-account key linked to Play, product `pro`,
+  entitlement `pro`, offering `default` with a Lifetime package; copy the public Android SDK key into
+  `.env.native.local`. (5) 12 closed-test testers for 14 days before production access.
+  Release signing and the keystore are still not made (Session 24).
 
 ### Session 24 · Store listings
 - Privacy policy page on Pages (no data collected, nothing leaves the device except what

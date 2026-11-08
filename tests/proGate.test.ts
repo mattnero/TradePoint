@@ -1,17 +1,30 @@
 import { createProGate } from "../src/pro/gate";
-import type { Entitlement } from "../src/pro/entitlement";
+import type { Entitlement, PurchaseOutcome, RestoreOutcome } from "../src/pro/entitlement";
 
-function fakeEntitlement(initiallyPro: boolean, purchase: () => Promise<void> = async () => {}) {
+function fakeEntitlement(
+  initiallyPro: boolean,
+  purchase: () => Promise<PurchaseOutcome | void> = async () => {},
+  restore: () => Promise<RestoreOutcome> = async () => "nothing",
+) {
   let pro = initiallyPro;
   const listeners = new Set<() => void>();
   const entitlement: Entitlement & { grant(): void } = {
     isPro: () => pro,
+    price: () => null,
+    canRestore: true,
     purchase: async () => {
-      await purchase();
-      pro = true;
-      listeners.forEach((l) => l());
+      const outcome = (await purchase()) ?? "purchased";
+      if (outcome === "purchased") {
+        pro = true;
+        listeners.forEach((l) => l());
+      }
+      return outcome;
     },
-    restore: async () => {},
+    restore: async () => {
+      const outcome = await restore();
+      if (outcome === "restored") entitlement.grant();
+      return outcome;
+    },
     subscribe: (listener) => {
       listeners.add(listener);
       return () => void listeners.delete(listener);
@@ -149,4 +162,112 @@ describe("pro gate", () => {
     gate.dismiss();
     expect(seen).toEqual([true, false]);
   });
+
+  describe("cancelled and pending purchases", () => {
+    it("a cancelled purchase keeps the sheet open with no error and no notice", async () => {
+      const gate = createProGate(fakeEntitlement(false, async () => "cancelled"));
+      gate.request("equity");
+      await gate.unlock();
+      expect(gate.snapshot()).toMatchObject({ sheetOpen: true, isPro: false, working: false, error: null, notice: null });
+    });
+
+    it("a pending purchase keeps the sheet open and explains that Pro comes when it's approved", async () => {
+      const gate = createProGate(fakeEntitlement(false, async () => "pending"));
+      gate.request("equity");
+      await gate.unlock();
+      expect(gate.snapshot()).toMatchObject({ sheetOpen: true, isPro: false, working: false, error: null });
+      expect(gate.snapshot().notice).toMatch(/approv/i);
+    });
+
+    it("a pending purchase that is later approved closes the sheet and clears the notice", async () => {
+      const entitlement = fakeEntitlement(false, async () => "pending");
+      const gate = createProGate(entitlement);
+      gate.request("equity");
+      await gate.unlock();
+      entitlement.grant();
+      expect(gate.snapshot()).toMatchObject({ sheetOpen: false, isPro: true, notice: null });
+    });
+
+    it("trying again clears the old notice", async () => {
+      let attempt = 0;
+      const gate = createProGate(fakeEntitlement(false, async () => (++attempt === 1 ? "pending" : "cancelled")));
+      gate.request("equity");
+      await gate.unlock();
+      await gate.unlock();
+      expect(gate.snapshot().notice).toBeNull();
+    });
+
+    it("dismissing clears the notice", async () => {
+      const gate = createProGate(fakeEntitlement(false, async () => "pending"));
+      gate.request("equity");
+      await gate.unlock();
+      gate.dismiss();
+      expect(gate.snapshot().notice).toBeNull();
+    });
+  });
+
+  describe("restore", () => {
+    it("a restored purchase closes the sheet and unlocks", async () => {
+      const gate = createProGate(fakeEntitlement(false, undefined, async () => "restored"));
+      gate.request("pdf");
+      await gate.restore();
+      expect(gate.snapshot()).toMatchObject({ sheetOpen: false, isPro: true, working: false, error: null });
+    });
+
+    it("nothing to restore says so and leaves the sheet open", async () => {
+      const gate = createProGate(fakeEntitlement(false, undefined, async () => "nothing"));
+      gate.request("pdf");
+      await gate.restore();
+      expect(gate.snapshot()).toMatchObject({ sheetOpen: true, isPro: false, error: null });
+      expect(gate.snapshot().notice).toMatch(/no pro purchase/i);
+    });
+
+    it("a store that can't be reached shows an error, and a retry works", async () => {
+      let attempt = 0;
+      const gate = createProGate(
+        fakeEntitlement(false, undefined, async () => {
+          if (++attempt === 1) throw new Error("offline");
+          return "restored";
+        }),
+      );
+      gate.request("pdf");
+      await gate.restore();
+      expect(gate.snapshot().error).toMatch(/store/i);
+      expect(gate.snapshot().sheetOpen).toBe(true);
+      await gate.restore();
+      expect(gate.snapshot()).toMatchObject({ sheetOpen: false, isPro: true, error: null });
+    });
+
+    it("shows working while restoring and ignores a second tap", async () => {
+      let calls = 0;
+      const wait = deferred();
+      const gate = createProGate(
+        fakeEntitlement(false, undefined, async () => {
+          calls += 1;
+          await wait.promise;
+          return "restored";
+        }),
+      );
+      gate.request("pdf");
+      const first = gate.restore();
+      const second = gate.restore();
+      expect(gate.snapshot().working).toBe(true);
+      wait.resolve(undefined);
+      await Promise.all([first, second]);
+      expect(calls).toBe(1);
+    });
+
+    it("works from Settings with no sheet open", async () => {
+      const gate = createProGate(fakeEntitlement(false, undefined, async () => "nothing"));
+      await gate.restore();
+      expect(gate.snapshot().sheetOpen).toBe(false);
+      expect(gate.snapshot().notice).toMatch(/no pro purchase/i);
+    });
+  });
 });
+
+function deferred() {
+  let resolve!: (value: unknown) => void;
+  const promise = new Promise((res) => (resolve = res));
+  return { promise, resolve };
+}

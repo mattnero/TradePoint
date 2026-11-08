@@ -1,13 +1,18 @@
 import type { KeyValueStore } from "../store/garage";
 
+export type PurchaseOutcome = "purchased" | "cancelled" | "pending";
+export type RestoreOutcome = "restored" | "nothing";
+
 export interface Entitlement {
   isPro(): boolean;
-  purchase(): Promise<void>;
-  restore(): Promise<void>;
+  price(): string | null;
+  canRestore: boolean;
+  purchase(): Promise<PurchaseOutcome>;
+  restore(): Promise<RestoreOutcome>;
   subscribe(listener: () => void): () => void;
 }
 
-export interface WebEntitlement extends Entitlement {
+export interface ProEntitlement extends Entitlement {
   testingLock(): boolean;
   setTestingLock(locked: boolean): void;
 }
@@ -20,7 +25,7 @@ export function parseProOpen(value: string | undefined): boolean {
   return flag !== "false" && flag !== "0";
 }
 
-function readLock(storage: KeyValueStore): boolean {
+export function readLock(storage: KeyValueStore): boolean {
   try {
     return storage.getItem(TESTING_LOCK_KEY) === "1";
   } catch {
@@ -28,7 +33,7 @@ function readLock(storage: KeyValueStore): boolean {
   }
 }
 
-function writeLock(storage: KeyValueStore, locked: boolean): void {
+export function writeLock(storage: KeyValueStore, locked: boolean): void {
   try {
     if (locked) storage.setItem(TESTING_LOCK_KEY, "1");
     else storage.removeItem(TESTING_LOCK_KEY);
@@ -37,7 +42,7 @@ function writeLock(storage: KeyValueStore, locked: boolean): void {
   }
 }
 
-export function createWebEntitlement(options: { open: boolean; storage: KeyValueStore }): WebEntitlement {
+export function createWebEntitlement(options: { open: boolean; storage: KeyValueStore }): ProEntitlement {
   const { open, storage } = options;
   const listeners = new Set<() => void>();
   let purchased = false;
@@ -48,11 +53,16 @@ export function createWebEntitlement(options: { open: boolean; storage: KeyValue
 
   return {
     isPro,
+    price: () => null,
+    canRestore: false,
     async purchase() {
       purchased = true;
       notify();
+      return "purchased";
     },
-    async restore() {},
+    async restore() {
+      return "nothing";
+    },
     subscribe(listener) {
       listeners.add(listener);
       return () => void listeners.delete(listener);
