@@ -59,7 +59,7 @@ export function gapRows(quote: DealQuote, benchmarks: Benchmarks, v: Verdict): G
         return {
           kind: g.kind,
           title: "Trade gap",
-          detail: `${formatCAD(quote.tradeAllowance)} allowance vs your ${formatCAD(benchmarks.outsideTradeOffer ?? cents(0))} outside offer`,
+          detail: `${formatCAD(quote.tradeAllowance)} trade-in value vs your ${formatCAD(benchmarks.outsideTradeOffer ?? cents(0))} outside offer`,
           amount,
           level: g.level,
         };

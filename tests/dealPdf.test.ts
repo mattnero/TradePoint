@@ -84,7 +84,7 @@ describe("dealPdfContent", () => {
   it("describes the quote and the benchmarks used", () => {
     expect(content.quoteLines).toEqual([
       "$450 monthly for 84 months at 7.99% APR",
-      "Down payment $3,000. Trade-in: $8,000 allowance, $5,000 owing.",
+      "Down payment $3,000. Trade-in value $8,000, with $5,000 still owing on it.",
       "Advertised price $29,995.",
       "Benchmarks used: 5.99% pre-approval, $9,200 outside trade offer.",
     ]);

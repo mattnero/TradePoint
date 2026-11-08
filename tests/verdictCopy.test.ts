@@ -52,7 +52,7 @@ describe("gapRows", () => {
     expect(rows.map((r) => [r.title, r.detail, r.amount, r.level])).toEqual([
       ["Price gap", "Implied all-in vs advertised + HST + licensing", "+$1,877", "ask"],
       ["Rate gap", "7.99% quoted vs your 5.99% pre-approval, over 84 months", "+$2,371", "ask"],
-      ["Trade gap", "$8,000 allowance vs your $9,200 outside offer", "−$1,200", "ask"],
+      ["Trade gap", "$8,000 trade-in value vs your $9,200 outside offer", "−$1,200", "ask"],
     ]);
   });
 

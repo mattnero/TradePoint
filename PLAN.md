@@ -682,11 +682,11 @@ half set up.
   `initialViewportFitValueHint` = `cover`. Checked on the phone: edge-to-edge with safe-area padding, the
   numeric keypad for the odometer with the field and Add button kept above the keyboard, a car added through
   the form survives a force-stop and relaunch (app data then cleared for Matt's own pass).
+  **Build environment:** Gradle 8.14 cannot compile its scripts on Android Studio's bundled Java 25, so Android
+  builds use Homebrew `openjdk@21`: `JAVA_HOME=/opt/homebrew/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home`.
   **Still to do before 21 is closed:** (1) Matt's own tap-through on the Pixel (Session 14's open item).
-  (2) Android debug build only: no release signing or keystore yet (Session 24/25). (3) Known gap, not yet
-  tried on the phone: the PDF button makes a Blob download and Share uses `navigator.share`/clipboard, which an
-  Android WebView does not turn into a saved file or share sheet; that is exactly Session 22's native
-  share/files work. (4) The Apple developer account (Session 23) is only needed if iOS ships; with no iPhone
+  (2) Android debug build only: no release signing or keystore yet (Session 24/25). (3) Share and PDF were fixed on
+  the phone on 2026-11-07 after Matt reported them (see Session 22). (4) The Apple developer account (Session 23) is only needed if iOS ships; with no iPhone
   to test on, decide whether to ship iOS at all before paying for it.
 
 ### Session 22 · Native storage, share and files
@@ -700,6 +700,16 @@ half set up.
   Share links still point at the Pages URL.
 - Done when: kill and relaunch keeps the garage on both platforms; a web backup pasted
   into the app restores the Santa Fe; a PDF reaches Messages/Files.
+- **Status 2026-11-07, partly pulled forward (Matt tried the app on his Pixel 9a and hit it):** done: Share
+  and the PDF use the native share sheet in the app (`@capacitor/share` 8.0.3, `@capacitor/filesystem` 8.1.5,
+  both loaded only when the native platform is detected; `src/native/platform.ts`, `src/native/share.ts`; the PDF
+  is written to the cache directory and shared as a file). Shared links now use the public address
+  (`PUBLIC_APP_URL` = `https://mattnero.github.io/TradePoint/`) from inside the app; on the web they still use
+  the page's own address. Cancelling the sheet is not an error (`isShareCancel`). Checked on the Pixel by driving
+  the real app over WebView debugging: the Android sheet shows the Pages link, and "Sharing 1 file:
+  TradePoint-Honda-of-...-2026-11-07.pdf". **Still open in this session:** garage in `@capacitor/preferences`
+  (async behind a sync interface, one-way copy from localStorage on first native launch), and Settings "Restore
+  from a backup". Opus per the model table; storage is the part that can lose a garage.
 
 ### Session 23 · RevenueCat
 - Needs the developer accounts and agreements (see prerequisites). One non-consumable

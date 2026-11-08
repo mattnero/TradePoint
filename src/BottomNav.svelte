@@ -44,6 +44,10 @@
 
 <style>
   nav {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    background: var(--surface);
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     border-top: 1px solid var(--line);

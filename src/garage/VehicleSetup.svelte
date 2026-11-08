@@ -201,7 +201,7 @@
       </p>
       <p class="hint">
         Worked out from the {formatCAD(vehicle.loan.kind === "snapshot" ? vehicle.loan.balance : vehicle.loan.principal)}
-        you entered at {(vehicle.loan.apr * 100).toFixed(2)}%. The Dealer tab will use it for your trade payoff.
+        you entered at {(vehicle.loan.apr * 100).toFixed(2)}%. The Dealer tab will use it for what you owe on your trade.
       </p>
       <button class="btn quiet" type="button" onclick={removeLoan}>Remove loan</button>
     {:else}

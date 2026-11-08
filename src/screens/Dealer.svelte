@@ -86,11 +86,29 @@
   </span>
 {/snippet}
 
+{#snippet tradeFields()}
+  <Field
+    id="in-trade"
+    label="Trade-in value"
+    hint="What the dealer gives you for your car"
+    error={problems.tradeAllowance}
+    bind:value={decoder.tradeAllowance}
+  />
+  <Field
+    id="in-payoff"
+    label="Owing on trade"
+    hint="What you still owe on it"
+    prefilled={isFromGarage("tradePayoff")}
+    error={problems.tradePayoff}
+    bind:value={decoder.tradePayoff}
+  />
+{/snippet}
+
 {#snippet garageHint()}
   {#if anyFromGarage() && garageSourceName()}
     <p class="hint">
       <span class="pill">From your garage</span>
-      Filled in from your {garageSourceName()?.make} {garageSourceName()?.model}. The payoff is worked out
+      Filled in from your {garageSourceName()?.make} {garageSourceName()?.model}. What you owe on the trade is worked out
       from your loan, so use your lender's figure if you have it. Edit anything the dealer's numbers change.
     </p>
   {/if}
@@ -122,14 +140,7 @@
       <Field id="in-term" label="Term (months)" mode="numeric" error={problems.term} bind:value={decoder.term} />
       <Field id="in-apr" label="Rate % APR" error={problems.apr} bind:value={decoder.apr} />
       <Field id="in-down" label="Down payment" error={problems.down} bind:value={decoder.down} />
-      <Field id="in-trade" label="Trade-in value" error={problems.tradeAllowance} bind:value={decoder.tradeAllowance} />
-      <Field
-        id="in-payoff"
-        label="Owing on trade"
-        prefilled={isFromGarage("tradePayoff")}
-        error={problems.tradePayoff}
-        bind:value={decoder.tradePayoff}
-      />
+      {@render tradeFields()}
     </div>
 
     {@render garageHint()}
@@ -195,14 +206,7 @@
       <Field id="in-apr" label="Rate % APR" error={problems.apr} bind:value={decoder.apr} />
       <Field id="in-down" label="Down payment" error={problems.down} bind:value={decoder.down} />
       <Field id="in-adv" label="Advertised price (optional)" error={problems.advertised} bind:value={decoder.advertised} />
-      <Field id="in-trade" label="Trade allowance" error={problems.tradeAllowance} bind:value={decoder.tradeAllowance} />
-      <Field
-        id="in-payoff"
-        label="Trade payoff"
-        prefilled={isFromGarage("tradePayoff")}
-        error={problems.tradePayoff}
-        bind:value={decoder.tradePayoff}
-      />
+      {@render tradeFields()}
     </div>
 
     {@render garageHint()}

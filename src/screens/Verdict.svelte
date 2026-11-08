@@ -8,6 +8,7 @@
   import { pro, requirePro } from "../pro/pro.svelte";
   import { garageStore } from "../store/garage.svelte";
   import { router } from "../router/router.svelte";
+  import { isNativeApp, isShareCancel, shareUrl } from "../native/platform";
   import { decodeShare, encodeShare } from "../share/codec";
   import { headline, verdict, type VerdictLevel } from "../model/verdict";
   import { askFor, gapRows, subtitle, tenMinutesText, walkAwayLine } from "../model/verdictCopy";
@@ -54,7 +55,20 @@
 
   async function share() {
     if (!reading.quote) return;
-    const url = `${location.origin}${location.pathname}#d=${encodeShare(reading.quote, reading.benchmarks)}`;
+    const url = shareUrl(encodeShare(reading.quote, reading.benchmarks), {
+      native: isNativeApp(),
+      origin: location.origin,
+      pathname: location.pathname,
+    });
+    if (isNativeApp()) {
+      try {
+        const { shareLinkNatively } = await import("../native/share");
+        await shareLinkNatively(url, "TradePoint deal check");
+        return;
+      } catch (error) {
+        if (isShareCancel(error)) return;
+      }
+    }
     if (typeof navigator.share === "function") {
       try {
         await navigator.share({ title: "TradePoint deal check", url });
@@ -75,13 +89,16 @@
     try {
       const { downloadDealPdf } = await import("../pdf/download");
       const label = findSaved(garageStore.deals, reading.quote, reading.benchmarks)?.label;
-      await downloadDealPdf({
+      const outcome = await downloadDealPdf({
         ...(label === undefined ? {} : { label }),
         quote: reading.quote,
         benchmarks: reading.benchmarks,
         date: todayIso(),
       });
-      notice = "PDF made. Your walk-away number isn't in it.";
+      notice =
+        outcome === "cancelled"
+          ? ""
+          : `${outcome === "shared" ? "PDF ready." : "PDF made."} Your walk-away number isn't in it.`;
     } catch {
       notice = "The PDF couldn't be made on this device. Try again, or share the link instead.";
     } finally {

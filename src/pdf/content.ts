@@ -39,7 +39,7 @@ function quoteLines(quote: DealQuote, benchmarks: Benchmarks): string[] {
   ];
   const trade =
     quote.tradeAllowance > 0 || quote.tradePayoff > 0
-      ? ` Trade-in: ${formatCAD(quote.tradeAllowance)} allowance, ${formatCAD(quote.tradePayoff)} owing.`
+      ? ` Trade-in value ${formatCAD(quote.tradeAllowance)}, with ${formatCAD(quote.tradePayoff)} still owing on it.`
       : "";
   lines.push(`Down payment ${formatCAD(quote.downPayment)}.${trade}`);
   if (quote.advertisedPrice !== undefined) lines.push(`Advertised price ${formatCAD(quote.advertisedPrice)}.`);
