@@ -1,0 +1,77 @@
+ios/App/App.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved
+  s_86879f60f11863::t_7a60b4344a72a0 1-15
+android/app/build.gradle
+  s_86879f60f11863::t_de3c4649b1f65b 1-54
+android/app/capacitor.build.gradle
+  s_86879f60f11863::t_de3c4649b1f65b 1-19
+android/app/src/main/java/io/github/mattnero/tradepoint/MainActivity.java
+  s_86879f60f11863::t_de3c4649b1f65b 1-5
+android/app/src/main/res/values/strings.xml
+  s_86879f60f11863::t_de3c4649b1f65b 1-7
+android/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+  s_86879f60f11863::t_cd501996767f75 1-9
+package.json
+  s_86879f60f11863::t_de3c4649b1f65b 28
+android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+  s_86879f60f11863::t_cd501996767f75 1-9
+android/app/src/main/AndroidManifest.xml
+  s_86879f60f11863::t_cd501996767f75 1-35
+android/capacitor.settings.gradle
+  s_86879f60f11863::t_de3c4649b1f65b 1-6
+android/.gitignore
+  s_86879f60f11863::t_e3bbf8e36d009a 1-101
+android/app/.gitignore
+  s_86879f60f11863::t_155698d6d22d12 1-2
+android/app/proguard-rules.pro
+  s_86879f60f11863::t_36407890295529 1-21
+android/app/src/androidTest/java/com/getcapacitor/myapp/ExampleInstrumentedTest.java
+  s_86879f60f11863::t_772b53b78289ee 1-26
+android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml
+  s_86879f60f11863::t_08a3e12a2d3cfa 1-34
+android/app/src/main/res/drawable/ic_launcher_background.xml
+  s_86879f60f11863::t_2c17d4dcd3a480 1-170
+android/app/src/main/res/layout/activity_main.xml
+  s_86879f60f11863::t_e090274c850bdd 1-12
+android/app/src/main/res/values/ic_launcher_background.xml
+  s_86879f60f11863::t_0d86a7a285055c 1-4
+android/app/src/main/res/values/styles.xml
+  s_86879f60f11863::t_a5875b78f2cb4e 1-22
+android/app/src/main/res/xml/file_paths.xml
+  s_86879f60f11863::t_52fa5ce1721439 1-5
+android/app/src/test/java/com/getcapacitor/myapp/ExampleUnitTest.java
+  s_86879f60f11863::t_adf9ca4807fbc5 1-18
+android/build.gradle
+  s_86879f60f11863::t_ff3e651b8b9147 1-29
+android/gradle.properties
+  s_86879f60f11863::t_aff63ad23d27d0 1-22
+android/gradle/wrapper/gradle-wrapper.properties
+  s_86879f60f11863::t_147f18c2387344 1-7
+android/gradlew
+  s_86879f60f11863::t_7faea968c17920 1-251
+android/gradlew.bat
+  s_86879f60f11863::t_3dfca399325b6d 1-94
+android/settings.gradle
+  s_86879f60f11863::t_4fc8734d8430e2 1-5
+android/variables.gradle
+  s_86879f60f11863::t_795437cc2fa03f 1-16
+package-lock.json
+  s_86879f60f11863::t_a908e1235e9ead 12,28-36
+PLAN.md
+  s_86879f60f11863::t_aae7cf88209ea0 651-677
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7288589bbd34a4bb0e3b1f741dd5d85ed7c94ad6",
+  "prompts": {},
+  "sessions": {
+    "s_86879f60f11863": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "46306b16-dda5-4566-8266-c0cd175e6220",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
