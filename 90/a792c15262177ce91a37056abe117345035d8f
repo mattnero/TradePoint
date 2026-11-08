@@ -1,0 +1,64 @@
+src/pro/revenueCatStore.ts
+  s_2899d9d1e9ac20::t_894930a8848564 1-16,23-63
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 17-22
+src/pro/pro.svelte.ts
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 1-2,4,6-9,13-14,16-49,64-72,80
+tests/storeEntitlement.test.ts
+  s_2899d9d1e9ac20::t_01d292c503907a 57,68
+  s_2899d9d1e9ac20::t_f4a80bd6e15e21 2,4-56,58-67,69-77,82-117,126-299,336-337
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 1,3,78-81,118-125,300-335
+.env.example
+  s_2899d9d1e9ac20::t_e25fe97226bf41 1-3
+tests/proGate.test.ts
+  s_2899d9d1e9ac20::t_fb314880eef319 2,4-8,13-14,16-26,165-266,268-273
+android/capacitor.settings.gradle
+  s_2899d9d1e9ac20::t_e25fe97226bf41 16-18
+src/pro/entitlement.ts
+  s_2899d9d1e9ac20::t_894930a8848564 3-5,8-11,15,28,36,45,56-57,61-64
+src/store/appStorage.ts
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 16,25-30
+  s_2899d9d1e9ac20::t_2f013aa7bacb2b 31
+src/pro/PaywallSheet.svelte
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 2,21,31-33,35,37-39
+package.json
+  s_2899d9d1e9ac20::t_8cb45807471785 37
+src/pro/storeEntitlement.ts
+  s_2899d9d1e9ac20::t_894930a8848564 1-66,68-69,71-92,104-105
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 67,70,93-103
+ios/App/CapApp-SPM/Package.swift
+  s_2899d9d1e9ac20::t_e25fe97226bf41 18-19,30-31
+src/main.ts
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 11,14-16
+src/screens/Settings.svelte
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 164-174
+src/native/platform.ts
+  s_2899d9d1e9ac20::t_b07b66f96e50c6 8-12
+src/pro/gate.ts
+  s_2899d9d1e9ac20::t_894930a8848564 10,17,23-25,33,43,55,65,72,75-81,89-110
+tests/entitlement.test.ts
+  s_2899d9d1e9ac20::t_fb314880eef319 38-43,48,55
+.gitignore
+  s_2899d9d1e9ac20::t_e25fe97226bf41 6-8
+android/app/capacitor.build.gradle
+  s_2899d9d1e9ac20::t_e25fe97226bf41 16
+PLAN.md
+  s_2899d9d1e9ac20::t_72ba228ae2237d 457,753-786
+package-lock.json
+  s_2899d9d1e9ac20::t_754cbf46f09fd7 21,523-540
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "90a792c15262177ce91a37056abe117345035d8f",
+  "prompts": {},
+  "sessions": {
+    "s_2899d9d1e9ac20": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "682b54c2-6d53-4e4e-ab7a-3706a8f25bb6",
+        "model": "claude-sonnet-5.5"
+      },
+      "human_author": "Matt Nero <mattnero@geotab.com>"
+    }
+  }
+}
