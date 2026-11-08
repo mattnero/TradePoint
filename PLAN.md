@@ -667,14 +667,20 @@ half set up.
   app renders edge-to-edge with safe-area padding, a car entered through the keyboard form survives a
   force-stop and relaunch, and it stays light in system dark mode. The native web bundle was also served from
   `/` and `/a/b/` in headless Chrome (no failed asset loads, lazy PDF chunk resolves).
-  **Not verified / still to do:** (1) the iPhone: none was connected; needs the phone plugged in and trusted,
-  Developer Mode on, and a signing team set in Xcode (Signing & Capabilities, personal Apple ID is fine for
-  testing); then Matt's real-phone tap-through (Session 14's open item) on iPhone and an Android phone, which an
-  emulator can't replace. (2) Fonts: Google Fonts load from the network, so a device with no connection falls
-  back to system fonts; bundle the two families (e.g. `@fontsource`) in the native polish. (3) Android debug build
-  only: no release signing or keystore yet (Session 24/25). (4) No tap-by-tap pass of every screen on either
-  platform. Emulator launch from cold is slow (several seconds of white before the UI); fine on a phone, worth a
-  glance on a real low-end Android.
+  **Fonts (done 2026-11-07):** Barlow Condensed 500/600/700 and IBM Plex Sans 400/500/600 are bundled with
+  `@fontsource/*` (Latin subset, imported in `src/main.ts`) and the Google Fonts links are gone from
+  `index.html`, on web and native alike: the app now contacts no third party at load (checked in headless
+  Chrome: only its own origin; faces load lazily as screens use them; about 137 kB of woff2 plus legacy woff
+  fallbacks, JS bundle unchanged).
+  **Decision 2026-11-07:** Matt has no iPhone, a Pixel 9a. iOS is verified on the simulator only and stays a
+  build target; the real-device pass is the Pixel. **Still to do before 21 is closed:** (1) Matt's real-phone
+  tap-through on the Pixel 9a: enable Developer options and USB debugging, plug in, accept the prompt, then
+  `adb install -r android/app/build/outputs/apk/debug/app-debug.apk` (rebuild with `npm run cap:sync` and
+  `./gradlew assembleDebug` under Android Studio's bundled JDK as `JAVA_HOME`). (2) Android debug build only: no
+  release signing or keystore yet (Session 24/25). (3) No tap-by-tap pass of every screen on either platform.
+  Emulator cold start shows several seconds of white; worth a glance on the Pixel. (4) The Apple developer
+  account (Session 23) is only needed if iOS ships; with no iPhone to test on, decide whether to ship iOS at all
+  before paying for it.
 
 ### Session 22 · Native storage, share and files
 - Test-first. iOS can clear WebView localStorage under storage pressure, so native
