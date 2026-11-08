@@ -648,6 +648,24 @@ half set up.
   and sheets. Status bar dark text on white.
 - Done when: the app runs on the iOS simulator, an Android emulator and Matt's iPhone;
   the real-phone tap-through from Session 14 is done there.
+- **Status 2026-11-07: iOS scaffold done, session NOT done.** Full Xcode isn't installed (Command Line Tools
+  only: no `xcodebuild`, no `simctl`), so nothing has been built or run on a simulator or phone, and Android
+  hasn't been started. Done without Xcode: `@capacitor/core`, `@capacitor/ios`, `@capacitor/status-bar` at 8.x
+  and `@capacitor/cli` (dev); `capacitor.config.ts` (id `io.github.mattnero.tradepoint`, name TradePoint,
+  `webDir: dist-native`, white background, status bar style LIGHT = dark text); `vite.config.ts` picks
+  `base` `./` for `--mode native` and `/TradePoint/` otherwise (Pages build byte-identical to before);
+  `npm run build:native` (into git-ignored `dist-native/`) and `npm run cap:sync`; `npx cap add ios`
+  generated `ios/` (Swift Package Manager, no CocoaPods, iOS 15 minimum) and it is committed. Edits to the
+  generated project: `UIUserInterfaceStyle` = Light in Info.plist (app is light-only), iPhone only
+  (`TARGETED_DEVICE_FAMILY = 1`, so no iPad screenshots needed at launch), dark splash variant removed.
+  Icon and splash: `assets/icon.png` (full-bleed teal with the favicon mark) and `assets/splash.png` (the
+  favicon tile centred on white), pushed into `ios/` with `npx @capacitor/assets generate --ios` (not a
+  dependency: it pulls 4 moderate audit findings). The native bundle was served from `/` and from `/a/b/`
+  in headless Chrome: renders, no failed asset loads, lazy PDF chunk resolves. Safe-area insets were already
+  in App, BottomNav and the paywall sheet. **Still to do:** install Xcode, `npm run cap:sync`, open
+  `ios/App/App.xcodeproj`, set the signing team, run on the simulator, then the iPhone; then Android.
+  **Known gap:** Google Fonts load from the network, so the native app falls back to system fonts offline;
+  bundle the two font families (e.g. `@fontsource`) when doing the native polish.
 
 ### Session 22 · Native storage, share and files
 - Test-first. iOS can clear WebView localStorage under storage pressure, so native

@@ -10,10 +10,13 @@
     "typecheck": "svelte-check --tsconfig ./tsconfig.json",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:native": "vite build --mode native --outDir dist-native",
+    "cap:sync": "npm run build:native && cap sync"
   },
   "license": "MIT",
   "devDependencies": {
+    "@capacitor/cli": "^8.6.0",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "svelte": "^5.57.3",
     "svelte-check": "^4.7.8",
@@ -22,6 +25,9 @@
     "vitest": "^5.1.0"
   },
   "dependencies": {
+    "@capacitor/core": "^8.6.0",
+    "@capacitor/ios": "^8.6.0",
+    "@capacitor/status-bar": "^8.0.4",
     "pdf-lib": "^1.17.1"
   }
 }
